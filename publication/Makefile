@@ -1,6 +1,6 @@
-.PHONY: all run1 run2 run3 clean
+.PHONY: all run1 run2 run3 run4 clean
 
-all: run1 run2 run3
+all: run1 run2 run3 run4
 
 run1:
 	$(MAKE) -C run1
@@ -11,7 +11,11 @@ run2:
 run3:
 	@if [ -f run3/Makefile ]; then $(MAKE) -C run3; fi
 
+run4:
+	@if [ -f run4/Makefile ]; then $(MAKE) -C run4; fi
+
 clean:
 	$(MAKE) -C run1 clean
 	@if [ -f run2/Makefile ]; then $(MAKE) -C run2 clean; fi
 	@if [ -f run3/Makefile ]; then $(MAKE) -C run3 clean; fi
+	@if [ -f run4/Makefile ]; then $(MAKE) -C run4 clean; fi

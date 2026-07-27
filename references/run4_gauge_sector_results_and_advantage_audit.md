@@ -190,7 +190,7 @@ E^\star=\frac{I+\bar Z_x}{2}.
 |---|---:|
 | 任意固定 \(\le2\)-link / weight-\(\le2\) observer | 0.50 |
 | 未 twirl、每类一个 representative 的 AOC | 0.75 |
-| 只做 stabilizer twirl | 0.75 |
+| 不做 logical nuisance twirl（representatives 已在 stabilizer code space） | 0.75 |
 | 正确 label-preserving nuisance twirl + AOC | 1.00 |
 | 错误 label-flipping twirl + AOC | 0.50 |
 | 已知 Wilson parity threshold | 1.00 |
@@ -199,6 +199,11 @@ E^\star=\frac{I+\bar Z_x}{2}.
 错误对照使用 \(\{I,\bar X_x\}\)，它直接翻转 label，使两类 twirled states
 相同。这个负控说明“加入更多 symmetry”不一定更好；必须先判断 group action
 是 nuisance-preserving 还是 label-erasing。
+
+这里 representatives 已经满足全部 stabilizer 约束，所以在这个
+\(4\times4\) logical code-space benchmark 中再做 stabilizer twirl 等同于恒等
+操作；原始输出里的 `stabilizer_only` 名称是实现标签，不应被理解为额外的
+logical nuisance averaging。
 
 ## 六、噪声校准
 

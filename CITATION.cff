@@ -21,7 +21,7 @@ abstract: >-
   contrast. It includes exact binary and multiclass measurement formulations,
   mergeable streaming states, sequential evidence, symmetry-sector
   diagnostics, physical and chemical controlled experiments, Qiskit
-  simulations, an exact gauge-sector benchmark, historical sources, and three
+  simulations, an exact gauge-sector benchmark, historical sources, and four
   compiled working papers.
 keywords:
   - eigen-component analysis

@@ -60,7 +60,7 @@ change.
 | [run 1](experiments/run1/) | When is ECA an optimal commuting measurement, and what is lost relative to a general POVM? | [DECA PDF](publication/run1/main.pdf) |
 | [run 2](experiments/run2/) | Can maximum-difference witnesses be accumulated, merged, capacity-limited, and used online? | [AOC PDF](publication/run2/main.pdf) |
 | [run 3](experiments/run3/) | What is the exact optimum under symmetry or a physical readout algebra, and which sector changed? | [SAOC PDF](publication/run3/main.pdf) |
-| [run 4](experiments/run4/) | Can a local observable algebra be certified blind before the first noncontractible gauge-sector witness is recovered? | [results and advantage audit](references/run4_gauge_sector_results_and_advantage_audit.md) |
+| [run 4](experiments/run4/) | Can a local observable algebra be certified blind before the first noncontractible gauge-sector witness is recovered? | [integrated Run 3+4 PDF](publication/run4/main.pdf); [advantage audit](references/run4_gauge_sector_results_and_advantage_audit.md) |
 
 Run 1 is the frozen DECA baseline. Later runs do not overwrite its code,
 results, or manuscript. Shared maintained code lives in
@@ -190,7 +190,7 @@ the command, dependencies, Git state, runtime, and output hashes.
 | [`experiments/run2/`](experiments/run2/) | Additive/streaming observable-contrast validation |
 | [`experiments/run3/`](experiments/run3/) | Symmetry-resolved and cross-domain validation |
 | [`experiments/run4/`](experiments/run4/) | Exact local-blindness and topological-flux validation |
-| [`publication/`](publication/) | Three independent paper sources and compiled PDFs for runs 1–3 |
+| [`publication/`](publication/) | Four independent paper sources and compiled PDFs for runs 1–4 |
 | [`references/`](references/) | Original ECA/Ising materials, reviews, research plans, and deep theory analysis |
 | [`CITATION.cff`](CITATION.cff) | GitHub citation metadata |
 | [`LICENSE.md`](LICENSE.md) | Public/private and mixed-rights boundary |

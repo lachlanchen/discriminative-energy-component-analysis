@@ -49,7 +49,7 @@ run 3 进一步加入物理约束。若 \(\mathcal A\) 是可访问观测代数�
 | [run 1](experiments/run1/) | ECA 何时等价于最优可交换测量？相对一般 POVM 损失什么？ | [DECA PDF](publication/run1/main.pdf) |
 | [run 2](experiments/run2/) | 最大差异观测能否逐样本累积、合并、限制秩并用于在线检测？ | [AOC PDF](publication/run2/main.pdf) |
 | [run 3](experiments/run3/) | 在对称性或物理读出代数下，精确最优解是什么？哪个扇区发生变化？ | [SAOC PDF](publication/run3/main.pdf) |
-| [run 4](experiments/run4/) | 能否先证明局域观测代数看不见拓扑扇区，再恢复第一个非收缩 witness？ | [结果与优势审计](references/run4_gauge_sector_results_and_advantage_audit.md) |
+| [run 4](experiments/run4/) | 能否先证明局域观测代数看不见拓扑扇区，再恢复第一个非收缩 witness？ | [Run 3+4 合并论文 PDF](publication/run4/main.pdf)；[结果与优势审计](references/run4_gauge_sector_results_and_advantage_audit.md) |
 
 run 1 是冻结的 DECA 基线。后续轮次不会覆盖其代码、结果或论文。持续维护的
 公共实现位于 [`experiments/aoc/`](experiments/aoc/)。
@@ -159,7 +159,7 @@ manifest，其中记录命令、依赖、Git 状态、运行时间和输出哈�
 | [`experiments/run2/`](experiments/run2/) | 加性/流式观测差异验证 |
 | [`experiments/run3/`](experiments/run3/) | 对称分辨与跨领域验证 |
 | [`experiments/run4/`](experiments/run4/) | 精确局域不可区分性与拓扑通量验证 |
-| [`publication/`](publication/) | run 1–3 的三份独立论文源码与编译 PDF |
+| [`publication/`](publication/) | run 1–4 的四份独立论文源码与编译 PDF |
 | [`references/`](references/) | ECA/Ising 原始材料、审稿意见、研究计划和理论分析 |
 
 ## 研究谱系、引用与权利
@@ -169,7 +169,7 @@ manifest，其中记录命令、依赖、Git 状态、运行时间和输出哈�
 ISCAS 源文件、Ising 聚类探索稿和早期讨论保存在 [`references/`](references/)
 中作为 provenance，不会改写历史来制造“后来理论早已存在”的印象。
 
-三份工作稿暂以 `Rongzhou (Lachlan) Chen` 作为仓库作者占位。正式投稿前，
+四份工作稿暂以 `Rongzhou (Lachlan) Chen` 作为仓库作者占位。正式投稿前，
 作者、单位、致谢和期刊必须由人类合作者确认。
 
 GitHub 使用 [`CITATION.cff`](CITATION.cff) 生成引用界面：
