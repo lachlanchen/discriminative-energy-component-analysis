@@ -16,7 +16,7 @@ from run_classical_benchmarks import model_suite
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results" / "classical"
-DATA_HOME = ROOT / "data" / "uci"
+DATA_HOME = ROOT.parent / "data" / "uci"
 METHODS = [
     "Logistic",
     "SVM-RBF",

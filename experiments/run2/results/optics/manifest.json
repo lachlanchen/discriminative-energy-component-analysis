@@ -1,0 +1,37 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "experiments/run2/scripts/run_optical_quantum.py"
+  ],
+  "config": {
+    "seeds": 20,
+    "shots_per_state": 16384,
+    "simulator": "qiskit_aer_density_matrix_instruction",
+    "visibility": 0.9
+  },
+  "experiment": "run2_optical_quantum",
+  "finished_unix": 1785143754.1758776,
+  "git_commit": "8868f0d44ceb97898cca2a9af8e6952a269fbe9e",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run2/results/optics/circuit.txt": "01879a226468d1dec9d81177efb56b569b45d57dee0680aaae8e04f57371db90",
+    "experiments/run2/results/optics/optical_quantum.pdf": "ea34f3caf68111c3bad2648220e0f6e928ee9038b0f768dd2070dcec05592290",
+    "experiments/run2/results/optics/optical_quantum.png": "d755aa91ddf0ccc59130d5a34576e4755cac6347d06dd2a91a594f125f8bd5c2",
+    "experiments/run2/results/optics/quantum_shots.csv": "cd42c352c6f87ad57e5e370780b0460a567adcca421d80ffcbc23f4e46e5f3bb",
+    "experiments/run2/results/optics/shot_success.csv": "65d02751028d2a518f08a2d3fd79f6f5a59a333a6cce8c66205ba7363c951bf2",
+    "experiments/run2/results/optics/summary.json": "95954697fb5f0b98ec6acf6d2c2c844a9423f1e15f039fd62803bb378d86bd1c"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785143743.5512521,
+  "wall_seconds": 10.62462568283081
+}

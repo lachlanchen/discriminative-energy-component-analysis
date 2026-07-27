@@ -1,0 +1,145 @@
+repetition,window_length,method,accuracy,roc_auc
+0,1,Rank-1 AOC contact witness,0.708,0.7424320000000001
+0,1,Oracle contact screw,0.716,0.755952
+0,1,Window-mean logistic,0.5,0.5
+0,4,Rank-1 AOC contact witness,0.818,0.9169440000000001
+0,4,Oracle contact screw,0.886,0.945824
+0,4,Window-mean logistic,0.5,0.5
+0,16,Rank-1 AOC contact witness,0.976,0.9968319999999999
+0,16,Oracle contact screw,0.99,0.999216
+0,16,Window-mean logistic,0.5,0.5
+0,64,Rank-1 AOC contact witness,1.0,1.0
+0,64,Oracle contact screw,1.0,1.0
+0,64,Window-mean logistic,0.5,0.5
+1,1,Rank-1 AOC contact witness,0.686,0.745104
+1,1,Oracle contact screw,0.718,0.7687200000000001
+1,1,Window-mean logistic,0.5,0.5
+1,4,Rank-1 AOC contact witness,0.864,0.9322560000000001
+1,4,Oracle contact screw,0.928,0.968368
+1,4,Window-mean logistic,0.5,0.5
+1,16,Rank-1 AOC contact witness,0.968,0.994736
+1,16,Oracle contact screw,0.994,0.9999359999999999
+1,16,Window-mean logistic,0.5,0.5
+1,64,Rank-1 AOC contact witness,1.0,1.0
+1,64,Oracle contact screw,1.0,1.0
+1,64,Window-mean logistic,0.5,0.5
+2,1,Rank-1 AOC contact witness,0.726,0.7685919999999999
+2,1,Oracle contact screw,0.73,0.7778240000000002
+2,1,Window-mean logistic,0.5,0.5
+2,4,Rank-1 AOC contact witness,0.844,0.9253439999999999
+2,4,Oracle contact screw,0.912,0.959776
+2,4,Window-mean logistic,0.5,0.5
+2,16,Rank-1 AOC contact witness,0.972,0.993936
+2,16,Oracle contact screw,0.984,0.9986079999999999
+2,16,Window-mean logistic,0.5,0.5
+2,64,Rank-1 AOC contact witness,1.0,1.0
+2,64,Oracle contact screw,1.0,1.0
+2,64,Window-mean logistic,0.5,0.5
+3,1,Rank-1 AOC contact witness,0.66,0.727088
+3,1,Oracle contact screw,0.666,0.734656
+3,1,Window-mean logistic,0.5,0.5
+3,4,Rank-1 AOC contact witness,0.836,0.9086879999999999
+3,4,Oracle contact screw,0.908,0.959248
+3,4,Window-mean logistic,0.5,0.5
+3,16,Rank-1 AOC contact witness,0.966,0.9976480000000001
+3,16,Oracle contact screw,0.996,0.999952
+3,16,Window-mean logistic,0.5,0.5
+3,64,Rank-1 AOC contact witness,0.998,1.0
+3,64,Oracle contact screw,1.0,1.0
+3,64,Window-mean logistic,0.5,0.5
+4,1,Rank-1 AOC contact witness,0.72,0.757104
+4,1,Oracle contact screw,0.72,0.7701119999999999
+4,1,Window-mean logistic,0.5,0.5
+4,4,Rank-1 AOC contact witness,0.838,0.909024
+4,4,Oracle contact screw,0.888,0.941072
+4,4,Window-mean logistic,0.5,0.5
+4,16,Rank-1 AOC contact witness,0.972,0.9967039999999999
+4,16,Oracle contact screw,0.99,0.999888
+4,16,Window-mean logistic,0.5,0.5
+4,64,Rank-1 AOC contact witness,1.0,1.0
+4,64,Oracle contact screw,1.0,1.0
+4,64,Window-mean logistic,0.5,0.5
+5,1,Rank-1 AOC contact witness,0.704,0.765392
+5,1,Oracle contact screw,0.748,0.791664
+5,1,Window-mean logistic,0.5,0.5
+5,4,Rank-1 AOC contact witness,0.834,0.9098079999999998
+5,4,Oracle contact screw,0.88,0.939168
+5,4,Window-mean logistic,0.5,0.5
+5,16,Rank-1 AOC contact witness,0.974,0.997312
+5,16,Oracle contact screw,0.982,0.999664
+5,16,Window-mean logistic,0.5,0.5
+5,64,Rank-1 AOC contact witness,1.0,1.0
+5,64,Oracle contact screw,1.0,1.0
+5,64,Window-mean logistic,0.5,0.5
+6,1,Rank-1 AOC contact witness,0.666,0.7200479999999999
+6,1,Oracle contact screw,0.702,0.755184
+6,1,Window-mean logistic,0.5,0.5
+6,4,Rank-1 AOC contact witness,0.822,0.8900319999999999
+6,4,Oracle contact screw,0.876,0.9303359999999999
+6,4,Window-mean logistic,0.5,0.5
+6,16,Rank-1 AOC contact witness,0.98,0.996096
+6,16,Oracle contact screw,0.992,0.999872
+6,16,Window-mean logistic,0.5,0.5
+6,64,Rank-1 AOC contact witness,1.0,1.0
+6,64,Oracle contact screw,1.0,1.0
+6,64,Window-mean logistic,0.5,0.5
+7,1,Rank-1 AOC contact witness,0.67,0.7384
+7,1,Oracle contact screw,0.706,0.7592319999999999
+7,1,Window-mean logistic,0.5,0.5
+7,4,Rank-1 AOC contact witness,0.828,0.9131520000000001
+7,4,Oracle contact screw,0.88,0.9503839999999999
+7,4,Window-mean logistic,0.5,0.5
+7,16,Rank-1 AOC contact witness,0.97,0.99744
+7,16,Oracle contact screw,0.994,0.99984
+7,16,Window-mean logistic,0.5,0.5
+7,64,Rank-1 AOC contact witness,1.0,1.0
+7,64,Oracle contact screw,1.0,1.0
+7,64,Window-mean logistic,0.5,0.5
+8,1,Rank-1 AOC contact witness,0.668,0.7061280000000001
+8,1,Oracle contact screw,0.682,0.721552
+8,1,Window-mean logistic,0.5,0.5
+8,4,Rank-1 AOC contact witness,0.832,0.90056
+8,4,Oracle contact screw,0.862,0.926912
+8,4,Window-mean logistic,0.5,0.5
+8,16,Rank-1 AOC contact witness,0.972,0.998032
+8,16,Oracle contact screw,0.996,1.0
+8,16,Window-mean logistic,0.5,0.5
+8,64,Rank-1 AOC contact witness,1.0,1.0
+8,64,Oracle contact screw,1.0,1.0
+8,64,Window-mean logistic,0.5,0.5
+9,1,Rank-1 AOC contact witness,0.696,0.7307520000000001
+9,1,Oracle contact screw,0.7,0.7410879999999999
+9,1,Window-mean logistic,0.5,0.5
+9,4,Rank-1 AOC contact witness,0.868,0.934896
+9,4,Oracle contact screw,0.908,0.964
+9,4,Window-mean logistic,0.5,0.5
+9,16,Rank-1 AOC contact witness,0.966,0.9944
+9,16,Oracle contact screw,0.99,0.999776
+9,16,Window-mean logistic,0.5,0.5
+9,64,Rank-1 AOC contact witness,1.0,1.0
+9,64,Oracle contact screw,1.0,1.0
+9,64,Window-mean logistic,0.5,0.5
+10,1,Rank-1 AOC contact witness,0.716,0.7611999999999999
+10,1,Oracle contact screw,0.748,0.7957759999999999
+10,1,Window-mean logistic,0.5,0.5
+10,4,Rank-1 AOC contact witness,0.838,0.9107840000000001
+10,4,Oracle contact screw,0.882,0.9482879999999999
+10,4,Window-mean logistic,0.5,0.5
+10,16,Rank-1 AOC contact witness,0.98,0.997408
+10,16,Oracle contact screw,0.992,0.9996160000000001
+10,16,Window-mean logistic,0.5,0.5
+10,64,Rank-1 AOC contact witness,1.0,1.0
+10,64,Oracle contact screw,1.0,1.0
+10,64,Window-mean logistic,0.5,0.5
+11,1,Rank-1 AOC contact witness,0.67,0.736096
+11,1,Oracle contact screw,0.658,0.7465440000000001
+11,1,Window-mean logistic,0.5,0.5
+11,4,Rank-1 AOC contact witness,0.828,0.9142239999999999
+11,4,Oracle contact screw,0.872,0.9404480000000002
+11,4,Window-mean logistic,0.5,0.5
+11,16,Rank-1 AOC contact witness,0.978,0.9980800000000001
+11,16,Oracle contact screw,0.998,1.0
+11,16,Window-mean logistic,0.5,0.5
+11,64,Rank-1 AOC contact witness,1.0,1.0
+11,64,Oracle contact screw,1.0,1.0
+11,64,Window-mean logistic,0.5,0.5

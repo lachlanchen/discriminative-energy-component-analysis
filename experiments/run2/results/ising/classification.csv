@@ -1,0 +1,61 @@
+repetition,method,accuracy
+0,AOC learned observable,1.0
+0,Oracle |magnetization|,1.0
+0,Oracle nearest-neighbor energy,1.0
+0,Linear logistic,0.5
+0,Polynomial SVM degree 2,1.0
+0,RBF SVM,1.0
+1,AOC learned observable,1.0
+1,Oracle |magnetization|,1.0
+1,Oracle nearest-neighbor energy,1.0
+1,Linear logistic,0.5
+1,Polynomial SVM degree 2,1.0
+1,RBF SVM,1.0
+2,AOC learned observable,0.9979166666666667
+2,Oracle |magnetization|,0.9979166666666667
+2,Oracle nearest-neighbor energy,1.0
+2,Linear logistic,0.5
+2,Polynomial SVM degree 2,0.9979166666666667
+2,RBF SVM,1.0
+3,AOC learned observable,1.0
+3,Oracle |magnetization|,1.0
+3,Oracle nearest-neighbor energy,1.0
+3,Linear logistic,0.5
+3,Polynomial SVM degree 2,1.0
+3,RBF SVM,1.0
+4,AOC learned observable,1.0
+4,Oracle |magnetization|,1.0
+4,Oracle nearest-neighbor energy,1.0
+4,Linear logistic,0.5
+4,Polynomial SVM degree 2,1.0
+4,RBF SVM,1.0
+5,AOC learned observable,1.0
+5,Oracle |magnetization|,1.0
+5,Oracle nearest-neighbor energy,1.0
+5,Linear logistic,0.5
+5,Polynomial SVM degree 2,0.9979166666666667
+5,RBF SVM,0.9979166666666667
+6,AOC learned observable,1.0
+6,Oracle |magnetization|,1.0
+6,Oracle nearest-neighbor energy,1.0
+6,Linear logistic,0.5
+6,Polynomial SVM degree 2,1.0
+6,RBF SVM,1.0
+7,AOC learned observable,1.0
+7,Oracle |magnetization|,1.0
+7,Oracle nearest-neighbor energy,1.0
+7,Linear logistic,0.5
+7,Polynomial SVM degree 2,1.0
+7,RBF SVM,1.0
+8,AOC learned observable,1.0
+8,Oracle |magnetization|,1.0
+8,Oracle nearest-neighbor energy,1.0
+8,Linear logistic,0.5
+8,Polynomial SVM degree 2,1.0
+8,RBF SVM,1.0
+9,AOC learned observable,1.0
+9,Oracle |magnetization|,1.0
+9,Oracle nearest-neighbor energy,1.0
+9,Linear logistic,0.5
+9,Polynomial SVM degree 2,1.0
+9,RBF SVM,1.0

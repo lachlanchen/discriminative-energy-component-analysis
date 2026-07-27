@@ -1,0 +1,8 @@
+{
+  "attachment_detachment_balance_error": 5.551115123125783e-17,
+  "claim_boundary": "The calculation is a controlled tight-binding illustration; predictive quantum chemistry requires an electronic-structure backend and validation against molecular data.",
+  "final_one_body_trace_distance": 0.3084481183133676,
+  "interpretation": "Positive and negative eigenvectors of the one-particle difference density are natural attachment and detachment modes.",
+  "maximum_bond_alternation": 0.7,
+  "model": "half-filled ten-site dimerized H\u00fcckel ring"
+}

@@ -1,0 +1,43 @@
+{
+  "damage_mode_overlap_at_035": {
+    "mean": 0.9934529633006262,
+    "minimum": 0.9903666077675067
+  },
+  "focal_damage_fraction": 0.35,
+  "focal_metrics": {
+    "AOC full effect": {
+      "accuracy": 0.8234375,
+      "roc_auc": 0.89955
+    },
+    "AOC rank-1 witness": {
+      "accuracy": 0.9198958333333334,
+      "roc_auc": 0.9767961805555555
+    },
+    "Nearest covariance centroid": {
+      "accuracy": 0.9113541666666667,
+      "roc_auc": 0.9732697916666667
+    },
+    "Oracle damage mode": {
+      "accuracy": 0.9203125,
+      "roc_auc": 0.9773548611111111
+    },
+    "Window-mean logistic": {
+      "accuracy": 0.49666666666666665,
+      "roc_auc": 0.4984954861111111
+    }
+  },
+  "focal_window_length": 128,
+  "online": {
+    "change_streams": 120,
+    "change_time": 50,
+    "damage_fraction": 0.7,
+    "detection_rate": 1.0,
+    "false_alarm_rate": 0.0,
+    "false_alarm_rate_95pct_upper": 0.03027297257742007,
+    "false_alarms": 0,
+    "horizon": 250,
+    "median_detected_delay": 89.0,
+    "null_streams": 120,
+    "window_length": 64
+  }
+}

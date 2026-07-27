@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "deca-experiments"
-version = "1.0.0"
-description = "Reproducible classical and quantum experiments for Discriminative Energy Component Analysis"
+version = "3.0.0"
+description = "Reproducible additive and symmetry-resolved observable-contrast research"
 readme = "README.md"
 license = {file = "LICENSE"}
 authors = [
@@ -32,9 +32,9 @@ test = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["."]
-include = ["deca*"]
+where = [".", "run1"]
+include = ["aoc*", "deca*"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"
-testpaths = ["tests"]
+testpaths = ["run1/tests", "run2/tests", "run3/tests"]

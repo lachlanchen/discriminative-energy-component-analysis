@@ -1,0 +1,11 @@
+{
+  "claim_boundary": "This is a physically structured simulation, not evidence from a deployed robot or a public contact dataset.",
+  "mean_mode_overlap": 0.9992505502951808,
+  "mean_roc_auc": {
+    "Oracle contact screw": 1.0,
+    "Rank-1 AOC contact witness": 1.0,
+    "Window-mean logistic": 0.5
+  },
+  "model": "six-axis force/torque residual with rank-one contact mode",
+  "window_length_for_summary": 64
+}

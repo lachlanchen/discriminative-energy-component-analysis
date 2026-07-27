@@ -1,0 +1,42 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "experiments/run3/scripts/run_translation_vision.py"
+  ],
+  "config": {
+    "rank": 2,
+    "repetitions": 12,
+    "test_pairs_per_class": 300,
+    "train_pairs_per_class": [
+      1,
+      2,
+      4,
+      8,
+      16
+    ]
+  },
+  "experiment": "run3-cyclic-translation-vision",
+  "finished_unix": 1785144658.0614355,
+  "git_commit": "8868f0d44ceb97898cca2a9af8e6952a269fbe9e",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run3/results/translation/sample_efficiency.csv": "3b057bc3df34c7e66549d2fc866faddb5d135b4629ee793bbe5b0b296c59893a",
+    "experiments/run3/results/translation/selected_modes.csv": "b9bee16fa5e7f1e1556a7f4dc27a9a7b1945964353732ce79b424e903efb35c9",
+    "experiments/run3/results/translation/summary.json": "1cc541d7f27d92f7010968541b11be1d8160eb6f18b753adf216eb9e3930b09d",
+    "experiments/run3/results/translation/translation_sample_efficiency.pdf": "4bd0fe9499d9968251cdc49f165bc354fb8e3e56d2847ee3e110a75528d6dc15",
+    "experiments/run3/results/translation/translation_sample_efficiency.png": "035b3f8724cc8211b0f3dab3cbdc2135f920adb9bfb93c12a10dea2bc5b401b9"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785144469.6285243,
+  "wall_seconds": 188.4329116344452
+}

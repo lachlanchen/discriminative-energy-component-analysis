@@ -1,0 +1,42 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "experiments/run2/scripts/run_ising_order.py"
+  ],
+  "config": {
+    "benchmark_repetitions": 10,
+    "cold_temperature": 1.6,
+    "hot_temperature": 3.5,
+    "lattice_sizes": [
+      8,
+      12,
+      16
+    ],
+    "z2_pairing": true
+  },
+  "experiment": "run2_ising_order",
+  "finished_unix": 1785143789.4779818,
+  "git_commit": "8868f0d44ceb97898cca2a9af8e6952a269fbe9e",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run2/results/ising/classification.csv": "2d7404d425e433ac44b100423fdb2a35fed0a26b6fc21d845b31c54d1db201ec",
+    "experiments/run2/results/ising/ising_order.pdf": "f7d8a86f4a9821bf82a4ddaa2cd2fc9c21336fcc2fc8d0663e373a8f37188ebe",
+    "experiments/run2/results/ising/ising_order.png": "6f2ec1743f0afbe9286082fb362d451e5e420001b5934b8c263c044175922d9c",
+    "experiments/run2/results/ising/order_mode.csv": "43f443b2956d06e15ee4074dc64782d9184c6e4ca3bccab3bdeecaf6c320c8b9",
+    "experiments/run2/results/ising/summary.json": "c3119d534db816bef671ea457cba68a9d82b582b82972c5e7fa1047bd058461f",
+    "experiments/run2/results/ising/temperature_scan.csv": "efc9f17d6aa51e64e2c14afd50da2da6dd5fd8f3d76bf2052e0b7594df1471a3"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785143758.9390023,
+  "wall_seconds": 30.53898000717163
+}

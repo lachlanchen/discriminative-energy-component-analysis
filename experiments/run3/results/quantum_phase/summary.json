@@ -1,0 +1,11 @@
+{
+  "claim_boundary": "This is an exact small-system diagnostic of a known transition, not a new solution of the Ising model.",
+  "field_step": 0.025,
+  "finite_size_peak_field": 0.9625000000000006,
+  "maximum_parity_commutator_error": 3.544172406167129e-09,
+  "model": "periodic transverse-field Ising chain",
+  "peak_trace_distance_susceptibility": 1.434051574788187,
+  "qubits": 10,
+  "reduced_qubits": 5,
+  "thermodynamic_critical_field": 1.0
+}

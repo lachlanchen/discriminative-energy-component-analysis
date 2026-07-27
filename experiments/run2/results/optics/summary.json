@@ -1,0 +1,16 @@
+{
+  "finite_shot_success_mean": 0.9500091552734375,
+  "finite_shot_success_std": 0.0009955468265761245,
+  "fixed_horizontal_success": 0.5,
+  "helstrom_success": 0.9499999999999998,
+  "maximum_probability_absolute_error": 0.0031250000000002665,
+  "optimal_analyzer_bloch_vector": [
+    0.9999999999999998,
+    0.0,
+    0.0
+  ],
+  "qubits": 1,
+  "trace_distance": 0.8999999999999998,
+  "transpiled_depth": 2,
+  "visibility": 0.9
+}

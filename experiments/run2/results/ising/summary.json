@@ -1,0 +1,45 @@
+{
+  "accuracy": {
+    "AOC learned observable": {
+      "mean": 0.9997916666666666,
+      "std": 0.0006588078458683973
+    },
+    "Linear logistic": {
+      "mean": 0.5,
+      "std": 0.0
+    },
+    "Oracle nearest-neighbor energy": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "Oracle |magnetization|": {
+      "mean": 0.9997916666666666,
+      "std": 0.0006588078458683973
+    },
+    "Polynomial SVM degree 2": {
+      "mean": 0.9995833333333334,
+      "std": 0.0008784104611578729
+    },
+    "RBF SVM": {
+      "mean": 0.9997916666666666,
+      "std": 0.0006588078458683981
+    }
+  },
+  "exact_critical_temperature": 2.269185314213022,
+  "finite_grid_steepest_points": [
+    {
+      "size": 8,
+      "steepest_temperature_grid_point": 2.375
+    },
+    {
+      "size": 12,
+      "steepest_temperature_grid_point": 2.375
+    },
+    {
+      "size": 16,
+      "steepest_temperature_grid_point": 2.375
+    }
+  ],
+  "leading_uniform_overlap_mean": 0.9991194918219592,
+  "leading_uniform_overlap_min": 0.9987425242228721
+}

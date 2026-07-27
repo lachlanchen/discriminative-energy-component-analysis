@@ -38,7 +38,7 @@ from deca.datasets import benchmark_datasets
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results" / "classical"
-DATA_HOME = ROOT / "data" / "uci"
+DATA_HOME = ROOT.parent / "data" / "uci"
 
 
 def model_suite(dimension: int, quick: bool):

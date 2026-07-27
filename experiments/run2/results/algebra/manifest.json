@@ -1,0 +1,38 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "experiments/run2/scripts/run_algebraic_validation.py"
+  ],
+  "config": {
+    "additive_trials": 100,
+    "alpha": 0.01,
+    "change_streams": 200,
+    "kernel_trials": 40,
+    "null_streams": 500,
+    "sdp_trials": 24
+  },
+  "experiment": "run2_algebraic_validation",
+  "finished_unix": 1785143736.0975964,
+  "git_commit": "8868f0d44ceb97898cca2a9af8e6952a269fbe9e",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run2/results/algebra/additive_exactness.csv": "d83d69230a708039d7dc56a5725d3f6c4e4e646b92f6ac414aba22eca7141034",
+    "experiments/run2/results/algebra/jordan_sdp_exactness.csv": "98a0ecf24f9d660c5fdd08276b6e6dcbfe8991365f9be0686a90f4ed9999de21",
+    "experiments/run2/results/algebra/kernel_operator_exactness.csv": "bdece8bb07975397130653a480bd1691034487ddb1838d410be7aa0b83de175c",
+    "experiments/run2/results/algebra/sequential_calibration.csv": "7f499f5e03a9c78fd4537807f4fc6a14c1a918032ad28df1abd6afbd70b3e198",
+    "experiments/run2/results/algebra/summary.json": "09ccd22006678ad1595f9cc9f44a0b959534f50aa1db0fd02b5152ef6abb0a23"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785143698.3555322,
+  "wall_seconds": 37.74206471443176
+}

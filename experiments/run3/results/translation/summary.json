@@ -1,0 +1,17 @@
+{
+  "frequencies": [
+    5,
+    17
+  ],
+  "interpretation": "The invariant AOC and a correctly specified Fourier-power classifier solve the task with one sign-pair per class; the result isolates symmetry prior rather than generic superiority.",
+  "mean_accuracy_at_two_samples": {
+    "Fourier-power logistic": 1.0,
+    "Raw linear logistic": 0.5,
+    "Translation-invariant rank-2 AOC": 0.9998611111111111,
+    "Untwirled rank-2 AOC": 0.5
+  },
+  "noise_standard_deviation": 0.8,
+  "repetitions": 12,
+  "signal_length": 128,
+  "test_pairs_per_class": 300
+}

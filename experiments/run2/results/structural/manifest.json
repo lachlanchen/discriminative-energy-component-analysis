@@ -1,0 +1,54 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "experiments/run2/scripts/run_structural_monitoring.py"
+  ],
+  "config": {
+    "change_time": 50,
+    "damage_fraction": 0.7,
+    "damage_levels": [
+      0.1,
+      0.2,
+      0.35,
+      0.5,
+      0.7
+    ],
+    "damaged_spring": 6,
+    "horizon": 250,
+    "masses": 12,
+    "offline_repetitions": 8,
+    "window_length": 64,
+    "window_lengths": [
+      1,
+      8,
+      32,
+      128
+    ]
+  },
+  "experiment": "run2_structural_monitoring",
+  "finished_unix": 1785143999.1732438,
+  "git_commit": "8868f0d44ceb97898cca2a9af8e6952a269fbe9e",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run2/results/structural/mode_localization.csv": "d919fbe3276004b8f01b8ca6d82ff76cd777145c964fb478bee60f511e2d871b",
+    "experiments/run2/results/structural/offline_benchmark.csv": "bf98d8ea2867540392f0c8a5f3d3ac10de22b287e7721296cc09255327849881",
+    "experiments/run2/results/structural/online_example_trace.csv": "ba930585542b818c1885f395f74ea61dccc2b4ef20ef4adaf6689ff232e75291",
+    "experiments/run2/results/structural/online_runs.csv": "ca11cf444b59dfa64b2ccac84e0ebd2ed28032c65a2d86a2faac92c42831b060",
+    "experiments/run2/results/structural/structural_monitoring.pdf": "8c7c921809db21a33df272d9c84d1238cad958d284065da47d092fe0d80eaa51",
+    "experiments/run2/results/structural/structural_monitoring.png": "4230249d7567abf4019d7cadc32092b5f5ec636dc826b02a9279cd54c63c87be",
+    "experiments/run2/results/structural/summary.json": "013752893dd95c80e4c91598a311e36d2205b8f5ed62ff73517d2247f549197f"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785143924.2019763,
+  "wall_seconds": 74.97126793861389
+}

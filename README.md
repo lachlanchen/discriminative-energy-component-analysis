@@ -1,87 +1,135 @@
-# Discriminative Energy Component Analysis
+# Observable Contrast Research
 
-[![Research](https://img.shields.io/badge/status-validated%20research-2b6cb0)](publication/main.pdf)
-[![Tests](https://img.shields.io/badge/tests-17%20passing-2ea44f)](experiments/tests)
-[![Qiskit](https://img.shields.io/badge/Qiskit-2.5.1-6929c4)](experiments/scripts/run_quantum_simulation.py)
+[![Research](https://img.shields.io/badge/status-reproducible%20working%20papers-2b6cb0)](publication/)
+[![Tests](https://img.shields.io/badge/tests-36%20passing-2ea44f)](experiments/)
+[![Papers](https://img.shields.io/badge/research%20runs-3-6f42c1)](publication/)
 [![ISCAS 2025](https://img.shields.io/badge/ECA%20origin-ISCAS%202025-00629B)](https://doi.org/10.1109/ISCAS56072.2025.11044249)
 [![中文](https://img.shields.io/badge/README-简体中文-red)](README.zh-Hans.md)
 
-This repository turns the original Eigen-Component Analysis (ECA) idea into a
-tested mathematical and computational framework:
+This repository follows one research idea from ECA to a broader mathematical
+and physical framework:
 
-> Learn class-discriminative energy components and compile them into the
-> simplest measurement that the problem structure permits.
+> Encode observations as positive states, specify the measurements that are
+> actually accessible, and learn the accessible observable whose expectation
+> differs most between regimes.
 
-The central result is **Discriminative Energy Component Analysis (DECA)**,
-formulated as minimum-error classification under a commuting/shared-basis
-measurement constraint. The repository includes:
+The point is not to replace every classifier. It is to solve a precise problem
+that appears in state discrimination, streaming change detection, physical
+mode localization, optics, chemistry, invariant signals, and many-body
+physics.
 
-- a journal-style [paper source](publication/main.tex) and
-  [compiled PDF](publication/main.pdf);
-- analytical binary and commuting-multiclass results;
-- a monotone multiclass Jacobi algorithm;
-- SDP and Pretty Good Measurement (PGM) oracles;
-- real Qiskit Aer PVM and Naimark-dilation simulations;
-- 17 passing tests and 1,100 repeated-CV benchmark fits;
-- the original 2020 preprint, ISCAS 2025 source archive, and exploratory Ising
-  clustering work for provenance.
+## The central result
 
-## The idea in three equations
-
-Encode an input as a unit state and estimate one class operator per class:
+For empirical states \(\rho_0,\rho_1\), let
+\(\Delta=\rho_1-\rho_0\). Among all bounded effects,
 
 \[
-\rho_x=\phi(x)\phi(x)^\dagger,\qquad
-A_c=\pi_c\,\mathbb E[\rho_x\mid y=c].
+\max_{0\preceq E\preceq I}\operatorname{Tr}(E\Delta)
+=\operatorname{Tr}(\Delta_+)
+=\frac12\|\Delta\|_1.
 \]
 
-For a shared basis \(P=[p_1,\ldots,p_d]\), the best commuting measurement has
-an analytical hard decoder:
+The optimizer is the positive spectral projector
+\(E^\star=\mathbf 1_{\Delta>0}\). This is the known Helstrom/Jordan result,
+not a newly claimed quantum theorem. It gives an exact operational meaning to
+the original ECA motivation: maximize class difference rather than pooled
+variance.
+
+The deeper run 3 statement handles physical constraints. If
+\(\mathcal A\) is the accessible observable algebra and
+\(\mathcal E_{\mathcal A}\) is the trace-preserving conditional expectation
+onto it, then
 
 \[
-S_{\mathrm{DECA}}(P)=
-\sum_{j=1}^d\max_c p_j^\dagger A_cp_j.
+\max_{\substack{E\in\mathcal A\\0\preceq E\preceq I}}
+\operatorname{Tr}(E\Delta)
+=\operatorname{Tr}\!\left[
+  \mathcal E_{\mathcal A}(\Delta)_+
+\right].
 \]
 
-For two classes, let \(\Delta=A_1-A_2\). Its eigenbasis is globally optimal:
+Group symmetry is the special case where
+\(\mathcal E_{\mathcal A}\) is a twirl. The resulting representation blocks
+say which parity, frequency, charge, or other physical sector carries the
+change.
 
-\[
-S_{\mathrm{DECA}}^\star
-=\frac12(1+\|\Delta\|_1)
-=S_{\mathrm{Helstrom}}^\star.
-\]
+## Three immutable research runs
 
-This binary equality is the known Helstrom result, not a new quantum
-discrimination theorem. The DECA contribution is the constrained-measurement
-reformulation, hard-decoder elimination, multiclass exactness and gap bound,
-Jacobi solver, and the distinction between:
+| Run | Question | Paper |
+|---|---|---|
+| [run 1](experiments/run1/) | When is ECA an optimal commuting measurement, and what is lost relative to a general POVM? | [DECA PDF](publication/run1/main.pdf) |
+| [run 2](experiments/run2/) | Can maximum-difference witnesses be accumulated, merged, capacity-limited, and used online? | [AOC PDF](publication/run2/main.pdf) |
+| [run 3](experiments/run3/) | What is the exact optimum under symmetry or a physical readout algebra, and which sector changed? | [SAOC PDF](publication/run3/main.pdf) |
 
-- **PVM-DECA:** keeps only eigenvalue signs for optimal single-shot binary
-  measurement;
-- **Spectral-DECA:** retains eigenvalue magnitudes for deterministic quadratic
-  classification or repeated-shot observable estimation.
+Run 1 is the frozen DECA baseline. Later runs do not overwrite its code,
+results, or manuscript. Shared maintained code lives in
+[`experiments/aoc/`](experiments/aoc/).
 
-## What the experiments show
+## What is new—and what is prior art
 
-| Evidence | Result |
-|---|---|
-| 30 random binary trials | closed form vs. SDP gap \(\le 2.0\times10^{-8}\) |
-| 16 commuting multiclass trials | DECA vs. SDP gap \(\le 1.45\times10^{-8}\) |
-| 72 noncommuting trials | zero violations of the proved residual bound |
-| Qiskit Aer circuits | max probability total-variation error \(0.0073\) |
-| Trine-state example | general POVM improves success by \(0.04466\) |
-| Classical benchmark | 10 datasets, 11 methods, 1,100 outer fits |
+Established foundations are credited directly: Helstrom state
+discrimination, POVMs, trace distance, group-invariant hypothesis testing,
+conditional expectations, CSP/generalized eigendecomposition, kernel MMD, and
+symmetry-resolved entanglement.
 
-The controlled covariance experiment validates the original intuition:
-Spectral-DECA reaches \(0.786\pm0.014\), versus \(0.496\pm0.019\) for logistic
-regression. The public-data results are deliberately less flattering. PGM
-usually improves over a projective DECA measurement, but RBF-SVM and random
-forest remain stronger on most tasks. On 26-class Letter Recognition with
-only 17 encoded dimensions, the experiment exposes the exact \(K>d\) PVM
-capacity limit.
+The repository's contribution is the tested synthesis:
 
-The project therefore claims a rigorous **mechanism and resource trade-off**,
-not universal accuracy, quantum speedup, privacy, or hardware advantage.
+- additive and exactly mergeable positive-state summaries;
+- full and rank-constrained maximum-difference witnesses;
+- a multiclass minimum-error POVM solver with feasibility diagnostics;
+- predictable learned witnesses coupled to a betting e-process under a known
+  independent reference;
+- symmetry-/subalgebra-restricted optimal effects;
+- additive sector diagnostics and an exact \(O(d\log d)\) cyclic-translation
+  implementation;
+- cross-domain experiments that report ties, failures, and claim boundaries.
+
+The detailed derivation and application map are in
+[`additive_symmetry_observable_contrast_theory.md`](references/additive_symmetry_observable_contrast_theory.md).
+
+## Selected evidence
+
+| Matched problem | Result | Honest comparison |
+|---|---:|---|
+| Algebraic identities | max analytic/SDP error \(6.67\times10^{-9}\) | numerical precision audit |
+| Sign-paired Ising phases | AOC \(0.9998\) accuracy; linear \(0.5000\) | RBF SVM ties; physical energy oracle is perfect |
+| 35% spring damage, 128-sample windows | rank-1 AOC AUC \(0.9768\); mean logistic \(0.4985\) | covariance centroid \(0.9733\); oracle \(0.9774\) |
+| Diagonal/antidiagonal polarization | learned analyzer \(0.9500\) success; fixed H/V \(0.5000\) | finite-shot Aer matches the analytic result |
+| Translation nuisance, 2 samples/class | invariant AOC \(0.999861\); raw methods \(0.5000\) | correctly specified Fourier-power logistic is \(1.0\) |
+| 10-qubit TFIM reduced state | response peak \(g/J=0.9625\) | known thermodynamic critical field is 1 |
+| Hückel difference density | attachment/detachment balance error \(5.55\times10^{-17}\) | controlled tight-binding model only |
+| Simulated 6-axis robot contact | learned screw overlap \(0.99925\) | structured simulation, not deployed hardware |
+
+The strong differences occur in deliberately matched mean-blind,
+low-rank, or symmetry-nuisance regimes. The project makes no claim of
+universal accuracy, quantum speedup, privacy, ASIC/FPGA advantage, or
+real-world robot/chemistry deployment.
+
+## Applications
+
+Direct uses are the ones where the state and observable already have physical
+meaning:
+
+- optical polarization and coherence analyzers;
+- quantum-state/device drift and bounded observable change;
+- data-driven order parameters and symmetry-sector response;
+- zero-mean structural vibration and covariance-mode localization;
+- translation-/phase-nuisance vibration, radar, sonar, and vision signals.
+
+Promising uses requiring real domain validation include:
+
+- robot force/torque and tactile contact modes;
+- electronic difference densities and spectroscopy;
+- EEG/CSP-style spatial power changes;
+- rotational molecular features built on established SOAP/ACE
+  representations.
+
+String theory and quantum field theory are a theoretical frontier only. A
+credible next calculation would compare gauge-invariant reduced states from a
+small lattice-gauge or published tensor-network model and test the learned
+sector witness against known flux or Wilson-loop diagnostics. Nothing here
+claims to solve string theory, identify a vacuum, or prove a holographic
+duality.
 
 ## Quick start
 
@@ -90,76 +138,78 @@ python3 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
 .venv/bin/python -m pip install -e './experiments[quantum,test]'
 
-.venv/bin/python -m pytest experiments/tests -q
-.venv/bin/python experiments/scripts/run_theory_validation.py
-.venv/bin/python experiments/scripts/run_quantum_simulation.py
+.venv/bin/python -m pytest -q
 ```
 
-Run the complete classical study:
+Run 2 experiments:
 
 ```bash
-.venv/bin/python experiments/scripts/run_classical_benchmarks.py \
-  --folds 5 --repeats 2
-.venv/bin/python experiments/scripts/analyze_classical_results.py
+.venv/bin/python experiments/run2/scripts/run_algebraic_validation.py
+.venv/bin/python experiments/run2/scripts/run_ising_order.py
+.venv/bin/python experiments/run2/scripts/run_structural_monitoring.py
+.venv/bin/python experiments/run2/scripts/run_optical_quantum.py
 ```
 
-The UCI downloader uses fixed URLs and SHA-256 verification. Downloaded data
-are cached under ignored `experiments/data/`; all CSV, JSON, PDF, and PNG
-evidence is under [`experiments/results/`](experiments/results/).
-
-Build the paper:
+Run 3 experiments:
 
 ```bash
-.venv/bin/python experiments/scripts/export_paper_tables.py
+.venv/bin/python experiments/run3/scripts/run_translation_vision.py
+.venv/bin/python experiments/run3/scripts/run_quantum_phase.py
+.venv/bin/python experiments/run3/scripts/run_huckel_difference.py
+.venv/bin/python experiments/run3/scripts/run_robot_contact.py
+```
+
+Build all manuscripts:
+
+```bash
 make -C publication
 ```
 
-No IBM Quantum account is required for the included local Aer simulations.
+No IBM Quantum account is required; the quantum circuits run locally on Aer.
+Every new result directory includes raw CSV/JSON evidence and a manifest with
+the command, dependencies, Git state, runtime, and output hashes.
 
 ## Repository map
 
 | Path | Purpose |
 |---|---|
-| [`publication/main.pdf`](publication/main.pdf) | Current journal-style paper |
-| [`publication/main.tex`](publication/main.tex) | Canonical LaTeX source |
-| [`experiments/deca/`](experiments/deca/) | Encodings, operators, solvers, classifier, and circuits |
-| [`experiments/tests/`](experiments/tests/) | Analytical, API, and Qiskit tests |
-| [`experiments/scripts/`](experiments/scripts/) | Reproducible experiment and table entry points |
-| [`experiments/results/`](experiments/results/) | Frozen raw records, summaries, and figures |
-| [`references/deca_theory_and_novelty_spec.md`](references/deca_theory_and_novelty_spec.md) | Detailed Chinese theory/novelty specification |
-| [`references/eca_deep_research_analysis.md`](references/eca_deep_research_analysis.md) | Audit of the original ECA and Ising directions |
-| [`references/README.md`](references/README.md) | Historical provenance and public/private boundary |
+| [`experiments/aoc/`](experiments/aoc/) | Maintained additive, multiclass, streaming, symmetry, physics, chemistry, and quantum primitives |
+| [`experiments/run1/`](experiments/run1/) | Frozen DECA code, tests, scripts, and evidence |
+| [`experiments/run2/`](experiments/run2/) | Additive/streaming observable-contrast validation |
+| [`experiments/run3/`](experiments/run3/) | Symmetry-resolved and cross-domain validation |
+| [`publication/`](publication/) | Three independent paper sources and compiled PDFs |
+| [`references/`](references/) | Original ECA/Ising materials, reviews, research plans, and deep theory analysis |
+| [`CITATION.cff`](CITATION.cff) | GitHub citation metadata |
+| [`LICENSE.md`](LICENSE.md) | Public/private and mixed-rights boundary |
 
 ## Historical lineage
 
 The original ECA paper was published at IEEE ISCAS 2025
-([DOI](https://doi.org/10.1109/ISCAS56072.2025.11044249)). This repository
-preserves the 2020 preprint and author source materials but does not alter them
-to make the new theory appear historical.
+([DOI](https://doi.org/10.1109/ISCAS56072.2025.11044249)). The 2020 preprint,
+ISCAS source, exploratory Ising clustering manuscript, and the author's
+earlier discussion are preserved under [`references/`](references/) as
+provenance. They are not rewritten to make later results appear historical.
 
-The new manuscript uses `Rongzhou (Lachlan) Chen` as a placeholder author.
-Final authorship, affiliations, acknowledgments, and target venue must be
-confirmed by the human contributors before submission.
+The working papers use `Rongzhou (Lachlan) Chen` as the repository-author
+placeholder. Final authorship, affiliations, acknowledgments, and target
+venues must be confirmed by the human contributors before submission.
 
 ## Citation
 
+GitHub renders “Cite this repository” from [`CITATION.cff`](CITATION.cff).
+
 ```bibtex
-@software{chen2026deca,
+@software{chen2026observablecontrast,
   author  = {Chen, Rongzhou},
-  title   = {Discriminative Energy Component Analysis:
-             Optimal Commuting Measurements and Spectral
-             Quadratic Classification},
+  title   = {Observable Contrast Research:
+             From Eigen-Components to Additive and
+             Symmetry-Resolved Physical Witnesses},
   year    = {2026},
-  version = {1.0.0},
+  version = {3.0.0},
   url     = {https://github.com/lachlanchen/discriminative-energy-component-analysis}
 }
 ```
 
-The original ISCAS paper has its own citation in [`CITATION.cff`](CITATION.cff)
-and the manuscript bibliography.
-
-## Rights and reuse
-
-Original code under [`experiments/`](experiments/) is MIT-licensed. Historical
-papers, figures, manuscripts, templates, and other archive material can have
-different rights. See [`LICENSE.md`](LICENSE.md) before reuse.
+Original code under [`experiments/`](experiments/) is MIT-licensed.
+Historical manuscripts, figures, templates, and publications can have
+different rights; see [`LICENSE.md`](LICENSE.md).

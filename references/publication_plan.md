@@ -2,7 +2,7 @@
 
 Date: 2026-07-27
 Status: approved by the user's request to produce a high-quality LaTeX paper
-Active manuscript target: `publication/main.tex`
+Frozen manuscript target: `publication/run1/main.tex`
 
 ## Scope and baseline
 
@@ -68,31 +68,31 @@ The paper will explicitly report:
 
 | Manuscript evidence | Frozen source |
 |---|---|
-| Binary/commuting exactness and gap bound | `experiments/results/theory/*.csv` |
-| Noncommuting residual/gap plot | `experiments/results/theory/noncommutativity_gap.pdf` |
-| Trine and binary circuit sampling | `experiments/results/quantum/*.csv` |
-| Quantum success plot | `experiments/results/quantum/quantum_simulation_success.pdf` |
-| 1,100-fit benchmark | `experiments/results/classical/benchmark_folds.csv` |
-| Accuracy heatmap | `experiments/results/classical/benchmark_accuracy.pdf` |
-| Mean-rank plot | `experiments/results/classical/benchmark_mean_rank.pdf` |
-| Dataset-level tests | `experiments/results/classical/statistical_summary.json` and `paired_dataset_comparisons.csv` |
-| Runtime/storage/sweep diagnostics | `experiments/results/classical/resource_summary.csv` |
+| Binary/commuting exactness and gap bound | `experiments/run1/results/theory/*.csv` |
+| Noncommuting residual/gap plot | `experiments/run1/results/theory/noncommutativity_gap.pdf` |
+| Trine and binary circuit sampling | `experiments/run1/results/quantum/*.csv` |
+| Quantum success plot | `experiments/run1/results/quantum/quantum_simulation_success.pdf` |
+| 1,100-fit benchmark | `experiments/run1/results/classical/benchmark_folds.csv` |
+| Accuracy heatmap | `experiments/run1/results/classical/benchmark_accuracy.pdf` |
+| Mean-rank plot | `experiments/run1/results/classical/benchmark_mean_rank.pdf` |
+| Dataset-level tests | `experiments/run1/results/classical/statistical_summary.json` and `paired_dataset_comparisons.csv` |
+| Runtime/storage/sweep diagnostics | `experiments/run1/results/classical/resource_summary.csv` |
 
 All numerical values in prose and tables must be checked against these files.
 
 ## Files to create
 
-- `publication/main.tex`
-- `publication/references.bib`
-- `publication/Makefile`
-- `publication/README.md`
-- `publication/main.pdf` (compiled artifact)
+- `publication/run1/main.tex`
+- `publication/run1/references.bib`
+- `publication/run1/Makefile`
+- `publication/run1/README.md`
+- `publication/run1/main.pdf` (compiled artifact)
 
 ## Verification
 
 ```bash
-.venv/bin/python -m pytest experiments/tests -q
-.venv/bin/python experiments/scripts/analyze_classical_results.py
+.venv/bin/python -m pytest experiments/run1/tests -q
+.venv/bin/python experiments/run1/scripts/analyze_classical_results.py
 make -C publication
 git diff --check
 ```
@@ -103,7 +103,7 @@ Before the final commit:
 - inspect the compiled PDF page images for overflow or unreadable tables;
 - ensure bibliography has no unresolved citations;
 - compare key paper numbers to JSON/CSV sources programmatically;
-- keep `publication/main.tex` as the canonical source and `main.pdf` as its
+- keep `publication/run1/main.tex` as the run 1 source and `main.pdf` as its
   compiled counterpart.
 
 ## Authorship boundary

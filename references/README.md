@@ -13,6 +13,10 @@ Discriminative Energy Component Analysis (DECA).
 | [`1. 更 general 的数学：ECA 代表什么通用概念？.md`](1.%20更%20general%20的数学：ECA%20代表什么通用概念？.md) | Earlier ChatGPT conversation supplied by the author | Research-process provenance, not peer-reviewed evidence |
 | [`eca_deep_research_analysis.md`](eca_deep_research_analysis.md) | Evidence-backed synthesis produced from the local artifacts, public code, and primary literature | Main analysis and future research roadmap |
 | [`deca_theory_and_novelty_spec.md`](deca_theory_and_novelty_spec.md) | Formal DECA/POVM/Spectral-DECA derivation plus frozen experiment findings | Current mathematical specification |
+| [`additive_symmetry_observable_contrast_theory.md`](additive_symmetry_observable_contrast_theory.md) | Unified AOC/SAOC derivation, multiclass POVM formulation, applications, and string-theory boundary | Main run 2/run 3 theory and research program |
+| [`global_run_architecture_plan.md`](global_run_architecture_plan.md) | Immutable run layout and verification record | Repository provenance |
+| [`run2_additive_observable_contrast_plan.md`](run2_additive_observable_contrast_plan.md) | Pre-change run 2 claim/evidence plan | Traceability record |
+| [`run3_symmetry_resolved_observable_contrast_plan.md`](run3_symmetry_resolved_observable_contrast_plan.md) | Pre-change run 3 claim/evidence plan | Traceability record |
 | [`publication_plan.md`](publication_plan.md) | Claim, evidence, file, and verification plan for the new manuscript | Traceability record |
 
 The executable implementation and paper generated from this analysis now live

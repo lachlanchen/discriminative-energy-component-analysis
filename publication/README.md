@@ -1,16 +1,19 @@
-# DECA manuscript
+# Publications by research run
 
-`main.tex` is the canonical journal-style manuscript. The author line and
-target venue are placeholders until the human contributors confirm
-authorship, affiliations, and submission plans.
+Each run keeps an independent manuscript, bibliography, generated tables,
+figures, and compiled PDF.
 
-Build from the repository root:
+| Run | Manuscript |
+|---|---|
+| [`run1/main.pdf`](run1/main.pdf) | DECA: optimal commuting measurements and spectral quadratic classification |
+| [`run2/main.pdf`](run2/main.pdf) | additive observable contrast and streaming physical witnesses |
+| [`run3/main.pdf`](run3/main.pdf) | symmetry-/subalgebra-resolved observable contrast |
+
+Build every available manuscript:
 
 ```bash
-.venv/bin/python experiments/scripts/export_paper_tables.py
 make -C publication
 ```
 
-The generated tables are derived directly from the frozen CSV results under
-`experiments/results/`; the manuscript figures include the corresponding PDF
-plots by relative path. `main.pdf` is the compiled artifact.
+Authorship, affiliations, and the final submission venue remain subject to
+human confirmation.

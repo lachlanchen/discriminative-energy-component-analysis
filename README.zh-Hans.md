@@ -1,79 +1,107 @@
-# 判别能量成分分析
+# 可访问观测差异研究
 
-[![研究状态](https://img.shields.io/badge/状态-理论与实验已验证-2b6cb0)](publication/main.pdf)
-[![测试](https://img.shields.io/badge/测试-17%20项通过-2ea44f)](experiments/tests)
-[![Qiskit](https://img.shields.io/badge/Qiskit-2.5.1-6929c4)](experiments/scripts/run_quantum_simulation.py)
+[![研究状态](https://img.shields.io/badge/状态-可复现工作论文-2b6cb0)](publication/)
+[![测试](https://img.shields.io/badge/测试-36%20项通过-2ea44f)](experiments/)
+[![研究轮次](https://img.shields.io/badge/研究轮次-3-6f42c1)](publication/)
 [![ISCAS 2025](https://img.shields.io/badge/ECA%20起点-ISCAS%202025-00629B)](https://doi.org/10.1109/ISCAS56072.2025.11044249)
 [![English](https://img.shields.io/badge/README-English-blue)](README.md)
 
-这个仓库把原来的 Eigen-Component Analysis（ECA）想法整理成了一个可证明、
-可运行、可复现的框架：
+这个仓库把 ECA 的原始想法推进成了一个更一般的数学与物理框架：
 
-> 学习类别判别能量成分，并把它编译成问题结构允许的最简单测量。
+> 把观测编码为正算符状态，先说明哪些测量在物理上或计算上真正可访问，
+> 再学习其中期望差异最大的观测。
 
-新的核心算法是 **Discriminative Energy Component Analysis（DECA）**：
-把分类表述为“共享本征基/可交换测量”约束下的最小错误态判别。仓库现在包含：
+它不是为了替代所有分类器，而是精确解决一个同时出现在状态判别、流式变化
+检测、物理模态定位、光学、化学、不变信号和多体物理中的问题。
 
-- journal-style [论文源码](publication/main.tex)和
-  [编译 PDF](publication/main.pdf)；
-- 二分类解析解、可交换多分类精确性和 POVM gap 上界；
-- 单调的多分类 Jacobi 算法；
-- SDP oracle 与 Pretty Good Measurement（PGM）；
-- 真正运行过的 Qiskit Aer PVM 和 Naimark dilation 电路；
-- 17 项测试与 1,100 次 repeated-CV 外层拟合；
-- 2020 原始预印本、ISCAS 2025 源文件和 Ising 聚类探索工作的研究谱系。
+## 核心数学
 
-## 三个公式理解 DECA
-
-把输入编码为单位态，并为每类估计一个算符：
+令两个经验状态之差为 \(\Delta=\rho_1-\rho_0\)。在全部有界 effect 中，
 
 \[
-\rho_x=\phi(x)\phi(x)^\dagger,\qquad
-A_c=\pi_c\,\mathbb E[\rho_x\mid y=c].
+\max_{0\preceq E\preceq I}\operatorname{Tr}(E\Delta)
+=\operatorname{Tr}(\Delta_+)
+=\frac12\|\Delta\|_1,
+\qquad E^\star=\mathbf 1_{\Delta>0}.
 \]
 
-对共享基 \(P=[p_1,\ldots,p_d]\)，固定基下的最优 decoder 必然可取 hard：
+这是已知的 Helstrom/Jordan 结果，不把它冒充新的量子定理。它为 ECA 最初的
+“最大化类别差异而非总体方差”给出了严格的操作含义。
+
+run 3 进一步加入物理约束。若 \(\mathcal A\) 是可访问观测代数，
+\(\mathcal E_{\mathcal A}\) 是到该代数的保迹条件期望，则
 
 \[
-S_{\mathrm{DECA}}(P)=
-\sum_{j=1}^d\max_c p_j^\dagger A_cp_j.
+\max_{\substack{E\in\mathcal A\\0\preceq E\preceq I}}
+\operatorname{Tr}(E\Delta)
+=\operatorname{Tr}\!\left[
+  \mathcal E_{\mathcal A}(\Delta)_+
+\right].
 \]
 
-二分类令 \(\Delta=A_1-A_2\)，其本征基给出全局解析解：
+群对称性是其中一个特例：先做 twirling，再取正谱部分。表示论分块还能指出
+变化由哪个 parity、frequency、charge 或其它物理扇区承载。
 
-\[
-S_{\mathrm{DECA}}^\star
-=\frac12(1+\|\Delta\|_1)
-=S_{\mathrm{Helstrom}}^\star.
-\]
+## 三个不可覆盖的研究轮次
 
-这里的二分类等式就是已知 Helstrom 结果，不把它冒充新的量子判别理论。
-DECA 的贡献在于约束测量表述、hard decoder 消元、多分类精确性与 gap bound、
-Jacobi solver，以及严格区分：
+| 轮次 | 问题 | 论文 |
+|---|---|---|
+| [run 1](experiments/run1/) | ECA 何时等价于最优可交换测量？相对一般 POVM 损失什么？ | [DECA PDF](publication/run1/main.pdf) |
+| [run 2](experiments/run2/) | 最大差异观测能否逐样本累积、合并、限制秩并用于在线检测？ | [AOC PDF](publication/run2/main.pdf) |
+| [run 3](experiments/run3/) | 在对称性或物理读出代数下，精确最优解是什么？哪个扇区发生变化？ | [SAOC PDF](publication/run3/main.pdf) |
 
-- **PVM-DECA：**只保留本征值正负号，对应二分类最优单次物理测量；
-- **Spectral-DECA：**保留本征值幅度，对应确定性二次分类或重复 shots 的
-  observable expectation。
+run 1 是冻结的 DECA 基线。后续轮次不会覆盖其代码、结果或论文。持续维护的
+公共实现位于 [`experiments/aoc/`](experiments/aoc/)。
 
-## 实验真正说明了什么
+## 新贡献与已有理论的边界
 
-| 证据 | 结果 |
-|---|---|
-| 30 个随机二分类 trial | 闭式解与 SDP gap \(\le 2.0\times10^{-8}\) |
-| 16 个可交换多分类 trial | DECA 与 SDP gap \(\le 1.45\times10^{-8}\) |
-| 72 个非对易 trial | 理论 residual bound 零违反 |
-| Qiskit Aer 电路 | 最大概率 total-variation error 为 \(0.0073\) |
-| trine-state 例子 | 一般 POVM 成功率提高 \(0.04466\) |
-| 经典基准 | 10 数据集、11 方法、1,100 次外层拟合 |
+Helstrom 判别、POVM、trace distance、群不变假设检验、条件期望、
+CSP/广义特征值、kernel MMD 和 symmetry-resolved entanglement 都明确作为
+已有基础引用。
 
-受控 covariance-only 数据验证了原始直觉：Spectral-DECA 达到
-\(0.786\pm0.014\)，logistic regression 为 \(0.496\pm0.019\)。
-公开数据结果则没有刻意美化：PGM 通常能修复一部分 PVM 多分类损失，但
-RBF-SVM 和 random forest 在多数任务上仍更强。26 类 Letter Recognition
-只有 17 个编码维度，实验直接暴露了可证明的 \(K>d\) PVM 容量限制。
+本仓库真正实现并验证的是这些对象的组合：
 
-因此本项目声称的是严格的**机制与资源—精度权衡**，不声称普遍准确率优势、
-量子加速、隐私保证或硬件优势。
+- 可逐样本更新并精确合并的正状态统计量；
+- 完整与限秩最大差异 witness；
+- 带可行性审计的多分类最小错误 POVM 求解器；
+- 已知独立参考状态下，可预测 witness 与 betting e-process；
+- 对称性/子代数约束下的精确最优 effect；
+- 可加的扇区诊断，以及 \(O(d\log d)\) 的循环平移特例；
+- 同时报告打平、失败和适用边界的跨领域实验。
+
+完整推导见
+[`additive_symmetry_observable_contrast_theory.md`](references/additive_symmetry_observable_contrast_theory.md)。
+
+## 关键证据
+
+| 匹配问题 | 结果 | 不美化的比较 |
+|---|---:|---|
+| 代数恒等式 | 解析解/SDP 最大误差 \(6.67\times10^{-9}\) | 数值精度审计 |
+| 精确正负配对 Ising | AOC 准确率 \(0.9998\)，线性模型 \(0.5000\) | RBF SVM 打平，物理能量 oracle 为 1 |
+| 35% 弹簧损伤、128 点窗口 | rank-1 AOC AUC \(0.9768\)，均值 logistic \(0.4985\) | covariance centroid \(0.9733\)，oracle \(0.9774\) |
+| 对角/反对角偏振 | 学习 analyzer 成功率 \(0.9500\)，固定 H/V 为 \(0.5000\) | Aer 有限 shots 与解析值一致 |
+| 平移干扰、每类 2 个样本 | invariant AOC \(0.999861\)，原空间方法 \(0.5000\) | 正确 Fourier-power logistic 为 \(1.0\) |
+| 10-qubit TFIM 约化态 | 响应峰 \(g/J=0.9625\) | 已知热力学极限临界点为 1 |
+| Hückel 差分密度 | attachment/detachment 守恒误差 \(5.55\times10^{-17}\) | 仅为受控 tight-binding 模型 |
+| 模拟六轴机器人接触 | 学习 screw 重叠 \(0.99925\) | 不是硬件部署证据 |
+
+显著优势发生在预先设计的均值盲、低秩或对称干扰场景中。本项目不声称普适
+准确率、量子加速、隐私保证、ASIC/FPGA 优势，也不声称已经完成真实机器人或
+定量化学验证。
+
+## 应用边界
+
+直接应用包括光学偏振/相干测量、量子器件 drift、数据驱动序参量、结构振动
+模态，以及带平移/相位干扰的 vibration、radar、sonar 和 vision 信号。
+
+需要真实数据继续验证的方向包括机器人 force/torque 与 tactile contact、
+电子差分密度和 spectroscopy、EEG/CSP 空间功率变化，以及建立在 SOAP/ACE
+之上的旋转不变分子特征。
+
+弦论和量子场论目前只是理论前沿。一个可信的下一步是在小型格点规范场或已
+发表的 tensor-network 模型上，比较两个耦合的 gauge-invariant 约化态，并
+检查学习到的扇区 witness 是否复现已知的 flux/Wilson-loop 诊断。当前工作
+不声称解决弦论、找到新 vacuum 或证明 holographic duality。
 
 ## 快速开始
 
@@ -81,58 +109,70 @@ RBF-SVM 和 random forest 在多数任务上仍更强。26 类 Letter Recognitio
 python3 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
 .venv/bin/python -m pip install -e './experiments[quantum,test]'
-
-.venv/bin/python -m pytest experiments/tests -q
-.venv/bin/python experiments/scripts/run_theory_validation.py
-.venv/bin/python experiments/scripts/run_quantum_simulation.py
+.venv/bin/python -m pytest -q
 ```
 
-运行完整经典实验：
+运行 run 2：
 
 ```bash
-.venv/bin/python experiments/scripts/run_classical_benchmarks.py \
-  --folds 5 --repeats 2
-.venv/bin/python experiments/scripts/analyze_classical_results.py
+.venv/bin/python experiments/run2/scripts/run_algebraic_validation.py
+.venv/bin/python experiments/run2/scripts/run_ising_order.py
+.venv/bin/python experiments/run2/scripts/run_structural_monitoring.py
+.venv/bin/python experiments/run2/scripts/run_optical_quantum.py
 ```
 
-UCI 数据下载使用固定 URL 和 SHA-256 校验。下载数据缓存在 Git 忽略的
-`experiments/data/`；所有 CSV、JSON、PDF 和 PNG 证据位于
-[`experiments/results/`](experiments/results/)。
-
-编译论文：
+运行 run 3：
 
 ```bash
-.venv/bin/python experiments/scripts/export_paper_tables.py
+.venv/bin/python experiments/run3/scripts/run_translation_vision.py
+.venv/bin/python experiments/run3/scripts/run_quantum_phase.py
+.venv/bin/python experiments/run3/scripts/run_huckel_difference.py
+.venv/bin/python experiments/run3/scripts/run_robot_contact.py
+```
+
+构建全部论文：
+
+```bash
 make -C publication
 ```
 
-本地 Aer 模拟不需要 IBM Quantum 账户。
+本地 Aer 不需要 IBM Quantum 账户。每个新结果目录都包含原始 CSV/JSON 与
+manifest，其中记录命令、依赖、Git 状态、运行时间和输出哈希。
 
 ## 仓库地图
 
 | 路径 | 内容 |
 |---|---|
-| [`publication/main.pdf`](publication/main.pdf) | 当前 journal-style 论文 |
-| [`publication/main.tex`](publication/main.tex) | 主 LaTeX 源文件 |
-| [`experiments/deca/`](experiments/deca/) | 编码、算符、solver、分类器和量子电路 |
-| [`experiments/tests/`](experiments/tests/) | 理论、API 与 Qiskit 测试 |
-| [`experiments/scripts/`](experiments/scripts/) | 可复现实验入口 |
-| [`experiments/results/`](experiments/results/) | 原始记录、汇总和图 |
-| [`references/deca_theory_and_novelty_spec.md`](references/deca_theory_and_novelty_spec.md) | 中文理论与新颖性规格 |
-| [`references/eca_deep_research_analysis.md`](references/eca_deep_research_analysis.md) | 原 ECA 与 Ising 方向审计 |
-| [`references/README.md`](references/README.md) | 历史材料来源与公开边界 |
+| [`experiments/aoc/`](experiments/aoc/) | 加性、多分类、流式、对称、物理、化学和量子基础实现 |
+| [`experiments/run1/`](experiments/run1/) | 冻结的 DECA 代码、测试、脚本和证据 |
+| [`experiments/run2/`](experiments/run2/) | 加性/流式观测差异验证 |
+| [`experiments/run3/`](experiments/run3/) | 对称分辨与跨领域验证 |
+| [`publication/`](publication/) | 三份独立论文源码与编译 PDF |
+| [`references/`](references/) | ECA/Ising 原始材料、审稿意见、研究计划和理论分析 |
 
-## 研究谱系与作者边界
+## 研究谱系、引用与权利
 
 原始 ECA 论文发表于 IEEE ISCAS 2025
-（[DOI](https://doi.org/10.1109/ISCAS56072.2025.11044249)）。本仓库保留
-2020 预印本和作者源文件，但不会改写历史文件来制造“新理论早已存在”的印象。
+（[DOI](https://doi.org/10.1109/ISCAS56072.2025.11044249)）。2020 预印本、
+ISCAS 源文件、Ising 聚类探索稿和早期讨论保存在 [`references/`](references/)
+中作为 provenance，不会改写历史来制造“后来理论早已存在”的印象。
 
-新稿暂以 `Rongzhou (Lachlan) Chen` 作为作者占位。真正投稿前，作者名单、
-单位、致谢和目标期刊必须由所有人确认。
+三份工作稿暂以 `Rongzhou (Lachlan) Chen` 作为仓库作者占位。正式投稿前，
+作者、单位、致谢和期刊必须由人类合作者确认。
 
-## 引用与权利
+GitHub 使用 [`CITATION.cff`](CITATION.cff) 生成引用界面：
 
-引用信息见 [`CITATION.cff`](CITATION.cff)。`experiments/` 下的原创代码使用
-MIT License；历史论文、图片、手稿和模板可能有不同权利状态。复用前请阅读
-[`LICENSE.md`](LICENSE.md)。
+```bibtex
+@software{chen2026observablecontrast,
+  author  = {Chen, Rongzhou},
+  title   = {Observable Contrast Research:
+             From Eigen-Components to Additive and
+             Symmetry-Resolved Physical Witnesses},
+  year    = {2026},
+  version = {3.0.0},
+  url     = {https://github.com/lachlanchen/discriminative-energy-component-analysis}
+}
+```
+
+[`experiments/`](experiments/) 下的原创代码采用 MIT License；历史论文、
+图片、模板和出版物可能有不同权利。详见 [`LICENSE.md`](LICENSE.md)。

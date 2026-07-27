@@ -1,0 +1,40 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "experiments/run3/scripts/run_robot_contact.py"
+  ],
+  "config": {
+    "calibration_windows_per_class": 300,
+    "repetitions": 12,
+    "window_lengths": [
+      1,
+      4,
+      16,
+      64
+    ]
+  },
+  "experiment": "run3-robot-contact-wrench",
+  "finished_unix": 1785144457.912835,
+  "git_commit": "8868f0d44ceb97898cca2a9af8e6952a269fbe9e",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run3/results/robot_contact/contact_detection.csv": "93e9c312c5cf1d5d44cc0934e70f1e3207c0ba746fef8f614fd8defbe91c3c66",
+    "experiments/run3/results/robot_contact/robot_contact_detection.pdf": "a2b8c871c5bda6f0b2310c587d5ff4e55d316211c5847dbc41495f1bb6d03cb8",
+    "experiments/run3/results/robot_contact/robot_contact_detection.png": "46e07b68be8b051611fdec8a2d48852fa2801c6a5c8f67b43526989ed65047cb",
+    "experiments/run3/results/robot_contact/summary.json": "b15d4225c5d3af381b488c17ff244fff21f24536481ceac4ba9e69d5c7d8ef54",
+    "experiments/run3/results/robot_contact/wrench_localization.csv": "2e5da8d293c31e74379c55117f65ed10cfaeea0b86be83b96adc7afa7f4c33a4"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785144447.6091936,
+  "wall_seconds": 10.30364179611206
+}

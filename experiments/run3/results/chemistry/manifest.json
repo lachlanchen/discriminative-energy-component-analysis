@@ -1,0 +1,36 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "experiments/run3/scripts/run_huckel_difference.py"
+  ],
+  "config": {
+    "distortion_points": 36,
+    "maximum_distortion": 0.7,
+    "occupied_orbitals": 5,
+    "sites": 10
+  },
+  "experiment": "run3-huckel-difference-density",
+  "finished_unix": 1785144445.155512,
+  "git_commit": "8868f0d44ceb97898cca2a9af8e6952a269fbe9e",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run3/results/chemistry/difference_orbitals.csv": "07de5df4ead953a7b039eb45efcac996cb9b9edb9569b7348be6fbc5ae86b703",
+    "experiments/run3/results/chemistry/distortion_scan.csv": "e2f6361c20b57c0b49973051d1ad86965604144faa0ca1e06850883b26f2cf98",
+    "experiments/run3/results/chemistry/huckel_difference_density.pdf": "989fa13385839071f78ca484d391ab0e3af60ea2caeb459d98b1571d7ebc3d66",
+    "experiments/run3/results/chemistry/huckel_difference_density.png": "c424bba2b7032c10609ac67dc88d03e1cd48d80cd950c22ab084633b63d8e7fd",
+    "experiments/run3/results/chemistry/summary.json": "e1da6bba3ce381cc2e3af62dc6360df8473d3a83d2fd57e13590bfcce1d2b8b0"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785144444.3882875,
+  "wall_seconds": 0.7672247886657715
+}

@@ -8,8 +8,8 @@ falsifiable are welcome.
 - Corrections to a derivation, source citation, or implementation audit.
 - Counterexamples that identify the limits of squared energy features or the
   shared-eigenbasis assumption.
-- Improvements to the tested PVM-DECA, Spectral-DECA, PGM, SDP, Jacobi, or
-  Qiskit implementations.
+- Improvements to PVM-DECA, Spectral-DECA, additive/streaming AOC,
+  multiclass POVM, symmetry-resolved SAOC, or Qiskit implementations.
 - Fair benchmark scripts with fold-local preprocessing, fixed seeds, nested
   validation, and strong baselines.
 - Repairs to the exploratory Ising/Potts clustering formulation that include
@@ -35,7 +35,7 @@ estimates.
 2. Keep one pull request focused on one claim or implementation unit.
 3. Add tests or a reproducible command when code is introduced.
 4. Run `git diff --check` and verify all Markdown links you touched.
-5. Run `.venv/bin/python -m pytest experiments/tests -q`; for manuscript
+5. Run `.venv/bin/python -m pytest -q`; for manuscript
    changes, also run `make -C publication`.
 6. Do not include confidential review correspondence, private datasets,
    credentials, personal contact lists, or publisher-restricted artifacts.

@@ -1,0 +1,36 @@
+{
+  "command": [
+    ".venv/bin/python",
+    "experiments/run3/scripts/run_quantum_phase.py"
+  ],
+  "config": {
+    "field_max": 1.6500000000000012,
+    "field_min": 0.35,
+    "field_step": 0.025,
+    "kept_qubits": 5,
+    "qubits": 10
+  },
+  "experiment": "run3-symmetry-resolved-tfim",
+  "finished_unix": 1785144446.7449977,
+  "git_commit": "8868f0d44ceb97898cca2a9af8e6952a269fbe9e",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run3/results/quantum_phase/field_scan.csv": "c2c9945c8eab3ff2fcee943e6e9c5a6f908558e638d968e02588b800bdbaa237",
+    "experiments/run3/results/quantum_phase/summary.json": "1668f8af215bd537cfbdfaea04822f0ed2b59de29892c744275923ac7c26796e",
+    "experiments/run3/results/quantum_phase/symmetry_resolved_transition.pdf": "11f45ccb97bc27f89affddc9aad83860b0c86ba1059987b733850b25466074e1",
+    "experiments/run3/results/quantum_phase/symmetry_resolved_transition.png": "c375475e4bb8121a7474273d6266a38ee046fc52e2fd2837a37daba9caa7bc29"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785144445.9140987,
+  "wall_seconds": 0.8308992385864258
+}

@@ -1,15 +1,17 @@
-LATEXMK ?= latexmk
+.PHONY: all run1 run2 run3 clean
 
-.PHONY: all clean distclean
+all: run1 run2 run3
 
-all: main.pdf
+run1:
+	$(MAKE) -C run1
 
-main.pdf: main.tex references.bib generated/main_accuracy_table.tex \
-	generated/full_accuracy_table.tex generated/resource_table.tex
-	$(LATEXMK) -pdf -interaction=nonstopmode -halt-on-error main.tex
+run2:
+	@if [ -f run2/Makefile ]; then $(MAKE) -C run2; fi
+
+run3:
+	@if [ -f run3/Makefile ]; then $(MAKE) -C run3; fi
 
 clean:
-	$(LATEXMK) -c main.tex
-
-distclean:
-	$(LATEXMK) -C main.tex
+	$(MAKE) -C run1 clean
+	@if [ -f run2/Makefile ]; then $(MAKE) -C run2 clean; fi
+	@if [ -f run3/Makefile ]; then $(MAKE) -C run3 clean; fi

@@ -1,0 +1,241 @@
+repetition,train_pairs_per_class,train_samples_per_class,method,accuracy
+0,1,2,Untwirled rank-2 AOC,0.5
+0,1,2,Translation-invariant rank-2 AOC,0.9983333333333333
+0,1,2,Raw linear logistic,0.5
+0,1,2,Fourier-power logistic,1.0
+0,2,4,Untwirled rank-2 AOC,0.5
+0,2,4,Translation-invariant rank-2 AOC,1.0
+0,2,4,Raw linear logistic,0.5
+0,2,4,Fourier-power logistic,1.0
+0,4,8,Untwirled rank-2 AOC,0.6333333333333333
+0,4,8,Translation-invariant rank-2 AOC,1.0
+0,4,8,Raw linear logistic,0.5
+0,4,8,Fourier-power logistic,1.0
+0,8,16,Untwirled rank-2 AOC,0.8766666666666667
+0,8,16,Translation-invariant rank-2 AOC,1.0
+0,8,16,Raw linear logistic,0.5
+0,8,16,Fourier-power logistic,1.0
+0,16,32,Untwirled rank-2 AOC,0.995
+0,16,32,Translation-invariant rank-2 AOC,1.0
+0,16,32,Raw linear logistic,0.5
+0,16,32,Fourier-power logistic,1.0
+1,1,2,Untwirled rank-2 AOC,0.5
+1,1,2,Translation-invariant rank-2 AOC,1.0
+1,1,2,Raw linear logistic,0.5
+1,1,2,Fourier-power logistic,1.0
+1,2,4,Untwirled rank-2 AOC,0.5
+1,2,4,Translation-invariant rank-2 AOC,1.0
+1,2,4,Raw linear logistic,0.5
+1,2,4,Fourier-power logistic,1.0
+1,4,8,Untwirled rank-2 AOC,0.6133333333333333
+1,4,8,Translation-invariant rank-2 AOC,1.0
+1,4,8,Raw linear logistic,0.5
+1,4,8,Fourier-power logistic,1.0
+1,8,16,Untwirled rank-2 AOC,0.9283333333333333
+1,8,16,Translation-invariant rank-2 AOC,1.0
+1,8,16,Raw linear logistic,0.5
+1,8,16,Fourier-power logistic,1.0
+1,16,32,Untwirled rank-2 AOC,0.9966666666666667
+1,16,32,Translation-invariant rank-2 AOC,1.0
+1,16,32,Raw linear logistic,0.5
+1,16,32,Fourier-power logistic,1.0
+2,1,2,Untwirled rank-2 AOC,0.5
+2,1,2,Translation-invariant rank-2 AOC,1.0
+2,1,2,Raw linear logistic,0.5
+2,1,2,Fourier-power logistic,1.0
+2,2,4,Untwirled rank-2 AOC,0.5
+2,2,4,Translation-invariant rank-2 AOC,1.0
+2,2,4,Raw linear logistic,0.5
+2,2,4,Fourier-power logistic,1.0
+2,4,8,Untwirled rank-2 AOC,0.59
+2,4,8,Translation-invariant rank-2 AOC,1.0
+2,4,8,Raw linear logistic,0.5
+2,4,8,Fourier-power logistic,1.0
+2,8,16,Untwirled rank-2 AOC,0.97
+2,8,16,Translation-invariant rank-2 AOC,1.0
+2,8,16,Raw linear logistic,0.5
+2,8,16,Fourier-power logistic,1.0
+2,16,32,Untwirled rank-2 AOC,0.9966666666666667
+2,16,32,Translation-invariant rank-2 AOC,1.0
+2,16,32,Raw linear logistic,0.5
+2,16,32,Fourier-power logistic,1.0
+3,1,2,Untwirled rank-2 AOC,0.5
+3,1,2,Translation-invariant rank-2 AOC,1.0
+3,1,2,Raw linear logistic,0.5
+3,1,2,Fourier-power logistic,1.0
+3,2,4,Untwirled rank-2 AOC,0.5
+3,2,4,Translation-invariant rank-2 AOC,1.0
+3,2,4,Raw linear logistic,0.5
+3,2,4,Fourier-power logistic,1.0
+3,4,8,Untwirled rank-2 AOC,0.54
+3,4,8,Translation-invariant rank-2 AOC,1.0
+3,4,8,Raw linear logistic,0.5
+3,4,8,Fourier-power logistic,1.0
+3,8,16,Untwirled rank-2 AOC,0.9416666666666667
+3,8,16,Translation-invariant rank-2 AOC,1.0
+3,8,16,Raw linear logistic,0.5
+3,8,16,Fourier-power logistic,1.0
+3,16,32,Untwirled rank-2 AOC,0.9983333333333333
+3,16,32,Translation-invariant rank-2 AOC,1.0
+3,16,32,Raw linear logistic,0.5
+3,16,32,Fourier-power logistic,1.0
+4,1,2,Untwirled rank-2 AOC,0.5
+4,1,2,Translation-invariant rank-2 AOC,1.0
+4,1,2,Raw linear logistic,0.5
+4,1,2,Fourier-power logistic,1.0
+4,2,4,Untwirled rank-2 AOC,0.5
+4,2,4,Translation-invariant rank-2 AOC,1.0
+4,2,4,Raw linear logistic,0.5
+4,2,4,Fourier-power logistic,1.0
+4,4,8,Untwirled rank-2 AOC,0.635
+4,4,8,Translation-invariant rank-2 AOC,1.0
+4,4,8,Raw linear logistic,0.5
+4,4,8,Fourier-power logistic,1.0
+4,8,16,Untwirled rank-2 AOC,0.9333333333333333
+4,8,16,Translation-invariant rank-2 AOC,1.0
+4,8,16,Raw linear logistic,0.5
+4,8,16,Fourier-power logistic,1.0
+4,16,32,Untwirled rank-2 AOC,0.9916666666666667
+4,16,32,Translation-invariant rank-2 AOC,1.0
+4,16,32,Raw linear logistic,0.5
+4,16,32,Fourier-power logistic,1.0
+5,1,2,Untwirled rank-2 AOC,0.5
+5,1,2,Translation-invariant rank-2 AOC,1.0
+5,1,2,Raw linear logistic,0.5
+5,1,2,Fourier-power logistic,1.0
+5,2,4,Untwirled rank-2 AOC,0.5
+5,2,4,Translation-invariant rank-2 AOC,1.0
+5,2,4,Raw linear logistic,0.5
+5,2,4,Fourier-power logistic,1.0
+5,4,8,Untwirled rank-2 AOC,0.5666666666666667
+5,4,8,Translation-invariant rank-2 AOC,1.0
+5,4,8,Raw linear logistic,0.5
+5,4,8,Fourier-power logistic,1.0
+5,8,16,Untwirled rank-2 AOC,0.9083333333333333
+5,8,16,Translation-invariant rank-2 AOC,1.0
+5,8,16,Raw linear logistic,0.5
+5,8,16,Fourier-power logistic,1.0
+5,16,32,Untwirled rank-2 AOC,0.9983333333333333
+5,16,32,Translation-invariant rank-2 AOC,1.0
+5,16,32,Raw linear logistic,0.5
+5,16,32,Fourier-power logistic,1.0
+6,1,2,Untwirled rank-2 AOC,0.5
+6,1,2,Translation-invariant rank-2 AOC,1.0
+6,1,2,Raw linear logistic,0.5
+6,1,2,Fourier-power logistic,1.0
+6,2,4,Untwirled rank-2 AOC,0.5
+6,2,4,Translation-invariant rank-2 AOC,1.0
+6,2,4,Raw linear logistic,0.5
+6,2,4,Fourier-power logistic,1.0
+6,4,8,Untwirled rank-2 AOC,0.5516666666666666
+6,4,8,Translation-invariant rank-2 AOC,1.0
+6,4,8,Raw linear logistic,0.5
+6,4,8,Fourier-power logistic,1.0
+6,8,16,Untwirled rank-2 AOC,0.92
+6,8,16,Translation-invariant rank-2 AOC,1.0
+6,8,16,Raw linear logistic,0.5
+6,8,16,Fourier-power logistic,1.0
+6,16,32,Untwirled rank-2 AOC,0.99
+6,16,32,Translation-invariant rank-2 AOC,1.0
+6,16,32,Raw linear logistic,0.5
+6,16,32,Fourier-power logistic,1.0
+7,1,2,Untwirled rank-2 AOC,0.5
+7,1,2,Translation-invariant rank-2 AOC,1.0
+7,1,2,Raw linear logistic,0.5
+7,1,2,Fourier-power logistic,1.0
+7,2,4,Untwirled rank-2 AOC,0.5
+7,2,4,Translation-invariant rank-2 AOC,1.0
+7,2,4,Raw linear logistic,0.5
+7,2,4,Fourier-power logistic,1.0
+7,4,8,Untwirled rank-2 AOC,0.5316666666666666
+7,4,8,Translation-invariant rank-2 AOC,1.0
+7,4,8,Raw linear logistic,0.5
+7,4,8,Fourier-power logistic,1.0
+7,8,16,Untwirled rank-2 AOC,0.8866666666666667
+7,8,16,Translation-invariant rank-2 AOC,1.0
+7,8,16,Raw linear logistic,0.5
+7,8,16,Fourier-power logistic,1.0
+7,16,32,Untwirled rank-2 AOC,0.9966666666666667
+7,16,32,Translation-invariant rank-2 AOC,1.0
+7,16,32,Raw linear logistic,0.5
+7,16,32,Fourier-power logistic,1.0
+8,1,2,Untwirled rank-2 AOC,0.5
+8,1,2,Translation-invariant rank-2 AOC,1.0
+8,1,2,Raw linear logistic,0.5
+8,1,2,Fourier-power logistic,1.0
+8,2,4,Untwirled rank-2 AOC,0.5
+8,2,4,Translation-invariant rank-2 AOC,1.0
+8,2,4,Raw linear logistic,0.5
+8,2,4,Fourier-power logistic,1.0
+8,4,8,Untwirled rank-2 AOC,0.5733333333333334
+8,4,8,Translation-invariant rank-2 AOC,1.0
+8,4,8,Raw linear logistic,0.5
+8,4,8,Fourier-power logistic,1.0
+8,8,16,Untwirled rank-2 AOC,0.955
+8,8,16,Translation-invariant rank-2 AOC,1.0
+8,8,16,Raw linear logistic,0.5
+8,8,16,Fourier-power logistic,1.0
+8,16,32,Untwirled rank-2 AOC,0.9966666666666667
+8,16,32,Translation-invariant rank-2 AOC,1.0
+8,16,32,Raw linear logistic,0.5
+8,16,32,Fourier-power logistic,1.0
+9,1,2,Untwirled rank-2 AOC,0.5
+9,1,2,Translation-invariant rank-2 AOC,1.0
+9,1,2,Raw linear logistic,0.5
+9,1,2,Fourier-power logistic,1.0
+9,2,4,Untwirled rank-2 AOC,0.5
+9,2,4,Translation-invariant rank-2 AOC,1.0
+9,2,4,Raw linear logistic,0.5
+9,2,4,Fourier-power logistic,1.0
+9,4,8,Untwirled rank-2 AOC,0.585
+9,4,8,Translation-invariant rank-2 AOC,1.0
+9,4,8,Raw linear logistic,0.5
+9,4,8,Fourier-power logistic,1.0
+9,8,16,Untwirled rank-2 AOC,0.91
+9,8,16,Translation-invariant rank-2 AOC,1.0
+9,8,16,Raw linear logistic,0.5
+9,8,16,Fourier-power logistic,1.0
+9,16,32,Untwirled rank-2 AOC,0.995
+9,16,32,Translation-invariant rank-2 AOC,1.0
+9,16,32,Raw linear logistic,0.5
+9,16,32,Fourier-power logistic,1.0
+10,1,2,Untwirled rank-2 AOC,0.5
+10,1,2,Translation-invariant rank-2 AOC,1.0
+10,1,2,Raw linear logistic,0.5
+10,1,2,Fourier-power logistic,1.0
+10,2,4,Untwirled rank-2 AOC,0.5
+10,2,4,Translation-invariant rank-2 AOC,1.0
+10,2,4,Raw linear logistic,0.5
+10,2,4,Fourier-power logistic,1.0
+10,4,8,Untwirled rank-2 AOC,0.535
+10,4,8,Translation-invariant rank-2 AOC,1.0
+10,4,8,Raw linear logistic,0.5
+10,4,8,Fourier-power logistic,1.0
+10,8,16,Untwirled rank-2 AOC,0.885
+10,8,16,Translation-invariant rank-2 AOC,1.0
+10,8,16,Raw linear logistic,0.5
+10,8,16,Fourier-power logistic,1.0
+10,16,32,Untwirled rank-2 AOC,1.0
+10,16,32,Translation-invariant rank-2 AOC,1.0
+10,16,32,Raw linear logistic,0.5
+10,16,32,Fourier-power logistic,1.0
+11,1,2,Untwirled rank-2 AOC,0.5
+11,1,2,Translation-invariant rank-2 AOC,1.0
+11,1,2,Raw linear logistic,0.5
+11,1,2,Fourier-power logistic,1.0
+11,2,4,Untwirled rank-2 AOC,0.5
+11,2,4,Translation-invariant rank-2 AOC,1.0
+11,2,4,Raw linear logistic,0.5
+11,2,4,Fourier-power logistic,1.0
+11,4,8,Untwirled rank-2 AOC,0.5533333333333333
+11,4,8,Translation-invariant rank-2 AOC,1.0
+11,4,8,Raw linear logistic,0.5
+11,4,8,Fourier-power logistic,1.0
+11,8,16,Untwirled rank-2 AOC,0.9233333333333333
+11,8,16,Translation-invariant rank-2 AOC,1.0
+11,8,16,Raw linear logistic,0.5
+11,8,16,Fourier-power logistic,1.0
+11,16,32,Untwirled rank-2 AOC,1.0
+11,16,32,Translation-invariant rank-2 AOC,1.0
+11,16,32,Raw linear logistic,0.5
+11,16,32,Fourier-power logistic,1.0

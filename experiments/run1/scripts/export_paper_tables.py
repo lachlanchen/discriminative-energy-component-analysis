@@ -8,9 +8,9 @@ from pathlib import Path
 import pandas as pd
 
 
-ROOT = Path(__file__).resolve().parents[2]
-RESULTS = ROOT / "experiments" / "results" / "classical"
-OUTPUT = ROOT / "publication" / "generated"
+ROOT = Path(__file__).resolve().parents[1]
+RESULTS = ROOT / "results" / "classical"
+OUTPUT = ROOT.parents[1] / "publication" / "run1" / "generated"
 
 
 DATASET_LABELS = {

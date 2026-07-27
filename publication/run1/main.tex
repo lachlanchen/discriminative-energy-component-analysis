@@ -27,9 +27,9 @@
   urlcolor=blue!55!black
 }
 \graphicspath{
-  {../experiments/results/theory/}
-  {../experiments/results/quantum/}
-  {../experiments/results/classical/}
+  {../../experiments/run1/results/theory/}
+  {../../experiments/run1/results/quantum/}
+  {../../experiments/run1/results/classical/}
 }
 \sisetup{detect-all}
 
@@ -834,7 +834,7 @@ boosting.}
 
 {\footnotesize
 \begin{verbatim}
-python -m pytest experiments/tests -q
+python -m pytest experiments/run1/tests -q
 cd experiments
 python scripts/run_theory_validation.py
 python scripts/run_quantum_simulation.py
