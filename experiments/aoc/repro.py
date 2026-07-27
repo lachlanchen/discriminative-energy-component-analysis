@@ -65,6 +65,8 @@ def write_manifest(
         "matplotlib",
         "qiskit",
         "qiskit-aer",
+        "pymatching",
+        "stim",
     ):
         try:
             packages[package] = importlib.metadata.version(package)

@@ -1,0 +1,101 @@
+{
+  "name": "run5-paper-locked-v2-cycle-fair",
+  "locked": true,
+  "publication_grade": true,
+  "design_provenance": "Cycle-fair locked design frozen after the reduced pilot and independent pre-freeze audit, before the publication-grade sequential test. The audit corrected a temporal pair-versus-cycle unit error, separated every validation/training seed from locked-test seeds, and added a named validation-trained linear logistic comparator plus a multiplicity-controlled primary comparison. This comparator was chosen after inspecting the independent offline diagnostic audit but before any sequential locked test; it is predeclared here rather than claimed to be the strongest generic baseline. No publication-grade sequential result was inspected before this v2 design was frozen.",
+  "units": {
+    "calibration_and_horizons": "physical syndrome cycles",
+    "spatial_detector_update": "one physical syndrome cycle",
+    "temporal_detector_update": "one nonoverlapping pair = two physical syndrome cycles",
+    "target_arl": "physical syndrome cycles",
+    "detector_thresholds": "detector updates; 1000 spatial updates and 500 temporal pair updates both correspond to a target ARL of at least 1000 physical cycles",
+    "witness_window_and_update_interval": "detector updates within each family"
+  },
+  "claim_boundary": [
+    "No cross-family sample-efficiency claim is permitted unless physical-cycle, calibration, and labeled-training budgets are matched explicitly.",
+    "The validation-trained linear logistic effect is the named predeclared non-oracle comparator; matched analytic witnesses and exact likelihood ratios are model-aware controls or ceilings.",
+    "A positive comparison flag requires both the distribution-free simultaneous confidence bound and Holm-adjusted one-sided test to pass for both preregistered middle-effect hypotheses, with the ARL guarantee intact.",
+    "A pass supports only vAOC versus the named logistic comparator on these two controlled tasks; it is not a strongest-baseline, general algorithmic-advantage, or universal sample-efficiency result.",
+    "No superiority to Helstrom, a Wilson oracle, an exact likelihood ratio, or a threshold/logistic rule on the identical sufficient statistic is claimed.",
+    "No quantum acceleration, universal sample efficiency, scalable computational advantage, new topological-order theorem, Wilson-loop discovery, string-theory result, or holographic-duality result is claimed."
+  ],
+  "model": {
+    "size": 5,
+    "event_probability": 0.65,
+    "readout_error": 0.03,
+    "null_chain2_probability": 0.35
+  },
+  "spatial_alternatives": [0.45, 0.55, 0.65],
+  "temporal_persistence": [0.5, 0.75, 0.9],
+  "calibration_cycles": 4096,
+  "witness_window_updates": 64,
+  "witness_update_interval_updates": 8,
+  "ridge_grid": [0.0001, 0.001, 0.01],
+  "bet_fractions": [0.02, 0.05, 0.1, 0.2, 0.4, 0.8],
+  "target_arl_cycles": 1000,
+  "detector_threshold_updates": {
+    "spatial": 1000,
+    "temporal": 500
+  },
+  "change_time_cycles": 256,
+  "post_change_horizon_cycles": 1024,
+  "null_horizon_cycles": 5000,
+  "validation_streams": 8,
+  "ridge_validation_horizon_cycles": 512,
+  "null_test_streams": 512,
+  "changed_test_streams": 256,
+  "validation_trained_baseline": {
+    "method": "validation-trained linear logistic effect",
+    "training_streams_per_class": 8,
+    "cycles_per_stream": 512,
+    "total_physical_cycles_per_class": 4096,
+    "spatial_training_examples_per_class": 4096,
+    "temporal_pair_training_examples_per_class": 2048,
+    "logistic_c": 1.0,
+    "logistic_max_iter": 2000,
+    "training_effects": {
+      "spatial_q": 0.55,
+      "temporal_kappa": 0.75
+    },
+    "budget_note": "Both families receive 4096 labeled physical cycles per class. The temporal arm necessarily has half as many nonoverlapping pair updates; no cross-family sample-efficiency comparison is made."
+  },
+  "primary_comparison_hypotheses": {
+    "proposed_method": "vAOC / same-feature Hotelling",
+    "baseline_method": "validation-trained linear logistic effect",
+    "spatial_effect": 0.55,
+    "temporal_effect": 0.75,
+    "estimand": "paired restart-at-change restricted mean delay difference in physical cycles: proposed minus baseline",
+    "support_direction": "negative",
+    "familywise_alpha": 0.05,
+    "required_decision": "For each hypothesis, the distribution-free Bonferroni-Hoeffding simultaneous 95% upper bound must be below zero and the Holm-adjusted one-sided Hoeffding p-value must be below 0.05. Overall comparison support additionally requires both hypotheses to pass. A pass supports only vAOC versus this named comparator on the two declared tasks."
+  },
+  "scaling_sizes": [5, 7, 9],
+  "scaling_repetitions": 128,
+  "bootstrap_resamples": 10000,
+  "seeds": {
+    "calibration": {
+      "spatial": 510001,
+      "temporal": 510002
+    },
+    "baseline_training": {
+      "spatial_null": 511001,
+      "spatial_alternative": 511002,
+      "temporal_null": 511003,
+      "temporal_alternative": 511004
+    },
+    "ridge_validation": {
+      "spatial_start": 520000,
+      "temporal_start": 521000
+    },
+    "locked_test": {
+      "spatial_start": 600000,
+      "temporal_start": 20000000
+    },
+    "scaling_start": 40000000,
+    "timing_start": 50000000,
+    "analysis": {
+      "bootstrap": 880000
+    }
+  },
+  "seed_partition_note": "Calibration, labeled-comparator training, ridge validation, locked spatial tests, locked temporal tests, scaling, timing, and descriptive bootstrap use explicitly disjoint seed partitions; load_config verifies every sampling interval before execution."
+}

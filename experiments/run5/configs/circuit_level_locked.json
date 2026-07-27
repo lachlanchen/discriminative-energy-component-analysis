@@ -1,0 +1,81 @@
+{
+  "name": "run5-circuit-level-locked-v1",
+  "locked": true,
+  "publication_grade": true,
+  "design_provenance": "Noise settings were selected after small exploratory infrastructure pilots with different seeds. Distances, endpoint, sample sizes, and all reported-run seeds were frozen before this locked run.",
+  "output_directory": "circuit_level_locked",
+  "generator": {
+    "name": "surface_code:rotated_memory_z",
+    "memory_basis": "Z",
+    "injected_fault_axis": "X",
+    "rounds": "distance",
+    "pair_selection": "greedy_short_detector_disjoint_v1",
+    "dem_decompose_errors": true
+  },
+  "distances": [
+    3,
+    5,
+    7
+  ],
+  "shots_per_regime": 200000,
+  "regimes": {
+    "reference": "A stationary circuit with independent data-X faults in every round.",
+    "correlated": "A separate stationary post-change circuit with common-plus-residual paired data-X faults in every round. There is no within-circuit transition."
+  },
+  "confidence": 0.95,
+  "paired_bootstrap_resamples": 50000,
+  "marginal_audit_tolerance": 1e-12,
+  "noise": {
+    "marginal_data_x_error": 0.02,
+    "common_pair_x_error": 0.01,
+    "after_clifford_depolarization": 0.001,
+    "before_measure_flip_probability": 0.002,
+    "after_reset_flip_probability": 0.002
+  },
+  "sampling_seeds": {
+    "3": {
+      "reference": 560031,
+      "correlated": 560032
+    },
+    "5": {
+      "reference": 560051,
+      "correlated": 560052
+    },
+    "7": {
+      "reference": 560071,
+      "correlated": 560072
+    }
+  },
+  "paired_bootstrap_seed_base": 561000,
+  "decoders": [
+    {
+      "id": "static_null",
+      "dem": "reference",
+      "enable_correlations": false
+    },
+    {
+      "id": "ordinary_post",
+      "dem": "correlated_post",
+      "enable_correlations": false
+    },
+    {
+      "id": "correlation_aware",
+      "dem": "correlated_post",
+      "enable_correlations": true
+    }
+  ],
+  "primary_endpoint": {
+    "distance": 7,
+    "regime": "correlated",
+    "first_decoder": "ordinary_post",
+    "second_decoder": "correlation_aware",
+    "estimand": "logical_error_rate(first_decoder)-logical_error_rate(second_decoder)",
+    "positive_value_means": "correlation-aware decoding has lower logical error"
+  },
+  "claim_boundary": [
+    "This is a controlled Stim/PyMatching circuit simulation, not hardware evidence.",
+    "The injected post-change correlation channel and both decoder models are known.",
+    "The experiment evaluates decoder utility; it does not test sequential drift-detection advantage.",
+    "No claim is made of quantum acceleration, universal sample efficiency, or superiority to an oracle decoder."
+  ]
+}

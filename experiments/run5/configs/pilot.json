@@ -1,0 +1,96 @@
+{
+  "name": "run5-pilot-v2-cycle-fair",
+  "locked": false,
+  "publication_grade": false,
+  "design_provenance": "Reduced smoke-test design. Its earlier output exposed the blind-SR clock artifact and the later independent audit exposed temporal pair-versus-cycle unfairness. The named logistic comparator was chosen after inspecting the independent offline diagnostic audit but before the corrected sequential run. This v2 metadata uses the corrected cycle convention but remains a pilot and cannot support a publication-grade comparator claim.",
+  "units": {
+    "calibration_and_horizons": "physical syndrome cycles",
+    "spatial_detector_update": "one physical syndrome cycle",
+    "temporal_detector_update": "one nonoverlapping pair = two physical syndrome cycles",
+    "target_arl": "physical syndrome cycles",
+    "detector_thresholds": "detector updates; 200 spatial updates and 100 temporal pair updates both correspond to a target ARL of at least 200 physical cycles",
+    "witness_window_and_update_interval": "detector updates within each family"
+  },
+  "claim_boundary": [
+    "This is a reduced pilot and cannot support a publication-grade named-comparator claim.",
+    "No cross-family sample-efficiency claim is permitted.",
+    "Matched analytic and exact-likelihood methods are model-aware controls, not the named logistic comparator.",
+    "Any positive flag supports only vAOC versus the named logistic comparator on these two pilot tasks and is not publication-grade evidence.",
+    "No quantum acceleration, universal sample efficiency, or string-theory/holography claim is made."
+  ],
+  "model": {
+    "size": 5,
+    "event_probability": 0.65,
+    "readout_error": 0.03,
+    "null_chain2_probability": 0.35
+  },
+  "spatial_alternatives": [0.55],
+  "temporal_persistence": [0.75],
+  "calibration_cycles": 1024,
+  "witness_window_updates": 64,
+  "witness_update_interval_updates": 8,
+  "ridge_grid": [0.0001, 0.001, 0.01],
+  "bet_fractions": [0.02, 0.05, 0.1, 0.2, 0.4, 0.8],
+  "target_arl_cycles": 200,
+  "detector_threshold_updates": {
+    "spatial": 200,
+    "temporal": 100
+  },
+  "change_time_cycles": 128,
+  "post_change_horizon_cycles": 384,
+  "null_horizon_cycles": 1000,
+  "validation_streams": 2,
+  "ridge_validation_horizon_cycles": 512,
+  "null_test_streams": 32,
+  "changed_test_streams": 32,
+  "validation_trained_baseline": {
+    "method": "validation-trained linear logistic effect",
+    "training_streams_per_class": 2,
+    "cycles_per_stream": 512,
+    "total_physical_cycles_per_class": 1024,
+    "spatial_training_examples_per_class": 1024,
+    "temporal_pair_training_examples_per_class": 512,
+    "logistic_c": 1.0,
+    "logistic_max_iter": 2000,
+    "training_effects": {
+      "spatial_q": 0.55,
+      "temporal_kappa": 0.75
+    },
+    "budget_note": "Both families receive 1024 labeled physical cycles per class; no cross-family sample-efficiency comparison is made."
+  },
+  "primary_comparison_hypotheses": {
+    "proposed_method": "vAOC / same-feature Hotelling",
+    "baseline_method": "validation-trained linear logistic effect",
+    "spatial_effect": 0.55,
+    "temporal_effect": 0.75,
+    "estimand": "paired restart-at-change restricted mean delay difference in physical cycles: proposed minus baseline",
+    "support_direction": "negative",
+    "familywise_alpha": 0.05,
+    "required_decision": "Pilot-only descriptive implementation of the locked decision rule."
+  },
+  "bootstrap_resamples": 1000,
+  "seeds": {
+    "calibration": {
+      "spatial": 810001,
+      "temporal": 810002
+    },
+    "baseline_training": {
+      "spatial_null": 811001,
+      "spatial_alternative": 811002,
+      "temporal_null": 811003,
+      "temporal_alternative": 811004
+    },
+    "ridge_validation": {
+      "spatial_start": 820000,
+      "temporal_start": 821000
+    },
+    "locked_test": {
+      "spatial_start": 60000000,
+      "temporal_start": 70000000
+    },
+    "analysis": {
+      "bootstrap": 88000000
+    }
+  },
+  "seed_partition_note": "All sampling and analysis seed partitions are explicit and load_config verifies that validation and test sampling intervals are disjoint."
+}

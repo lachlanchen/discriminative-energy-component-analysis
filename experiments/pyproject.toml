@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "deca-experiments"
-version = "4.0.0"
-description = "Reproducible additive and symmetry-resolved observable-contrast research"
+version = "5.0.0"
+description = "Reproducible accessible-observable contrast and change-detection research"
 readme = "README.md"
 license = {file = "LICENSE"}
 authors = [
@@ -27,6 +27,10 @@ quantum = [
   "qiskit~=2.5.0",
   "qiskit-aer~=0.17",
 ]
+qec = [
+  "pymatching~=2.4.0",
+  "stim~=1.16.0",
+]
 test = [
   "pytest>=8,<10",
 ]
@@ -37,4 +41,10 @@ include = ["aoc*", "deca*"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"
-testpaths = ["run1/tests", "run2/tests", "run3/tests", "run4/tests"]
+testpaths = [
+  "run1/tests",
+  "run2/tests",
+  "run3/tests",
+  "run4/tests",
+  "run5/tests",
+]
