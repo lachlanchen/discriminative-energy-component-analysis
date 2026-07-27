@@ -39,6 +39,12 @@ PNNL_METHOD_IDS = (
 )
 PNNL_RANDOMIZATION_REPLICATES = 256
 PNNL_PATH_STATE_EPISODES = 22
+PNNL_SIGNED_BET_COUNT = 4
+PNNL_LOGISTIC_RATE_COUNT = 3
+PNNL_SPARSE_HALF_LIFE_COUNT = 4
+PNNL_SPARSE_K_VALUES = (1, 4, 16, 64)
+PNNL_SPECTRAL_HALF_LIFE_COUNT = 3
+PNNL_SPECTRAL_RANK_COUNT = 2
 GOOGLE_THRESHOLD_BOOTSTRAP_REPLICATES = 2_000
 FORMAL_METHOD_IDS = ("m0", "m1", "m3", "m4", "m5", "space")
 LABEL_IDS = ("correlated_matching_mismatch", "pymatching_mismatch")
@@ -2868,6 +2874,7 @@ def validate_pittsburgh_manifest(path: Path) -> Mapping[str, Any]:
                 "basis": row["basis"],
                 "distance": distance,
                 "rounds": rounds,
+                "m": m,
                 "calibration_pair_id": calibration_pair_id,
                 "raw_qasm_pair_identical": raw_same,
                 "normalized_qasm_pair_identical": normalized_same,
@@ -3418,7 +3425,173 @@ def validate_pnnl_randomization(
     return audit
 
 
-def validate_pnnl_resources(value: Any) -> Mapping[str, Any]:
+def pnnl_formal_component_counts(q: int, roles: int) -> dict[str, int]:
+    """Reconstruct the locked PNNL within-shot accumulator dimensions."""
+
+    check_count = require_int(q, context="PNNL ledger q", minimum=1)
+    role_count = require_int(roles, context="PNNL ledger roles", minimum=1)
+    feature_dimension = check_count * (check_count + 1) // 2
+    eligible_sparse_count = sum(
+        sparse_k <= feature_dimension for sparse_k in PNNL_SPARSE_K_VALUES
+    )
+    sparse = (
+        role_count
+        * PNNL_SPARSE_HALF_LIFE_COUNT
+        * eligible_sparse_count
+        * PNNL_SIGNED_BET_COUNT
+    )
+    spectral = (
+        role_count
+        * PNNL_SPECTRAL_HALF_LIFE_COUNT
+        * PNNL_SPECTRAL_RANK_COUNT
+        * PNNL_SIGNED_BET_COUNT
+    )
+    return {
+        "dfr": role_count * 2 * PNNL_SIGNED_BET_COUNT,
+        "online_logistic": (
+            role_count * PNNL_LOGISTIC_RATE_COUNT * PNNL_SIGNED_BET_COUNT
+        ),
+        "space_sparse": sparse,
+        "space_spectral": spectral,
+        "space_composite": sparse + spectral,
+    }
+
+
+def pnnl_adaptive_bank_numeric_bytes(q: int, roles: int) -> int:
+    """Reconstruct ``DimensionAdaptedBank.state_nbytes`` from frozen shapes."""
+
+    check_count = require_int(q, context="PNNL ledger q", minimum=1)
+    role_count = require_int(roles, context="PNNL ledger roles", minimum=1)
+    feature_dimension = check_count * (check_count + 1) // 2
+    role_update_bytes = 8 * role_count
+    logistic_bytes = 8 * role_count * PNNL_LOGISTIC_RATE_COUNT * feature_dimension
+    sparse_bytes = 2 * 8 * role_count * PNNL_SPARSE_HALF_LIFE_COUNT * feature_dimension
+    spectral_bytes = (
+        4 * 16 * role_count * PNNL_SPECTRAL_HALF_LIFE_COUNT * check_count * check_count
+    )
+    return role_update_bytes + logistic_bytes + sparse_bytes + spectral_bytes
+
+
+def pnnl_expected_resource_counts(
+    cohorts: Sequence[Mapping[str, Any]],
+) -> dict[str, int]:
+    """Reconstruct every cohort-derived integer in the PNNL resource ledger."""
+
+    path_groups = len(cohorts)
+    fit_paired_shot_pairs = 0
+    fit_role_score_updates = 0
+    fit_detector_event_bits_consumed = 0
+    surveillance_paired_shot_pairs = 0
+    surveillance_role_score_updates = 0
+    surveillance_detector_event_bits_consumed = 0
+    bootstrap_surrogate_shot_updates = 0
+    bootstrap_surrogate_role_score_updates = 0
+    randomization_surrogate_shot_updates = 0
+    randomization_surrogate_role_score_updates = 0
+    fit_eigendecompositions = 0
+    actual_surveillance_eigendecompositions = 0
+    bootstrap_eigendecompositions = 0
+    randomization_eigendecompositions = 0
+    paired_shots_per_pre_or_post_phase = 0
+    paired_cycle_updates_per_pre_or_post_phase = 0
+    for index, cohort in enumerate(cohorts):
+        distance = require_int(
+            cohort["distance"],
+            context=f"PNNL cohort {index} distance",
+            minimum=2,
+        )
+        q = distance - 1
+        roles = require_int(
+            cohort["rounds"],
+            context=f"PNNL cohort {index} rounds",
+            minimum=1,
+        )
+        m = require_int(
+            cohort["m"],
+            context=f"PNNL cohort {index} partition size",
+            minimum=1,
+        )
+        fit = m // 2
+        surveillance = (m - fit) + m
+        spectral_updates = (fit + surveillance) // 8 - fit // 8
+        paired_shots_per_pre_or_post_phase += 2 * m
+        paired_cycle_updates_per_pre_or_post_phase += 2 * m * roles
+        fit_paired_shot_pairs += 2 * fit
+        fit_role_score_updates += 2 * fit * roles
+        fit_detector_event_bits_consumed += 4 * fit * roles * q
+        surveillance_paired_shot_pairs += 2 * surveillance
+        surveillance_role_score_updates += 2 * surveillance * roles
+        surveillance_detector_event_bits_consumed += 4 * surveillance * roles * q
+        bootstrap_surrogate_shot_updates += (
+            2 * len(PNNL_METHOD_IDS) * 4_096 * surveillance
+        )
+        bootstrap_surrogate_role_score_updates += (
+            2 * len(PNNL_METHOD_IDS) * 4_096 * surveillance * roles
+        )
+        randomization_surrogate_shot_updates += (
+            2 * len(PNNL_METHOD_IDS) * PNNL_RANDOMIZATION_REPLICATES * m
+        )
+        randomization_surrogate_role_score_updates += (
+            2 * len(PNNL_METHOD_IDS) * PNNL_RANDOMIZATION_REPLICATES * m * roles
+        )
+        fit_eigendecompositions += (
+            2 * roles * PNNL_SPECTRAL_HALF_LIFE_COUNT * (fit // 8)
+        )
+        actual_surveillance_eigendecompositions += (
+            2 * roles * PNNL_SPECTRAL_HALF_LIFE_COUNT * spectral_updates
+        )
+        bootstrap_eigendecompositions += (
+            4 * 4_096 * roles * PNNL_SPECTRAL_HALF_LIFE_COUNT * spectral_updates
+        )
+        randomization_eigendecompositions += (
+            4
+            * PNNL_RANDOMIZATION_REPLICATES
+            * roles
+            * PNNL_SPECTRAL_HALF_LIFE_COUNT
+            * (m // 8)
+        )
+    return {
+        "path_groups": path_groups,
+        "path_state_streams": 2 * path_groups,
+        "paired_shots_per_pre_or_post_phase": (paired_shots_per_pre_or_post_phase),
+        "paired_cycle_updates_per_pre_or_post_phase": (
+            paired_cycle_updates_per_pre_or_post_phase
+        ),
+        "fit_paired_shot_pairs": fit_paired_shot_pairs,
+        "fit_physical_circuit_shots": 2 * fit_paired_shot_pairs,
+        "fit_role_score_updates": fit_role_score_updates,
+        "fit_detector_event_bits_consumed": fit_detector_event_bits_consumed,
+        "surveillance_paired_shot_pairs": surveillance_paired_shot_pairs,
+        "surveillance_physical_circuit_shots": (2 * surveillance_paired_shot_pairs),
+        "surveillance_formal_eprocess_shot_updates": (surveillance_paired_shot_pairs),
+        "surveillance_role_score_updates": surveillance_role_score_updates,
+        "surveillance_detector_event_bits_consumed": (
+            surveillance_detector_event_bits_consumed
+        ),
+        "bootstrap_replicates_per_path_state_method": 4_096,
+        "bootstrap_surrogate_shot_updates": bootstrap_surrogate_shot_updates,
+        "bootstrap_surrogate_role_score_updates": (
+            bootstrap_surrogate_role_score_updates
+        ),
+        "randomization_replicates": PNNL_RANDOMIZATION_REPLICATES,
+        "randomization_surrogate_shot_updates": (randomization_surrogate_shot_updates),
+        "randomization_surrogate_role_score_updates": (
+            randomization_surrogate_role_score_updates
+        ),
+        "fit_eigendecompositions": fit_eigendecompositions,
+        "actual_surveillance_eigendecompositions": (
+            actual_surveillance_eigendecompositions
+        ),
+        "bootstrap_eigendecompositions": bootstrap_eigendecompositions,
+        "randomization_eigendecompositions": randomization_eigendecompositions,
+    }
+
+
+def validate_pnnl_resources(
+    value: Any,
+    *,
+    cohorts: Sequence[Mapping[str, Any]],
+) -> Mapping[str, Any]:
     resources = require_mapping(value, context="PNNL resource ledger")
     integer_keys = {
         "path_groups",
@@ -3463,25 +3636,117 @@ def validate_pnnl_resources(value: Any) -> Mapping[str, Any]:
     for key in ("wall_seconds", "held_value_processing_wall_seconds"):
         if require_number(resources[key], context=f"PNNL resource {key}") < 0:
             raise PublicationDataError(f"PNNL resource {key} cannot be negative.")
-    require_mapping(
+    ledger = require_fixed_list(
         resources["adaptive_state_ledger"],
+        2 * len(cohorts),
         context="PNNL adaptive-state ledger",
     )
-    if (
-        resources["path_groups"] != 11
-        or resources["path_state_streams"] != 22
-        or resources["bootstrap_replicates_per_path_state_method"] != 4_096
-        or resources["randomization_replicates"] != 256
-        or resources["fit_physical_circuit_shots"]
-        != 2 * resources["fit_paired_shot_pairs"]
-        or resources["surveillance_physical_circuit_shots"]
-        != 2 * resources["surveillance_paired_shot_pairs"]
-        or resources["surveillance_formal_eprocess_shot_updates"]
-        != resources["surveillance_paired_shot_pairs"]
-        or resources["output_bytes_including_results_manifest"]
-        < resources["output_bytes_excluding_results_manifest"]
+    expected_ledger_order = [
+        (cohort, logical_state) for cohort in cohorts for logical_state in (0, 1)
+    ]
+    ledger_keys = {
+        "cohort_id",
+        "logical_state",
+        "q",
+        "roles",
+        "adaptive_bank_numeric_bytes",
+        "formal_accumulator_components",
+        "formal_accumulator_numeric_bytes",
+    }
+    for index, (raw, expected) in enumerate(
+        zip(ledger, expected_ledger_order, strict=True)
     ):
-        raise PublicationDataError("PNNL resource-ledger identities changed.")
+        row = require_mapping(raw, context=f"PNNL adaptive-state ledger row {index}")
+        require_exact_keys(
+            row,
+            ledger_keys,
+            context=f"PNNL adaptive-state ledger row {index}",
+        )
+        cohort, logical_state = expected
+        expected_q = (
+            require_int(
+                cohort["distance"],
+                context=f"PNNL cohort {index // 2} distance",
+                minimum=2,
+            )
+            - 1
+        )
+        expected_roles = require_int(
+            cohort["rounds"],
+            context=f"PNNL cohort {index // 2} rounds",
+            minimum=1,
+        )
+        if (
+            row["cohort_id"] != cohort["cohort_id"]
+            or require_int(
+                row["logical_state"],
+                context=f"PNNL adaptive-state ledger row {index} logical state",
+                minimum=0,
+            )
+            != logical_state
+            or require_int(
+                row["q"],
+                context=f"PNNL adaptive-state ledger row {index} q",
+                minimum=1,
+            )
+            != expected_q
+            or require_int(
+                row["roles"],
+                context=f"PNNL adaptive-state ledger row {index} roles",
+                minimum=1,
+            )
+            != expected_roles
+        ):
+            raise PublicationDataError(
+                f"PNNL adaptive-state ledger row {index} identity changed."
+            )
+        expected_components = pnnl_formal_component_counts(expected_q, expected_roles)
+        components = require_mapping(
+            row["formal_accumulator_components"],
+            context=f"PNNL adaptive-state ledger row {index} components",
+        )
+        require_exact_keys(
+            components,
+            PNNL_METHOD_IDS,
+            context=f"PNNL adaptive-state ledger row {index} components",
+        )
+        for method, expected_count in expected_components.items():
+            if (
+                require_int(
+                    components[method],
+                    context=(
+                        f"PNNL adaptive-state ledger row {index} "
+                        f"{method} component count"
+                    ),
+                    minimum=1,
+                )
+                != expected_count
+            ):
+                raise PublicationDataError(
+                    f"PNNL adaptive-state ledger row {index} "
+                    f"{method} component count changed."
+                )
+        expected_accumulator_bytes = 3 * 8 * sum(expected_components.values())
+        if require_int(
+            row["formal_accumulator_numeric_bytes"],
+            context=(
+                f"PNNL adaptive-state ledger row {index} formal-accumulator bytes"
+            ),
+            minimum=1,
+        ) != expected_accumulator_bytes or require_int(
+            row["adaptive_bank_numeric_bytes"],
+            context=(f"PNNL adaptive-state ledger row {index} adaptive-bank bytes"),
+            minimum=1,
+        ) != pnnl_adaptive_bank_numeric_bytes(expected_q, expected_roles):
+            raise PublicationDataError(
+                f"PNNL adaptive-state ledger row {index} byte identity changed."
+            )
+    expected_counts = pnnl_expected_resource_counts(cohorts)
+    for key, expected_value in expected_counts.items():
+        if resources[key] != expected_value:
+            raise PublicationDataError(
+                f"PNNL resource {key} disagrees with the locked cohorts."
+            )
     return resources
 
 
@@ -3530,7 +3795,10 @@ def validate_pnnl_manifest(
         "held_payloads_statted": len(snapshot_ids),
     }:
         raise PublicationDataError("PNNL metadata-validation counts changed.")
-    validate_pnnl_resources(manifest["resource_ledger"])
+    resources = validate_pnnl_resources(
+        manifest["resource_ledger"],
+        cohorts=cohorts,
+    )
     core_records = {
         "first_unblinding_record": manifest["first_unblinding_record"],
         "state_rows": manifest["state_rows"],
@@ -3586,6 +3854,15 @@ def validate_pnnl_manifest(
             paths[relative] = candidate
     if len(paths) != 226:
         raise PublicationDataError("PNNL portable artifact contract is not 226 files.")
+    artifact_bytes = sum(candidate.stat().st_size for candidate in paths.values())
+    if (
+        resources["output_bytes_excluding_results_manifest"] != artifact_bytes
+        or resources["output_bytes_including_results_manifest"]
+        != artifact_bytes + path.stat().st_size
+    ):
+        raise PublicationDataError(
+            "PNNL output-byte ledger disagrees with the validated artifacts."
+        )
     unblinding_path = resolve_artifact(
         manifest["first_unblinding_record"],
         path,
@@ -3711,6 +3988,20 @@ def validate_pnnl_manifest(
     finished = require_number(manifest["finished_unix"], context="PNNL finish time")
     if not started <= unblinded <= finished:
         raise PublicationDataError("PNNL unblinding time order is invalid.")
+    if not math.isclose(
+        resources["wall_seconds"],
+        finished - started,
+        rel_tol=0.0,
+        abs_tol=1e-9,
+    ) or not math.isclose(
+        resources["held_value_processing_wall_seconds"],
+        finished - unblinded,
+        rel_tol=0.0,
+        abs_tol=1e-9,
+    ):
+        raise PublicationDataError(
+            "PNNL wall-time ledger disagrees with the recorded timestamps."
+        )
     return manifest, rows, aggregate, randomization
 
 

@@ -40,6 +40,26 @@ def record(path: Path, base: Path) -> dict[str, Any]:
     }
 
 
+def write_pnnl_manifest_with_self_size(path: Path, manifest: dict[str, Any]) -> None:
+    artifact_bytes = sum(
+        artifact.stat().st_size
+        for artifact in path.parent.iterdir()
+        if artifact.is_file() and artifact != path
+    )
+    resources = manifest["resource_ledger"]
+    resources["output_bytes_excluding_results_manifest"] = artifact_bytes
+    resources["output_bytes_including_results_manifest"] = 0
+    for _ in range(16):
+        encoded = target.canonical_json_bytes(manifest) + b"\n"
+        including = artifact_bytes + len(encoded)
+        if resources["output_bytes_including_results_manifest"] == including:
+            break
+        resources["output_bytes_including_results_manifest"] = including
+    else:
+        raise AssertionError("fixture manifest self-size did not converge")
+    path.write_bytes(encoded)
+
+
 def make_event_summary() -> dict[str, Any]:
     return {
         method: {
@@ -849,45 +869,54 @@ def make_pnnl(
         "trace_artifacts": trace_records,
         "bootstrap_artifacts": bootstrap_records,
         "resource_ledger": {
-            "path_groups": 11,
-            "path_state_streams": 22,
-            "paired_shots_per_pre_or_post_phase": 200,
-            "paired_cycle_updates_per_pre_or_post_phase": 1_000,
-            "fit_paired_shot_pairs": 100,
-            "fit_physical_circuit_shots": 200,
-            "fit_role_score_updates": 500,
-            "fit_detector_event_bits_consumed": 1_000,
-            "surveillance_paired_shot_pairs": 200,
-            "surveillance_physical_circuit_shots": 400,
-            "surveillance_formal_eprocess_shot_updates": 200,
-            "surveillance_role_score_updates": 1_000,
-            "surveillance_detector_event_bits_consumed": 2_000,
-            "bootstrap_replicates_per_path_state_method": 4_096,
-            "bootstrap_surrogate_shot_updates": 10_000,
-            "bootstrap_surrogate_role_score_updates": 50_000,
-            "randomization_replicates": 256,
-            "randomization_surrogate_shot_updates": 5_000,
-            "randomization_surrogate_role_score_updates": 25_000,
-            "fit_eigendecompositions": 10,
-            "actual_surveillance_eigendecompositions": 20,
-            "bootstrap_eigendecompositions": 30,
-            "randomization_eigendecompositions": 40,
-            "adaptive_state_ledger": {},
+            **target.pnnl_expected_resource_counts(cohort_metadata),
+            "adaptive_state_ledger": [
+                {
+                    "cohort_id": cohort["cohort_id"],
+                    "logical_state": logical_state,
+                    "q": cohort["distance"] - 1,
+                    "roles": cohort["rounds"],
+                    "adaptive_bank_numeric_bytes": (
+                        target.pnnl_adaptive_bank_numeric_bytes(
+                            cohort["distance"] - 1,
+                            cohort["rounds"],
+                        )
+                    ),
+                    "formal_accumulator_components": (
+                        target.pnnl_formal_component_counts(
+                            cohort["distance"] - 1,
+                            cohort["rounds"],
+                        )
+                    ),
+                    "formal_accumulator_numeric_bytes": (
+                        3
+                        * 8
+                        * sum(
+                            target.pnnl_formal_component_counts(
+                                cohort["distance"] - 1,
+                                cohort["rounds"],
+                            ).values()
+                        )
+                    ),
+                }
+                for cohort in cohort_metadata
+                for logical_state in (0, 1)
+            ],
             "wall_seconds": 30.0,
             "held_value_processing_wall_seconds": 25.0,
             "peak_rss_kib": 204_800,
-            "output_bytes_excluding_results_manifest": 1_000,
-            "output_bytes_including_results_manifest": 2_000,
+            "output_bytes_excluding_results_manifest": 0,
+            "output_bytes_including_results_manifest": 0,
         },
         "retention_pass": retention,
         "environment": {},
         "command": ["fixture"],
         "started_unix": 1.0,
-        "held_value_processing_started_unix": 1.5,
-        "finished_unix": 2.0,
+        "held_value_processing_started_unix": 6.0,
+        "finished_unix": 31.0,
     }
     path = root / "results_manifest.json"
-    write_json(path, manifest)
+    write_pnnl_manifest_with_self_size(path, manifest)
     return path
 
 
@@ -1225,7 +1254,7 @@ def refresh_pnnl_artifact(
     manifest = target.load_json(paths["pnnl"])
     artifact_path = paths["pnnl"].parent / artifact_name
     manifest[manifest_key] = record(artifact_path, paths["pnnl"].parent)
-    write_json(paths["pnnl"], manifest)
+    write_pnnl_manifest_with_self_size(paths["pnnl"], manifest)
 
 
 def test_completed_positive_bundle_is_cross_checked_and_generated(
@@ -1472,10 +1501,15 @@ def test_completed_positive_bundle_is_cross_checked_and_generated(
     assert "Whole-run 30.000 s; held processing 25.000 s" in resource_table
     assert "PNNL threshold-bootstrap surrogates" in resource_table
     assert "PNNL paired-swap surrogates" in resource_table
-    assert "eigendecompositions 10" in resource_table
-    assert "eigendecompositions 20" in resource_table
-    assert "eigendecompositions 30" in resource_table
-    assert "eigendecompositions 40" in resource_table
+    pittsburgh = target.validate_pittsburgh_manifest(paths["pittsburgh"])
+    expected_resources = target.pnnl_expected_resource_counts(pittsburgh["cohorts"])
+    for key in (
+        "fit_eigendecompositions",
+        "actual_surveillance_eigendecompositions",
+        "bootstrap_eigendecompositions",
+        "randomization_eigendecompositions",
+    ):
+        assert f"eigendecompositions {expected_resources[key]:,}" in resource_table
 
 
 def test_negative_retention_emits_exact_no_advantage_sentence(tmp_path: Path) -> None:
@@ -1708,6 +1742,193 @@ def test_pnnl_must_bind_repair_ratification(tmp_path: Path) -> None:
         run_fixture(paths, tmp_path / "generated")
 
 
+@pytest.mark.parametrize(
+    "tamper",
+    (
+        "mapping_instead_of_rows",
+        "row_count",
+        "extra_row",
+        "row_schema",
+        "row_order",
+        "cohort_id",
+        "logical_state",
+        "q",
+        "roles",
+        "component_schema_missing",
+        "component_schema_extra",
+        "component_dfr",
+        "component_online_logistic",
+        "component_space_sparse",
+        "component_space_spectral",
+        "component_space_composite",
+        "formal_bytes",
+        "adaptive_bytes",
+    ),
+)
+def test_pnnl_adaptive_state_ledger_tamper_is_refused(
+    tmp_path: Path,
+    tamper: str,
+) -> None:
+    paths = make_fixture(tmp_path / "input")
+    pnnl = target.load_json(paths["pnnl"])
+    ledger = pnnl["resource_ledger"]["adaptive_state_ledger"]
+    if tamper == "mapping_instead_of_rows":
+        pnnl["resource_ledger"]["adaptive_state_ledger"] = {}
+    elif tamper == "row_count":
+        ledger.pop()
+    elif tamper == "extra_row":
+        ledger.append(dict(ledger[-1]))
+    elif tamper == "row_schema":
+        ledger[0]["extra"] = 0
+    elif tamper == "row_order":
+        ledger[0], ledger[1] = ledger[1], ledger[0]
+    elif tamper == "cohort_id":
+        ledger[0]["cohort_id"] += "_wrong"
+    elif tamper == "logical_state":
+        ledger[0]["logical_state"] = 1
+    elif tamper == "q":
+        ledger[0]["q"] += 1
+    elif tamper == "roles":
+        ledger[0]["roles"] += 1
+    elif tamper == "component_schema_missing":
+        del ledger[0]["formal_accumulator_components"]["dfr"]
+    elif tamper == "component_schema_extra":
+        ledger[0]["formal_accumulator_components"]["extra"] = 1
+    elif tamper.startswith("component_"):
+        method = tamper.removeprefix("component_")
+        ledger[0]["formal_accumulator_components"][method] += 1
+    elif tamper == "formal_bytes":
+        ledger[0]["formal_accumulator_numeric_bytes"] += 8
+    else:
+        ledger[0]["adaptive_bank_numeric_bytes"] += 8
+    write_json(paths["pnnl"], pnnl)
+    with pytest.raises(
+        target.PublicationDataError,
+        match="PNNL adaptive-state ledger",
+    ):
+        run_fixture(paths, tmp_path / "generated")
+
+
+@pytest.mark.parametrize(
+    "key",
+    (
+        "path_groups",
+        "path_state_streams",
+        "paired_shots_per_pre_or_post_phase",
+        "paired_cycle_updates_per_pre_or_post_phase",
+        "fit_paired_shot_pairs",
+        "fit_physical_circuit_shots",
+        "fit_role_score_updates",
+        "fit_detector_event_bits_consumed",
+        "surveillance_paired_shot_pairs",
+        "surveillance_physical_circuit_shots",
+        "surveillance_formal_eprocess_shot_updates",
+        "surveillance_role_score_updates",
+        "surveillance_detector_event_bits_consumed",
+        "bootstrap_replicates_per_path_state_method",
+        "bootstrap_surrogate_shot_updates",
+        "bootstrap_surrogate_role_score_updates",
+        "randomization_replicates",
+        "randomization_surrogate_shot_updates",
+        "randomization_surrogate_role_score_updates",
+        "fit_eigendecompositions",
+        "actual_surveillance_eigendecompositions",
+        "bootstrap_eigendecompositions",
+        "randomization_eigendecompositions",
+    ),
+)
+def test_pnnl_cohort_derived_resource_count_tamper_is_refused(
+    tmp_path: Path,
+    key: str,
+) -> None:
+    paths = make_fixture(tmp_path / "input")
+    pnnl = target.load_json(paths["pnnl"])
+    pnnl["resource_ledger"][key] += 1
+    write_json(paths["pnnl"], pnnl)
+    with pytest.raises(
+        target.PublicationDataError,
+        match=rf"PNNL resource {key} disagrees with the locked cohorts",
+    ):
+        run_fixture(paths, tmp_path / "generated")
+
+
+@pytest.mark.parametrize(
+    "key",
+    (
+        "output_bytes_excluding_results_manifest",
+        "output_bytes_including_results_manifest",
+    ),
+)
+def test_pnnl_output_byte_ledger_tamper_is_refused(
+    tmp_path: Path,
+    key: str,
+) -> None:
+    paths = make_fixture(tmp_path / "input")
+    pnnl = target.load_json(paths["pnnl"])
+    pnnl["resource_ledger"][key] += 1
+    write_json(paths["pnnl"], pnnl)
+    with pytest.raises(
+        target.PublicationDataError,
+        match="PNNL output-byte ledger disagrees",
+    ):
+        run_fixture(paths, tmp_path / "generated")
+
+
+@pytest.mark.parametrize(
+    ("container", "key"),
+    (
+        ("resource_ledger", "wall_seconds"),
+        ("resource_ledger", "held_value_processing_wall_seconds"),
+        ("manifest", "started_unix"),
+        ("manifest", "held_value_processing_started_unix"),
+        ("manifest", "finished_unix"),
+    ),
+)
+def test_pnnl_wall_time_identity_tamper_is_refused(
+    tmp_path: Path,
+    container: str,
+    key: str,
+) -> None:
+    paths = make_fixture(tmp_path / "input")
+    pnnl = target.load_json(paths["pnnl"])
+    target_container = pnnl if container == "manifest" else pnnl[container]
+    target_container[key] += 1.0
+    write_json(paths["pnnl"], pnnl)
+    with pytest.raises(
+        target.PublicationDataError,
+        match="PNNL wall-time ledger disagrees",
+    ):
+        run_fixture(paths, tmp_path / "generated")
+
+
+def test_pnnl_publication_resource_formulas_match_producer_objects() -> None:
+    experiments = Path(__file__).resolve().parents[3] / "experiments"
+    scripts = experiments / "run6" / "scripts"
+    sys.path.insert(0, str(experiments))
+    sys.path.insert(0, str(scripts))
+    try:
+        from run_pnnl_snapshot import (
+            DimensionAdaptedBank,
+            shot_component_weights,
+        )
+
+        for q in (1, 2, 3, 5, 6, 10, 11):
+            for roles in (1, 5):
+                observed_components = {
+                    method: len(weights)
+                    for method, weights in shot_component_weights(q, roles).items()
+                }
+                assert target.pnnl_formal_component_counts(q, roles) == (
+                    observed_components
+                )
+                assert target.pnnl_adaptive_bank_numeric_bytes(q, roles) == (
+                    DimensionAdaptedBank(q=q, role_count=roles).state_nbytes()
+                )
+    finally:
+        sys.path.remove(str(scripts))
+        sys.path.remove(str(experiments))
+
+
 def test_pnnl_randomization_counts_array_tamper_is_refused(
     tmp_path: Path,
 ) -> None:
@@ -1906,7 +2127,7 @@ def test_pnnl_cohort_metadata_must_match_pittsburgh_lock(tmp_path: Path) -> None
     write_json(aggregate_path, aggregate)
     pnnl = target.load_json(paths["pnnl"])
     pnnl["aggregate_results"] = record(aggregate_path, paths["pnnl"].parent)
-    write_json(paths["pnnl"], pnnl)
+    write_pnnl_manifest_with_self_size(paths["pnnl"], pnnl)
     with pytest.raises(
         target.PublicationDataError,
         match="metadata disagree with the Pittsburgh lock",

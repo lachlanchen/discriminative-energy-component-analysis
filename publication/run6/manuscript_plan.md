@@ -329,3 +329,53 @@ locked gate, or selecting claims from real values.
   `git diff --check`, pre-results audits, and both synthetic final builds
   pass; and
 - no real Run 6 numerical result file is inspected during this revision.
+
+## Revision unit: post-outcome publication-consumer schema repair
+
+**Origin:** the first strict production extraction after all scientific
+producers and the outcome join had completed.
+
+**Observed failure:** the extractor stopped before bundle emission and before
+reaching the outcome manifest because it required the PNNL
+`adaptive_state_ledger` to be an object, while the frozen producer emits an
+ordered list of 22 per-cohort/per-state records.
+
+**Allowed scope:** the publication extractor and its synthetic tests,
+manuscript disclosure, and separate publication-repair provenance records.
+No scientific producer, result manifest, experimental gate, threshold, seed,
+endpoint, outcome, or recorded runtime may be changed or rerun.
+
+**Repair contract:**
+
+1. validate exactly 22 ledger rows in Pittsburgh cohort order and logical
+   state order \(0,1\);
+2. require an exact seven-field row schema;
+3. derive \(q=d-1\) and the role count from locked cohort metadata;
+4. reconstruct the DFR, online-logistic, sparse, spectral, and composite
+   accumulator dimensions from the frozen bank design;
+5. reconstruct `DimensionAdaptedBank.state_nbytes()` and the three-array
+   formal-accumulator byte count independently; and
+6. preserve the failed extraction and bind the allowlisted publication-only
+   diff plus unchanged hashes of all eight experimental evidence inputs in a
+   separate post-outcome provenance chain.
+
+**Claim boundary:** this is a reporting-pipeline repair, not new experimental
+evidence.  Outcome production preceded it, so neither the repair nor the
+final execution is described as outcome-blind or preregistered.  The repair
+cannot change either empirical gate or strengthen any algorithmic,
+computational, quantum, topological, string-theory, or holographic claim.
+
+**Acceptance criteria:**
+
+- object/list confusion, wrong row count/order/schema, wrong \(q\), wrong
+  role count, any component-count change, and either byte-identity change
+  fail closed;
+- all eight upstream experimental input hashes are unchanged;
+- the canonical outcome output is not rerun;
+- the publication-repair manifest and ratification bind the historical
+  implementation commit, incident record, allowlisted diff, access truth,
+  and upstream hashes;
+- a fresh extraction and final PDF audit pass only through the repaired
+  consumer; and
+- the paper discloses the post-outcome chronology without outcome-blind
+  language.

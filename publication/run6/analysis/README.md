@@ -33,12 +33,22 @@ The extractor fails unless:
   and its `<i8` alarm-count and `<f8` maximum-log-e arrays have exact
   `(256,5)` shape, finite values, crossing identities, totals, histograms,
   and extrema;
+- the PNNL adaptive-state resource ledger is an ordered 22-row array whose
+  exact schema, cohort/state order, path dimensions, role counts, five
+  component dimensions, adaptive-bank bytes, and formal-accumulator bytes
+  are reconstructed from the locked cohort metadata;
 - all 110 PNNL path–state–method rows reproduce the macro results and
   two-comparator retention gate, while every cohort ID, basis, distance,
   rounds, calibration pair, and QASM/control class matches the Pittsburgh
   lock; and
 - `overall_run6_advantage` equals the conjunction of the Google and PNNL
   gates. This frozen field name is schema provenance, not the rendered claim.
+
+The first production extraction was attempted only after the outcome
+producer completed and stopped at the adaptive-state ledger schema check
+before emitting a bundle or reaching the outcome manifest.  Its repair is a
+post-outcome publication-consumer amendment: it changes no scientific
+producer or upstream evidence and is not described as outcome-blind.
 
 Run it only after both provenance chains and the four real-data stages are
 complete:

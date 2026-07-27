@@ -23,8 +23,24 @@ modified.  The repair has its own implementation--manifest--ratification
 chain.  This is not a detector-blind repair or a fully preregistered
 end-to-end execution.
 
-This publication-only revision does not inspect real detector numbers,
-decoder outcomes, randomization results, or PNNL held/results payloads.
+After all locked producers and the outcome join had completed, the first
+strict publication extraction failed before bundle emission because the
+publication consumer expected the PNNL adaptive-state ledger to be an object
+although the producer emits an ordered 22-row array.  That automated attempt
+validated derived detector/randomization records and loaded the PNNL results
+manifest before the schema failure; it had not reached the outcome manifest,
+and no performance number was manually inspected to select the repair.  The
+repair is nevertheless post-outcome and is not described as outcome-blind or
+preregistered.  It is confined to the publication extractor, tests, and
+provenance documentation.  No scientific producer, upstream artifact,
+threshold, seed, endpoint, gate, outcome, or recorded runtime was changed or
+rerun.
+
+The repaired consumer requires exactly 22 adaptive-state rows in locked
+cohort/state order and reconstructs every row's path dimension, role count,
+five accumulator sizes, adaptive-bank bytes, and formal-accumulator bytes.
+Separate publication-provenance records bind the failed attempt, the
+allowlisted repair, and unchanged hashes of all eight experimental inputs.
 Before a verified bundle exists, every unresolved value appears visibly as
 `TBD(KEY)`.
 
