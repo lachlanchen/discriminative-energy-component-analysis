@@ -1,0 +1,1357 @@
+\IfFileExists{revtex4-2.cls}
+  {\documentclass[aps,prxquantum,preprint,groupedaddress,nofootinbib]{revtex4-2}}
+  {\documentclass[11pt]{article}}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={Predictable Sparse and Spectral Contrast Monitoring of Real QEC Syndromes:
+  A Predeclared Benchmark with a Disclosed Post-Detector Repair},
+  pdfauthor={Rongzhou (Lachlan) Chen},
+  pdfsubject={Predeclared dual-provenance benchmark with a disclosed post-detector repair}
+}
+
+\makeatletter
+\newif\ifrunrevtex
+\@ifclassloaded{revtex4-2}{\runrevtextrue}{\runrevtexfalse}
+\makeatother
+\ifrunrevtex\else
+  \usepackage[numbers,sort&compress]{natbib}
+  \usepackage[margin=1in]{geometry}
+\fi
+
+\definecolor{pending}{RGB}{166,35,35}
+\newcommand{\RunSixPending}[1]{%
+  \textcolor{pending}{\nolinkurl{TBD(#1)}}%
+}
+\newif\ifrunresultbundle
+\IfFileExists{generated/publication_bundle_manifest.json}
+  {\runresultbundletrue}
+  {\runresultbundlefalse}
+\ifrunresultbundle
+  \input{generated/manuscript_artifact_contract.tex}
+\else
+\fi
+\newcommand{\RunSixClaimSentence}{%
+  \ifrunresultbundle
+    \RunSixVerifiedClaim%
+  \else
+    \RunSixPending{CLAIM_SENTENCE}%
+  \fi
+}
+
+\newcommand{\E}{\mathbb E}
+\newcommand{\Prb}{\mathbb P}
+\newcommand{\KL}{\operatorname{KL}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\cF}{\mathcal F}
+\newcommand{\cC}{\mathcal C}
+\newcommand{\one}{\mathbf 1}
+\newcommand{\SPace}{S-PACE}
+\newcommand{\DFR}{DFR}
+\newcommand{\PNNL}{PNNL}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\setlength{\emergencystretch}{3em}
+\renewcommand{\arraystretch}{1.12}
+
+\begin{document}
+
+\title{Predictable Sparse and Spectral Contrast Monitoring of Real QEC
+Syndromes: A Predeclared Benchmark with a Disclosed Post-Detector Repair}
+
+\author{Rongzhou (Lachlan) Chen}
+\ifrunrevtex
+  \affiliation{Independent research}
+  \email{lachen@connect.hku.hk}
+\else
+  \date{Independent research\\Pre-results working paper, 28 July 2026}
+\fi
+
+\newcommand{\RunSixAbstractBody}{%
+Quantum-error-correction (QEC) records can be nonstationary and burst-prone,
+but detector firing rate is already a strong diagnostic and elaborate
+feature maps need not improve operational decisions.  We introduce
+\SPace{}, an initially preregistered composite of past-only sparse and spectral
+contrast witnesses for classical syndrome streams.  Bounded predictable
+scores are converted to betting factors and combined with fixed priors over
+features, time scales, bet sizes, and 51 round-role experts.  One complete
+paired shot---not one role---is the formal time step.  Exact false-alarm
+validity is reserved for an independently randomized complete-pair design;
+the natural Google replay and the constructed \PNNL{}/IBM snapshot
+boundaries are evaluated empirically.  The locked benchmark compares
+\SPace{} with paired detector firing rate, within-shot Page--CUSUM,
+diagonal detector surprise, shrinkage Hotelling monitoring, and an online
+logistic witness receiving the same feature bank.  Detector scores were
+frozen under the original pre-access chain.  After that detector run, a
+source-derived consumer-validation repair was separately ratified before
+decoder outcomes, PNNL held payloads, or a completed randomization replicate
+were available.  Detector numeric diagnostics had been exposed during
+diagnosis but were not used to select the repair, and the detector was
+neither modified nor rerun.  A conjunctive two-arm rule prevents a favorable
+auxiliary analysis from rescuing a failed primary test.  \RunSixClaimSentence
+}
+
+\ifrunrevtex
+\begin{abstract}
+\RunSixAbstractBody
+\end{abstract}
+  \keywords{quantum error correction, sequential change detection,
+  e-processes, preregistration, sparse features, spectral contrasts}
+\maketitle
+\else
+\maketitle
+\begin{abstract}
+\RunSixAbstractBody
+\end{abstract}
+  \noindent\textbf{Keywords:} quantum error correction; sequential change
+  detection; e-processes; preregistration; sparse features; spectral
+  contrasts
+\fi
+
+\section{Introduction}
+\label{sec:introduction}
+
+Repeated syndrome measurements serve two distinct functions in QEC: they
+support decoding, and they expose changes in the physical error process.
+Detector rates, detector correlations, and occasional bursts are established
+hardware diagnostics~\cite{google2023surface,mcewen2022bursts}.  Modern work
+also adapts noise estimates and decoding graphs under drift
+~\cite{wang2023dgr,bhardwaj2026drifting,poster2026reloqate}.  A new monitor
+therefore earns its complexity only if it improves a fixed operational
+endpoint at matched observations, calibration, and alert budget.
+
+The motivating idea is to follow coordinates or operator directions with
+large \emph{between-stream contrast}, rather than directions selected only
+for pooled variance.  Sparse discriminative projections and tailored
+high-dimensional change monitors already embody this broad principle
+~\cite{tveten2019sparse}.  Likewise, predictable betting, fixed mixtures of
+e-values, Page--CUSUM, Hotelling statistics, and the Jordan positive-part
+construction are established foundations
+~\cite{shafer2011testmartingales,vovk2021evalues,
+waudbysmith2024betting,page1954cusum,hotelling1931ratio,
+helstrom1969detection}.  The contribution pursued here is their
+auditable integration into an initially preregistered real-QEC protocol,
+followed by a disclosed post-detector, pre-outcome validator amendment:
+
+\begin{enumerate}
+  \item a fixed raw-check plus pair-correlation feature bank and a
+  positive-semidefinite spectral representation;
+  \item past-only sparse and spectral witnesses whose current scores remain
+  bounded;
+  \item a complete-shot mixture that does not count 51 correlated roles as
+  51 fresh randomization revelations;
+  \item separate proper-prior e-process and Shiryaev--Roberts (SR)
+  accumulators, preserving the distinction between lifetime crossing
+  probability and average run length (ARL);
+  \item same-information rate, likelihood-surprise, covariance, CUSUM, and
+  logistic controls; and
+  \item a detector/outcome freeze and a falsifiable conjunctive empirical gate.
+\end{enumerate}
+
+Run 6 processes classical bits produced by fixed QEC measurements.  It is
+not a quantum algorithm, a new measurement, or a claim of quantum speedup.
+It cannot beat a correctly specified same-information likelihood ratio in
+expected log growth, nor can it reveal physical changes that leave the
+archived syndrome law unchanged.  These boundaries are part of the method,
+not qualifications added after results.
+
+\section{Observation Level, Related Work, and Evidence Boundary}
+\label{sec:boundary}
+
+\subsection{Three observation levels}
+
+The experiment begins after the hardware measurement.  Table
+~\ref{tab:levels} separates the three levels that must not be conflated.
+
+\begin{table}[ht]
+\centering
+\caption{Observation levels and Run 6 access.}
+\label{tab:levels}
+\small
+\begin{tabularx}{\linewidth}{@{}p{0.20\linewidth}X p{0.19\linewidth}@{}}
+\toprule
+Level & Object and relevant theory & Run 6 access\\
+\midrule
+Quantum acquisition & Unmeasured state/channel and measurement choice;
+Helstrom or quantum quickest-change limits
+~\cite{helstrom1969detection,fanizza2023quantumchange}. & No.\\
+Classical stream & Fixed detector bits in archive order; likelihood,
+CUSUM, covariance, and predictable betting. & Yes.\\
+Retrospective utility & Observable flips and decoder predictions used for
+risk--coverage after detector freeze. & Outcome join only.\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Classical-shadow sequential detection requires randomized measurement
+settings and a known inverse shadow channel
+~\cite{huang2020shadows,zecchin2026escd}.  Those acquisition records are not
+present in the fixed syndrome archives.  A numerical proxy would therefore
+compare different experiments and is excluded.
+
+\subsection{Sequential inference and change detection}
+
+Nonnegative test martingales and e-values provide anytime evidence under
+declared nulls~\cite{shafer2011testmartingales,vovk2021evalues,
+howard2021confidence}.  Predictable betting gives concrete bounded-mean
+constructions~\cite{waudbysmith2024betting}.  E-detectors provide CUSUM- and
+SR-type ARL formulations~\cite{shin2024edetectors}; they do not turn every SR
+threshold into a lifetime false-alarm probability.  Sequential
+randomization e-values are also prior art~\cite{zampieri2025randomization}.
+Run 6 applies these ideas with one orientation coin per complete QEC shot.
+
+The empirical controls deliberately span simple and structured alternatives:
+detector firing rate, Page's CUSUM~\cite{page1954cusum}, diagonal Bernoulli
+surprise, Hotelling geometry with Ledoit--Wolf shrinkage
+~\cite{hotelling1931ratio,ledoitwolf2004covariance}, and a pairwise online
+logistic learner that receives the same 300 coordinates as the sparse
+witness.  Published detector-likelihood work motivates, but is not
+identical to, the diagonal surprise control used here
+~\cite{hesner2025likelihood}.
+
+\subsection{Evidence classes}
+
+We use four labels:
+
+\begin{enumerate}
+  \item \textbf{Exact design audit}: complete observed pairs receive
+  independently randomized orientation.
+  \item \textbf{Natural approximate event}: archived Google order contains
+  an author-identified, approximately located event.
+  \item \textbf{Constructed boundary}: real-hardware \PNNL{}/IBM snapshot
+  cohorts are concatenated by the benchmark.
+  \item \textbf{Retrospective utility}: frozen detector ranks are joined to
+  decoder mismatches.
+\end{enumerate}
+
+Only the first label supports the declared conditional randomization
+guarantee.  The other arms supply empirical evidence at frozen operating
+points.
+
+\section{Preregistered Data Roles and Experimental Unit}
+\label{sec:protocol}
+
+\subsection{Google repetition-code replay}
+
+The primary archive is the Google Quantum AI deposit accompanying its
+surface-code study~\cite{google2022data,google2023surface}.  The locked
+experiment
+\texttt{repetition\_code\_bZ\_d25\_r50\_center\_5\_5} contains 500,000
+shots, 50 syndrome rounds, and 1,224 declared detectors.  Detector
+coordinates from the ideal Stim circuit define a permutation into 51 round
+roles by 24 physical check coordinates.  The parser does not assume that a
+raw reshape preserves the physical order.
+
+The immutable split is shown in Table~\ref{tab:split}.  Held monitored shot
+\(40000+q\) is paired one-to-one with reference shot \(20000+q\), for
+\(q=0,\ldots,19999\).  Every complete pair consumes two archived physical
+shots.  A role state is updated once per shot and is never shared with
+another role.
+
+\begin{table}[ht]
+\centering
+\caption{Frozen zero-based Google shot split.}
+\label{tab:split}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Indices & Role & Permitted use\\
+\midrule
+\([0,5000)\), \([10000,15000)\) & paired fit & model state\\
+\([5000,10000)\), \([15000,20000)\) & threshold & operating points\\
+\([20000,40000)\) & held reference & one per test shot\\
+\([40000,60000)\) & held monitor & primary replay\\
+\([60000,500000)\) & future & untouched in primary\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The primary event window is \([57750,57800)\), with frozen narrow and wide
+sensitivity windows \([57770,57780)\) and \([57725,57825)\).  The archive
+documentation localizes a large event only approximately; no exact physical
+onset or wall-clock delay is inferred.
+
+\subsection{\PNNL{}/IBM auxiliary arm}
+
+The auxiliary data are the versioned \PNNL{} release of IBM
+repetition-code experiments~\cite{stein2026film,stein2026dataset}.  Physical
+paths are reconstructed from each state-specific QASM.  The independent
+summary unit is a path/snapshot, not an individual syndrome bit.  Every
+comparison is called a \emph{constructed boundary between real-hardware
+snapshot cohorts}.  It is not interpreted as a natural time series; changed
+QASM is reported as circuit-and-hardware domain shift.
+
+\subsection{One randomization unit, one formal time}
+
+For complete paired shot \(u\), a single random bit swaps its A/B
+orientation.  The same bit acts on all roles \(r=0,\ldots,50\).  All role
+scores use pre-shot states, after which the 51 role-component experts are
+updated in parallel.  Formal time is \(u\), not \(51u+r\).  The flattened
+cycle index is retained only for empirical alert localization.
+
+\begin{figure}[ht]
+\centering
+\fbox{\begin{minipage}{0.92\linewidth}
+\centering
+\textbf{Frozen causal sequence}\\[3pt]
+fit pairs \(\rightarrow\) checkpoint clone
+\(\rightarrow\) disjoint threshold replay
+\(\rightarrow\) held detector replay
+\(\rightarrow\) hash detector artifacts
+\(\rightarrow\) outcome join\\[4pt]
+One complete pair \(\rightarrow\) 51 simultaneous role scores
+\(\rightarrow\) one formal update.
+\end{minipage}}
+\caption{Protocol timeline.  Threshold-state updates do not flow into held
+monitoring, and outcome labels cannot affect detector scores or ties.}
+\label{fig:timeline}
+\end{figure}
+
+\section{\SPace{} Construction}
+\label{sec:method}
+
+\subsection{Bounded global, sparse, and spectral representations}
+
+For one cycle let \(e\in\{0,1\}^{24}\), \(z=\one-2e\), and
+\[
+  g(e)=\frac1{24}\sum_{j=1}^{24}e_j.
+\]
+The fixed sparse feature bank is
+\[
+  \phi(e)=
+  \left(e_1,\ldots,e_{24},
+  \left\{\frac{1+z_i z_j}{2}\right\}_{1\le i<j\le24}\right)
+  \in[0,1]^{300}.
+\tag{1}
+\]
+All 276 check pairs are included, preventing an event-dependent adjacency
+choice.  The spectral representation is
+\[
+  R(e)=\frac{zz^{\mathsf T}}{24},\qquad
+  R(e)\succeq0,\quad \Tr R(e)=1.
+\tag{2}
+\]
+For paired reference/monitor cycles,
+\[
+  D^\phi_{u,r}=\phi(e^B_{u,r})-\phi(e^A_{u,r}),\qquad
+  \Delta_{u,r}=R(e^B_{u,r})-R(e^A_{u,r}).
+\tag{3}
+\]
+
+The separately designated M0 control uses
+\(g(e^B)-g(e^A)\).  It is not a component of the fixed proposed method
+\(S\), which is exactly the M4/M5 composite defined below.  Reporting M0
+alongside \(S\) supplies a directly interpretable global-rate baseline; a
+pure orbit-centered relative representation would be pathwise blind to an
+additive common mode, as Sec.~\ref{sec:guarantees} makes explicit.
+
+\subsection{Sparse analytical witness}
+
+For each role, sparse witnesses retain exponentially weighted, past-only
+contrasts with half-lives \(h\in\{4,16,64,256\}\).  For
+\(k\in\{1,4,16,64\}\), the witness assigns weight \(1/k\) to the signed
+copies of the \(k\) largest absolute historical contrasts, using a fixed
+magnitude/index tie rule.  Its \(\ell_1\) norm is at most one, so the current
+score \(s^{(4)}_{u,r,h,k}=w_{u-1,r,h,k}^{\mathsf T}D^\phi_{u,r}\) lies in
+\([-1,1]\).  Scoring precedes the EWMA update.
+
+\subsection{Spectral analytical-observable-contrast witness}
+
+For \(h\in\{4,16,64\}\), let \(\overline\Delta_{u-1,r,h}\) be the past-only
+EWMA operator contrast.  The stored matrix is symmetrized in float64.
+Effects are recomputed at prior role-update counts \(8,16,24,\ldots\) and
+first used on the following observation, with absolute eigentolerance
+\(\tau_{\mathrm{eig}}=10^{-10}\).  At a locked refresh, the full effect is
+\[
+  E^{+}_{u-1,r,h}
+  =\Pi_+(\overline\Delta_{u-1,r,h};\tau_{\mathrm{eig}}),
+\tag{4}
+\]
+where
+\(\Pi_+(H;\tau)=\sum_{\lambda_i(H)>\tau}v_iv_i^{\mathsf T}\), or zero if
+the index set is empty.  For the
+rank-one variant, if \(\lambda_{\max}\le\tau_{\mathrm{eig}}\) the effect is
+zero.  Otherwise form the projector \(P_{\max}\) of all eigenvalues within
+\(\tau_{\mathrm{eig}}\) of \(\lambda_{\max}\); choose the smallest coordinate
+\(j\) whose diagonal entry is within tolerance of
+\(\max_i(P_{\max})_{ii}\); and set
+\[
+  v=\frac{P_{\max}e_j}{\|P_{\max}e_j\|_2},\qquad E^{(1)}=vv^{\mathsf T}.
+\]
+The first entry of \(v\) with magnitude above tolerance is made positive,
+although its projector is sign invariant.  Both effects obey
+\(0\preceq E\preceq I\);
+therefore
+\[
+  s^{(5)}_{u,r,h,\mathrm{rank}}
+  =\Tr(E_{u-1,r,h,\mathrm{rank}}\Delta_{u,r})\in[-1,1].
+\tag{5}
+\]
+The positive-part variational identity is the standard Jordan/Helstrom
+calculation, applied here to an already observed classical feature matrix;
+it is not a physical Helstrom measurement.
+
+\subsection{Factors, fixed priors, and empirical score}
+
+Every bounded predictable score is converted to
+\[
+  L_{u,r,c}=1+\beta_c s_{u,r,c},
+  \qquad \beta_c\in\{0.1,0.3,0.6,0.9\}.
+\tag{6}
+\]
+M4 has 64 uniform components over \((h,k,\beta)\); M5 has 24 over
+\((h,\mathrm{rank},\beta)\).  The exact \SPace{} composite assigns one half
+of its prior to each branch and remains a fixed mixture.  It never selects
+the better branch from held performance.
+
+The empirically calibrated cycle statistic is separately fixed as
+\[
+  Z^{(S)}_{q,r}
+  =\max\{Z^{(4)}_{q,r},Z^{(5)}_{q,r}\},
+\tag{7}
+\]
+where each branch maximum ranges only over its predeclared components.  This
+maximum is \emph{not} called an e-factor; its full multiplicity is calibrated
+on the disjoint threshold block.
+
+\section{Guarantees and Impossibility Boundaries}
+\label{sec:guarantees}
+
+\subsection{Predictable factors}
+
+\begin{proposition}[bounded predictable factor]
+\label{prop:factor}
+Let \(s_u\in[-1,1]\) satisfy
+\(\E_0[s_u\mid\cF_{u-1}]=0\), and let
+\(\beta_u\in[-1,1]\) be \(\cF_{u-1}\)-measurable.  Then
+\(L_u=1+\beta_u s_u\) is nonnegative and
+\(\E_0[L_u\mid\cF_{u-1}]=1\).
+\end{proposition}
+
+\begin{proof}
+The range assumptions give \(L_u\ge0\), and conditional linearity gives
+\(\E_0[L_u\mid\cF_{u-1}]=1+\beta_u\E_0[s_u\mid\cF_{u-1}]=1\).
+\end{proof}
+
+This proposition is a direct predictable-betting specialization, not a new
+martingale theorem.  It applies to the independently randomized orientation
+because an antisymmetric current-pair score is conditionally centered given
+the unordered pair and past state.  Fixed natural hardware orientation is
+not made exchangeable by this notation.
+
+\subsection{Complete-shot expert mixture}
+
+\begin{proposition}[shared-orientation roles]
+\label{prop:roles}
+Suppose one orientation coin is drawn for complete paired shot \(u\), and
+every role-component score is computed from its pre-shot state.  If each
+\((r,c)\) construction is a conditional e-factor with respect to the
+pre-coin filtration, then every fixed convex mixture of the corresponding
+role-component wealth processes is an e-process.  Serially treating the 51
+roles as fresh coin revelations is not justified.
+\end{proposition}
+
+\begin{proof}
+Each expert wealth is nonnegative with conditional expectation no larger
+than its previous value.  Conditional linearity preserves this property
+under fixed convex weights despite arbitrary dependence between experts.
+After the first role reveals the shared orientation, the remaining roles do
+not receive a fresh randomization bit, so a 51-step product needs an
+additional conditional argument that the design does not supply.
+\end{proof}
+
+For horizon \(H\), the locked proper-prior recursion is
+\[
+  A_{0,r,c}=0,\qquad
+  A_{u,r,c}=L_{u,r,c}\!\left(A_{u-1,r,c}+\frac1H\right),
+\tag{8}
+\]
+\[
+  E_u=\frac{H-u}{H}
+  +\frac1{51}\sum_{r=0}^{50}\sum_c\pi_c A_{u,r,c}.
+\tag{9}
+\]
+Here \(H=20{,}000\) for held replay and \(H=5{,}000\) for the randomization
+threshold replay.
+
+\subsection{Common-mode blind spot and global diagnostic}
+
+\begin{proposition}[relative-projection blind spot]
+\label{prop:common}
+Let \(P_{\mathrm{rel}}=I-P_{\mathrm{triv}}\) remove the invariant spatial
+mode.  If a change is exactly
+\(\Phi'_u=\Phi_u+\one\otimes c_u\), with no clipping, nonlinear remapping, or
+relative change, then
+\[
+  P_{\mathrm{rel}}\Phi'_u=P_{\mathrm{rel}}\Phi_u.
+\]
+Every detector measurable only with respect to the relative field has the
+same path law before and after this change.
+\end{proposition}
+
+\begin{proof}
+The additive term belongs to the invariant subspace and is annihilated by
+\(P_{\mathrm{rel}}\).  Equality is pathwise, so equality of every
+relative-field functional follows.
+\end{proof}
+
+This projection identity motivates reporting M0 as a separate, directly
+interpretable global-rate diagnostic beside the fixed M4/M5 composite \(S\).
+M0 is a control, not a claimed repair or an additional branch of \(S\), and
+the identity is not a new statement about topological order.
+
+\subsection{Closed-form maximum-difference coordinates}
+
+\begin{proposition}[top-\(k\) capped contrast]
+\label{prop:topk}
+For mean contrast \(\delta\in\mathbb R^p\) and
+\(k\in\{1,\ldots,p\}\), let
+\(v=(\delta,-\delta)\) and
+\[
+  \cC_k=\left\{q\in\mathbb R^{2p}_+:
+  \sum_{i=1}^{2p}q_i=1,\ q_i\le\frac1k\right\}.
+\]
+Then
+\[
+  \max_{q\in\cC_k}q^{\mathsf T}v
+  =\frac1k\sum_{j=1}^{k}|\delta|_{(j)}.
+\tag{10}
+\]
+\end{proposition}
+
+\begin{proof}
+A linear functional over the capped simplex assigns the largest allowed
+mass to its largest coordinates.  The \(k\) largest coordinates of
+\((\delta,-\delta)\) are the correctly signed copies of the \(k\) largest
+absolute entries of \(\delta\).
+\end{proof}
+
+Equation~(10) solves the declared linear-gap objective.  It does not prove
+minimum detection delay or universal feature-selection optimality.
+
+\subsection{Spectral gap and likelihood ceiling}
+
+\begin{proposition}[positive-part operator gap]
+\label{prop:jordan}
+For Hermitian \(\overline\Delta\),
+\[
+  \max_{0\preceq E\preceq I}\Tr(E\overline\Delta)
+  =\Tr(\overline\Delta_+),
+\]
+attained by the unambiguous spectral projector
+\(E=\Pi_+(\overline\Delta;0)\) onto the strictly positive eigenspace.
+\end{proposition}
+
+This standard variational identity maximizes a one-step linear gap, not
+sequential log wealth.  Moreover, if \(P_1\ll P_0\) is a correctly specified
+same-information alternative, every one-step e-factor \(L\) obeys
+\[
+  \E_1\log L\le\KL(P_1\Vert P_0),
+\tag{11}
+\]
+with equality for the likelihood ratio \(dP_1/dP_0\).
+Indeed,
+\[
+\E_1\log L
+=\KL(P_1\Vert P_0)
++\E_1\log\!\left(L\frac{dP_0}{dP_1}\right)
+\le\KL(P_1\Vert P_0)
+\]
+by Jensen and \(\E_0L\le1\).  Thus potential benefits of \SPace{} concern
+robustness, transparent calibration, sparse interpretation, or model-fitting
+cost---not violation of the likelihood ceiling
+~\cite{neymanpearson1933tests}.
+
+\subsection{Lifetime control versus average run length}
+
+\begin{theorem}[declared sequential meanings]
+\label{thm:sequential}
+Under the exact conditional null, Eq.~(9) is a nonnegative
+supermartingale with \(E_0=1\), so
+\[
+  \Prb_0\!\left(\sup_{u\le H}E_u\ge1/\alpha\right)\le\alpha.
+\tag{12}
+\]
+Separately, if
+\[
+  R_{u,r,c}=(R_{u-1,r,c}+1)L_{u,r,c},\qquad
+  R_u=\frac1{51}\sum_{r,c}\pi_cR_{u,r,c},
+\tag{13}
+\]
+then the SR stopping rule at threshold \(\gamma\) has null ARL at least
+\(\gamma\) \emph{complete paired shots}, subject to the standard
+optional-sampling conditions.  A role or flattened cycle index can localize
+an empirical alert within a shot but is not an ARL time unit.
+\end{theorem}
+
+These statements are not interchangeable.  When \(L\equiv1\), the SR
+statistic advances like a clock and crosses a finite threshold.  Run 6 uses
+\(\alpha=0.01\) for the reported proper-prior audit.  Equation~(13) records
+the distinct SR/ARL construction and its formal unit; this manuscript does
+not report a separate Google SR result.
+
+\subsection{Accessible-data no-go}
+
+\begin{theorem}[pushforward no-go]
+\label{thm:nogo}
+Let \(Y\) denote the archived syndrome path and let \(T(Y,U)\) be any
+detector, stopping rule, or randomized post-processing, where auxiliary
+randomness \(U\) has the same law under both hypotheses.  If the two physical
+regimes induce the same law for \(Y\), they induce the same law for
+\(T(Y,U)\).
+\end{theorem}
+
+\begin{proof}
+The result is the data-processing identity for the pushforward of the common
+law of \((Y,U)\).
+\end{proof}
+
+Theorem~\ref{thm:nogo} does not discover Wilson loops, toric-code logical
+structure, or a string-theory result.  Wilson observables and toric-code
+strings are established physical constructions
+~\cite{wilson1974confinement,kitaev2003anyons}.  They are not measured in
+the primary repetition-code archive.
+
+\section{Locked Comparators and Evaluation}
+\label{sec:evaluation}
+
+\subsection{Methods and information parity}
+
+Table~\ref{tab:methods} records the frozen method set.  M0C, M1, and M2 are
+mandatory contextual controls but cannot rescue failure of the
+predesignated M0/M3 comparisons.
+
+\begin{table}[ht]
+\centering
+\caption{Frozen methods.  ``Exact'' refers only to the randomized complete-
+pair design with the displayed factor construction.}
+\label{tab:methods}
+\small
+\begin{tabularx}{\linewidth}{@{}lXl@{}}
+\toprule
+ID & Score or fitted object & Status\\
+\midrule
+M0 & paired detector firing-rate difference & exact-factor/empirical\\
+M0C & within-shot two-sided Page--CUSUM & empirical\\
+M1 & fixed diagonal Bernoulli surprise & exact-factor/empirical\\
+M2 & role-centered shrinkage Hotelling score & empirical\\
+M3 & past-only pairwise logistic, same \(\phi\) & exact-factor/empirical\\
+M4 & sparse signed top-\(k\) witness & exact-factor/empirical\\
+M5 & positive-eigenspace/rank-one witness & exact-factor/empirical\\
+S & fixed M4/M5 prior; empirical max score & as declared above\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{M0 and M0C.}
+With \(d^g_{q,r}=g(e^B_{q,r})-g(e^A_{q,r})\), M0 uses
+\(s^{(0)}_{q,r}=d^g_{q,r}\), eight signed bets
+\(\beta\in\{\pm0.1,\pm0.3,\pm0.6,\pm0.9\}\), and empirical score
+\(Z^{(0)}_{q,r}=|s^{(0)}_{q,r}|\).  At shot \(q\), define the M0C channels
+\(x_{r,0}=d^g_{q,r}\) and
+\(x_{r,j}=e^B_{q,r,j}-e^A_{q,r,j}\) for raw checks
+\(j\in\{1,\ldots,24\}\).  M0C resets at each shot and, for drifts
+\(\kappa\in\{0.01,0.05,0.1\}\), applies
+\[
+ C^+_{\kappa,c}\leftarrow
+ \max\{0,C^+_{\kappa,c}+x_{r,c}-\kappa\},\qquad
+ C^-_{\kappa,c}\leftarrow
+ \max\{0,C^-_{\kappa,c}-x_{r,c}-\kappa\}.
+\]
+Its score is \(\max_{\kappa,c}\{C^+_{\kappa,c},C^-_{\kappa,c}\}\);
+it is a within-shot empirical scan, not an e-factor or cross-shot
+quickest-change oracle.
+
+\paragraph{M1 and M2.}
+M1 freezes role/check probabilities from the fit pairs using Jeffreys
+smoothing and clipping,
+\[
+ \widehat p_{rj}=\operatorname{clip}
+ \left(\frac{c_{rj}+1/2}{10001},10^{-4},1-10^{-4}\right),
+\]
+forms the mean diagonal Bernoulli negative log likelihood \(\ell_r(e)\),
+and scores
+\[
+ s^{(1)}_{q,r}=
+ \frac{\ell_r(e^B_{q,r})-\ell_r(e^A_{q,r})}
+ {\log\{(1-10^{-4})/10^{-4}\}}\in[-1,1].
+\]
+M2 uses the exact PCG64(610601) role-stratified 20,000-observation fit
+subsample, role means \(\widehat\mu_r\), and one pooled symmetrized
+Ledoit--Wolf precision \(\widehat\Omega\):
+\[
+ Z^{(2)}_{q,r}=\max\!\left\{0,
+ (D^\phi_{q,r}-\widehat\mu_r)^{\mathsf T}\widehat\Omega
+ (D^\phi_{q,r}-\widehat\mu_r)\right\}.
+\]
+M2 is empirical and never inherits an e-process guarantee.
+
+\paragraph{M3 same-feature control.}
+For \(\eta\in\{0.001,0.01,0.1\}\), M3 maintains a distinct
+\(w_{r,\eta}\in\mathbb R^{300}\), no intercept, and L2 coefficient
+\(\lambda=10^{-4}\).  From the pre-update
+\(a=w_{r,\eta}^{\mathsf T}D^\phi_{q,r}\) and
+\(2c=\max\{1,\|w_{r,\eta}\|_1\}\), it scores
+\[
+ s^{(3,\eta)}_{q,r}=\tanh(a/(2c))
+\]
+and only then applies the overflow-safe pairwise-logistic update
+\[
+ w_{r,\eta}\leftarrow w_{r,\eta}
+ +\eta\,\sigma(-a)D^\phi_{q,r}
+ -\eta\lambda w_{r,\eta}.
+\]
+The empirical maximum over the three frozen experts is threshold-calibrated;
+the exact branch instead uses its fixed 12-component \((\eta,\beta)\)
+mixture.
+
+All methods receive the same raw detector records.  The 5,000-pair fit block
+is common.  The disjoint 5,000-pair threshold clone selects the smallest
+observed-or-infinite strict threshold whose replay emits at most two
+notifications among 255,000 cycle-role opportunities.  At most one
+notification is counted per shot; states continue updating through
+within-shot suppression.  The complete threshold frontier is frozen before
+held scoring.
+
+\subsection{Primary event and risk--coverage endpoints}
+
+The natural-event endpoints are: alarm inside each frozen event window,
+first alarm shot and role, pre-event alerts, and event score rank.  Because
+the event is a single cluster with approximate onset, cycle-level population
+confidence claims are prohibited.
+
+Only after detector artifacts are hashed are actual observable flips and
+decoder predictions opened.  At the primary triage budget, each method ranks
+the 20,000 monitor shots by frozen score, breaking ties by ascending archive
+index.  The primary label is actual observable flip XOR correlated-matching
+prediction; PyMatching is secondary.  The top 20 shots are selected without
+labels.  This is retrospective veto/triage, not a new decoder.
+
+\subsection{Post-detector repair chronology and dual provenance}
+\label{sec:repair}
+
+The detector implementation, manifest, and original ratification were
+committed and pushed before detector-value access.  The detector replay then
+read, scored, and serialized the held detector stream.  The first
+randomization launch stopped in artifact-schema validation: all 32 planned
+shards produced the same failure, no shard manifest and no completed
+replicate.  Diagnosis exposed detector-derived numeric diagnostics.
+
+The defect was a producer--consumer validation mismatch: the producer omitted
+one redundant SR metadata key, while the consumers required it, and the
+consumer's expected prior vector did not reproduce the producer's exact
+normalization path.  The repair was fixed from source and schema evidence.
+No detector-derived number selected the repair; no threshold, score, state,
+seed, window, endpoint, or claim gate changed.  The original 231-artifact
+detector bundle was reused byte-for-byte and was not rerun.
+
+A second, post-detector and pre-outcome
+implementation--manifest--ratification chain binds the exact allowlisted
+consumer and verification diff, the original ratification, detector
+manifest and artifact registry, 32 preserved failed attempts, environment,
+thread settings, package lock, and runtime module origins.  Its access record
+truthfully sets detector access and numeric diagnostic exposure to true,
+repair selection from those numbers to false, decoder-outcome and PNNL held
+access to false, and completed randomization to zero.  Randomization, PNNL,
+the outcome join, and the final decision must bind this repair ratification;
+the immutable detector manifest continues to bind only the original
+ratification.
+
+Thus the methods and gates were initially preregistered, but the end-to-end
+execution is not described as detector-blind repair or pristine full
+preregistration.  This chronology is a limitation and part of the
+machine-checked publication contract.
+
+\subsection{Locked Google uncertainty}
+
+Risk--coverage stability uses a paired circular moving-block bootstrap of
+complete monitored shots: block length 128, 2,000 replicates, and replicate
+seed \(611000+b\).  Each resample draws 157 circular block starts, truncates
+to 20,000 shots, resamples score/outcome rows together, and recomputes the
+fixed top-\(B\) metrics and differences.  A separate descriptive threshold
+bootstrap uses complete threshold shots, block length 128, 2,000 replicates,
+40 block starts, and seeds \(613000+b\).  Neither bootstrap replaces the
+deterministic threshold or changes the primary Boolean.  With one natural
+event cluster, neither interval is called a population-level event-power
+confidence interval.
+
+\subsection{Exact randomization audit}
+
+The threshold block is replayed under 256 predeclared random-swap seeds.  One
+orientation bit applies to all 51 roles in a complete pair, all states reset
+between replicates, and factors are mixed only at complete-shot time.  This
+arm audits implementation and design-based calibration.  It neither
+establishes natural hardware stationarity nor estimates event power.
+
+\subsection{\PNNL{} path-level uncertainty}
+
+Each of the 22 path--logical-state streams calibrates its empirical threshold
+with 4,096 circular moving-block bootstrap replicates of \emph{complete
+paired shots}, block length 32, and its frozen cohort/state/method seed.
+This within-stream threshold bootstrap is not the cross-cohort uncertainty
+unit.
+
+For the auxiliary comparison, logical states 0 and 1 are first averaged
+within each of the 11 physical path/snapshot pairs.  The primary uncertainty
+analysis then bootstraps these 11 paired path effects 10,000 times with
+PCG64 seed 612500.  A separate 10,000-draw sensitivity bootstrap clusters by
+the five ordered calibration-hash pairs with seed 612501.  The paired
+randomization analysis exhaustively enumerates all \(2^{11}\) sign flips of
+the 11 path effects.  No bootstrap or randomization treats individual
+syndrome bits as independent.
+
+The exact swap audit is a different operation: seeds 610700 through 610955
+create one A/B swap bit per complete paired shot, shared across all methods
+and round roles; every path--state replicate resets fully, scores before
+updating, and performs one role-expert mixture update per shot.  It validates
+the design, not natural IBM drift.  QASM equality and inequality remain
+visible so circuit-and-hardware domain shift cannot be mislabeled as
+hardware-only drift.  The publication consumer validates all 110 ordered
+path--state--method JSON rows and aggregate-cross-checks their alarm totals
+and global maxima against hash-bound \(256\times5\) count and maximum-log-\(e\)
+arrays.  Those aggregate arrays do not reconstruct the allocation of alarms
+among individual path rows, so the audit is not described as an independent
+row-level recomputation.
+
+\subsection{Locked conjunctive empirical gate}
+
+Let \(G\) be \texttt{google\_primary\_pass}.  It is true only if the fixed
+composite:
+
+\begin{enumerate}
+  \item alarms inside \([57750,57800)\) at the validation-locked primary
+  threshold;
+  \item has at most nine pre-event alerts;
+  \item was frozen with its resource ledger before outcome access;
+  \item captures at least one more top-20 correlated-decoder mismatch than
+  paired \DFR{};
+  \item captures at least one more than same-feature online logistic;
+  \item reports every frozen sensitivity and uncertainty summary; and
+  \item receives no extra records or outcome labels.
+\end{enumerate}
+
+Let \(P\) be the single aggregate
+\texttt{pnnl\_retention\_pass}.  Against \emph{each} of DFR and
+same-feature online logistic, the fixed composite must have no more
+pre-boundary false alarms over all 22 state streams and a strictly lower
+equal-weight macro restricted-delay fraction after logical-state averaging.
+Ties fail.  This is not a count or selection of ``retained paths''; all 11
+path rows and both logical-state summaries remain in the report.  The
+overall statement is the conjunction
+\[
+  C_{\mathrm{Run\,6}}=G\land P.
+\tag{14}
+\]
+If either gate fails, the required conclusion is exactly ``no demonstrated
+\SPace{} algorithmic advantage.''  A tie, a sparse heat map, or a successful
+randomization audit cannot override Eq.~(14).
+
+\subsection{Physical and computational resource ledger}
+
+Observation exposure is reported for every method: calibration/reference
+and monitor shots, QEC cycles, detector bits, feature dimension, and update
+frequency.  Offline pairing consumes two physical archived shots per formal
+update.  The implementation executes all methods in one detector runner, so
+wall time and maximum resident set size are identifiable only for the
+\emph{joint pipeline/process}.  They are not divided into unsupported
+per-method timing or RSS claims.  The process-wide ledger additionally
+records output bytes and high-level operation counts where the manifest
+supports them.  Formal e-process/ARL time is always a complete paired shot;
+role and cycle indices are only within-shot localization coordinates.
+
+\section{Locked Results and Dual Provenance}
+\label{sec:results}
+
+\ifrunresultbundle\else
+\noindent\textcolor{pending}{\textbf{Pre-results status.}}
+Every red \texttt{TBD(KEY)} marker is a conditional fallback.  Final mode
+accepts only fragments generated from the original freeze, repair chain, and
+four completed hash-bound result manifests by the fail-closed publication
+extractor; editing this manuscript cannot resolve a marker.
+\fi
+
+\subsection{Provenance and detector freeze}
+
+The publication bundle verifies two distinct provenance lines.  The immutable
+detector manifest binds the original pre-access ratification.  The
+randomization, PNNL, outcome, and decision records additionally bind the
+post-detector repair ratification and its truthful access record.  The
+extractor rejects any attempt to describe the repair as detector-blind, any
+detector rerun, or any completed randomization or held-outcome/PNNL access
+before repair.  It verifies every derived artifact digest and recomputes both
+empirical gates before emitting the claim sentence.  The bundle contract is
+\ifrunresultbundle
+\texttt{generated/publication\_bundle\_manifest.json}.
+\else
+\RunSixPending{PUBLICATION_BUNDLE_MANIFEST}.
+\fi
+Detector-only artifacts precede both the repair ratification and the
+separately hash-authorized outcome join.
+
+\subsection{Threshold frontier and locked uncertainty}
+
+\begin{table}[ht]
+\centering
+\caption{Validation-locked thresholds and complete alert frontier.  Strict
+crossing and one-notification-per-shot semantics remain fixed.}
+\label{tab:frontier}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedGoogleThresholdFrontierTable}
+\else
+  \RunSixPending{GOOGLE_THRESHOLD_FRONTIER_TABLE}
+\fi
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Descriptive Google threshold-bootstrap audit for all methods.
+Complete-shot circular blocks have length 128; all 2,000 replicates and
+seeds 613000--614999 are validated.  The summaries do not replace a frozen
+threshold, enter a locked Boolean, or estimate natural-event power.}
+\label{tab:google-threshold-bootstrap}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedGoogleThresholdBootstrapTable}
+\else
+  \RunSixPending{GOOGLE_THRESHOLD_BOOTSTRAP_TABLE}
+\fi
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Locked Google S-PACE-minus-comparator uncertainty for both labels,
+both comparators, budgets \(2,20,200\), and all four metrics, including valid
+replicate counts.  Resampling uses complete shots/blocks and does not change
+the deterministic primary Boolean; only primary-label budget-20 capture is
+gate-relevant.}
+\label{tab:google-uncertainty}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedGoogleUncertaintyTable}
+\else
+  \RunSixPending{GOOGLE_UNCERTAINTY_TABLE}
+\fi
+\end{table}
+
+\subsection{Google natural-event replay}
+
+\begin{table}[ht]
+\centering
+\caption{Frozen Google event results for all predeclared methods, including
+the mandatory CUSUM, diagonal-surprise, and Hotelling controls.}
+\label{tab:google}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedGoogleEventTable}
+\else
+  \RunSixPending{GOOGLE_EVENT_TABLE}
+\fi
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\ifrunresultbundle
+  \RunSixVerifiedGoogleEventFigure
+\else
+  \fbox{\parbox[c][32mm][c]{0.90\linewidth}{\centering
+  \RunSixPending{GOOGLE_EVENT_FIGURE}}}
+\fi
+\caption{Google natural-event causal replay.  The author-provided event
+location is approximate; the plot does not define an exact onset.}
+\label{fig:google}
+\end{figure}
+
+\subsection{Frozen decoder-outcome join}
+
+\begin{table}[ht]
+\centering
+\caption{Risk--coverage results from frozen rankings for both decoder labels
+and all locked budgets \(2,20,200\), with all eight methods, captured/total,
+recall, precision, retained mismatch rate, coverage, intervals, and valid
+replicate counts visible.  Only correlated-matching capture at budget 20
+enters the primary gate.}
+\label{tab:risk-budget}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedGoogleRiskBudgetTable}
+\else
+  \RunSixPending{GOOGLE_RISK_BUDGET_TABLE}
+\fi
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\ifrunresultbundle
+  \RunSixVerifiedGoogleRiskFigure
+\else
+  \fbox{\parbox[c][32mm][c]{0.90\linewidth}{\centering
+  \RunSixPending{GOOGLE_RISK_COVERAGE_FIGURE}}}
+\fi
+\caption{Retrospective utility of detector-only frozen rankings.}
+\label{fig:risk}
+\end{figure}
+
+\subsection{Randomization-design calibration}
+
+\begin{table}[ht]
+\centering
+\caption{Complete-shot proper-prior randomization audit.  No SR result is
+inferred or reported.}
+\label{tab:randomization}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedGoogleRandomizationTable}
+\else
+  \RunSixPending{GOOGLE_RANDOMIZATION_TABLE}
+\fi
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\ifrunresultbundle
+  \RunSixVerifiedGoogleRandomizationFigure
+\else
+  \fbox{\parbox[c][32mm][c]{0.90\linewidth}{\centering
+  \RunSixPending{GOOGLE_RANDOMIZATION_FIGURE}}}
+\fi
+\caption{Exact-design randomization audit.}
+\label{fig:randomization}
+\end{figure}
+
+\subsection{\PNNL{}/IBM constructed-boundary arm}
+
+\begin{table}[ht]
+\centering
+\caption{\PNNL{} exact paired-swap implementation audit.  The table covers
+all 22 path--state episodes, five methods, and 256 seeds.  It is not a
+natural-hardware null, enters neither empirical gate nor the overall
+conjunction, and cannot override a failed empirical gate.}
+\label{tab:pnnl-randomization}
+\small
+\ifrunresultbundle
+  \RunSixVerifiedPNNLRandomizationTable
+\else
+  \RunSixPending{PNNL_RANDOMIZATION_AUDIT_TABLE}
+\fi
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{\PNNL{} equal-weight macro summaries.  Pre-boundary false-alarm
+and miss counts cover all 22 path--state streams; no path is selected or
+discarded by the retention decision.}
+\label{tab:pnnl-macro}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedPNNLMacroTable}
+\else
+  \RunSixPending{PNNL_MACRO_PREFA_MISS_TABLE}
+\fi
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{\PNNL{} state-resolved results.  Each cell is
+pre-boundary false-alarm indicator / miss indicator / restricted post-boundary
+delay fraction.  All 22 ordered path--state rows and all five methods are
+reported; no path or logical state is selected.}
+\label{tab:pnnl-state-results}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedPNNLStateResultsTable}
+\else
+  \RunSixPending{PNNL_STATE_RESULTS_TABLE}
+\fi
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{\PNNL{} state-averaged cohort results.  Each cell is pre-false-alarm
+mean / miss mean / restricted post-boundary delay fraction after averaging
+logical states 0 and 1.  All 11 cohorts and all five methods are reported;
+the forest plot separately shows the two gate-relevant differences.}
+\label{tab:pnnl-cohort-results}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedPNNLCohortResultsTable}
+\else
+  \RunSixPending{PNNL_COHORT_RESULTS_TABLE}
+\fi
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Aggregate \PNNL{} retention conditions against both predesignated
+comparators, with the path bootstrap, calibration-pair sensitivity bootstrap,
+exact paired sign-flip \(p\)-value, and all three gate Booleans.}
+\label{tab:pnnl-comparison}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedPNNLComparisonTable}
+\else
+  \RunSixPending{PNNL_AGGREGATE_RETENTION_TABLE}
+\fi
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{\PNNL{} cohort-control map.  The anonymous C01--C11 plot labels
+map to the frozen path/snapshot cohorts here; QASM equality is exposed, and
+the control class is derived per cohort from the hash-bound Pittsburgh
+manifest.  These constructed snapshot comparisons are not natural drift.}
+\label{tab:pnnl-controls}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedPNNLCohortControlTable}
+\else
+  \RunSixPending{PNNL_COHORT_CONTROL_TABLE}
+\fi
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\ifrunresultbundle
+  \RunSixVerifiedPNNLFigure
+\else
+  \fbox{\parbox[c][32mm][c]{0.90\linewidth}{\centering
+  \RunSixPending{PNNL_DELAY_FOREST_FIGURE}}}
+\fi
+\caption{\PNNL{}/IBM constructed snapshot-boundary results.}
+\label{fig:pnnl}
+\end{figure}
+
+\subsection{Resource ledger}
+
+\begin{table}[ht]
+\centering
+\caption{Hash-bound resource ledger.  Timing and maximum RSS are
+process-wide measurements for the joint pipeline and are not attributed to
+individual methods.  All three Google joint replays, both PNNL wall-time
+scopes, and PNNL bootstrap/randomization surrogate work and
+eigendecompositions are reported; surrogate work is not new hardware
+exposure.}
+\label{tab:resources}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedResourceLedgerTable}
+\else
+  \RunSixPending{JOINT_PIPELINE_RESOURCE_LEDGER}
+\fi
+\end{table}
+
+\subsection{Locked decision}
+
+\begin{table}[ht]
+\centering
+\caption{Recomputed atomic predicates and conjunctive locked decision.}
+\label{tab:gate}
+\small
+\ifrunresultbundle
+  \resizebox{\linewidth}{!}{\RunSixVerifiedGateTable}
+\else
+  \RunSixPending{RECOMPUTED_GATE_DECISION_TABLE}
+\fi
+\end{table}
+
+The result-contingent sentence emitted from that recomputation is:
+\RunSixClaimSentence
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{What a satisfied conjunctive gate would and would not mean}
+
+If and only if both gates in Eq.~(14) pass, the supported statement is an
+empirical fact: both fixed conditions were satisfied for these datasets,
+implementations, endpoints, and budgets.  Because the tests compare specific
+implementations at fixed endpoints, passing does not establish superiority
+over same-feature or same-parity logistic or threshold classes, a correct
+likelihood or oracle rule, or a general algorithmic advantage.  It also does
+not establish universal sample efficiency, scaling advantage, or quantum
+acceleration.  If either gate fails, the benchmark remains informative by
+identifying the simpler comparator that matched or exceeded the composite
+without changing the success criterion.
+
+\subsection{Symmetry and physics language}
+
+Sector projections are classical representation bookkeeping on observed
+features.  Group-symmetric quantum hypothesis testing
+~\cite{hiai2009symmetry} and symmetry-resolved entanglement
+~\cite{goldstein2018symmetry} are related mathematical contexts, not Run 6
+outputs.  The primary data are a one-dimensional repetition-code syndrome
+archive; they do not constitute a Wilson-loop measurement, a new
+topological-order theorem, or evidence about string theory or holography.
+
+\subsection{Limitations}
+
+The primary hardware evidence contains one author-identified event cluster.
+Its onset is approximate, and archived shot order is not a calibrated
+wall-clock cadence.  The paired reference reservoir is historical rather
+than physically simultaneous, so exact exchangeability is supplied only by
+the artificial randomization audit.  \PNNL{} comparisons are constructed
+snapshot boundaries and some confound circuit with hardware changes.  The
+same 300-coordinate bank is broad but finite; no monitor can detect a change
+absent from its accessible syndrome sigma-field.  The consumer validator was
+repaired only after detector values had been produced and numeric diagnostics
+had been exposed.  Although the repair was source/schema-derived, left the
+detector bundle unchanged, and preceded outcome and held-\PNNL{} access, this
+precludes describing the complete execution as detector-blind or pristine
+end-to-end preregistration.  Finally, the full spectral
+branch costs repeated eigendecompositions, so any computational benefit must
+be measured rather than inferred from parameter count.
+
+\subsection{Practical next experiment}
+
+The most consequential follow-up is an online surface-code experiment with
+prospectively timestamped calibration interventions and synchronized
+decoder likelihoods.  A resource-matched protocol should compare \SPace{}
+with covariance/CUSUM, detector likelihood, adaptive decoder/noise trackers,
+and predeclared gauge-invariant diagnostics at identical shots, qubit-cycle
+exposure, and intervention cost.  Classical-shadow e-detection becomes a
+valid comparator only if its randomized acquisition settings are collected
+as part of that separate experiment.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This work specifies an auditable route from past-only maximum-difference
+features to sequential monitoring of fixed QEC syndrome records.  Its exact
+content is deliberately narrow: bounded predictable factors under a
+declared conditional design, fixed mixtures at the complete-shot
+experimental unit, and standard lifetime/ARL guarantees used without
+interchange.  The result-contingent conclusion is:
+\RunSixClaimSentence\ The
+benchmark is designed so that a strong rate, covariance, likelihood, or
+same-feature comparator remains a scientific result rather than a baseline
+to be removed after inspection.
+
+\section*{Data and Code Availability}
+
+The Google and \PNNL{} data are public deposits
+~\cite{google2022data,stein2026dataset}.  The accompanying repository stores
+the initial preregistration, original freeze ratification, separately
+ratified post-detector repair, detector/outcome separation, truthful access
+record, environment lock, source hashes, and machine-readable resource
+ledgers.  Final manuscript values and figures are accepted only through the
+dual-provenance, hash-bound publication bundle.
+
+\section*{Acknowledgments}
+
+The author thanks the creators of the public QEC datasets and the developers
+of the statistical and QEC tools on which this reproducible benchmark
+depends.  This working paper makes no claim of endorsement by those groups.
+
+\appendix
+
+\section{Frozen Hyperparameters}
+\label{app:hyperparameters}
+
+\begin{table}[ht]
+\centering
+\caption{Selected locked parameters.}
+\small
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+\toprule
+Object & Frozen value\\
+\midrule
+M3 learning rates & \(0.001,0.01,0.1\); L2 \(10^{-4}\), no intercept\\
+M4 half-lives & \(4,16,64,256\) role updates\\
+M4 supports & \(k=1,4,16,64\)\\
+M5 half-lives & \(4,16,64\) role updates\\
+M5 effects & stride 8; \(\tau_{\rm eig}=10^{-10}\); deterministic anchored
+rank one and full positive eigenspace\\
+Bet fractions & \(0.1,0.3,0.6,0.9\)\\
+Proper-prior threshold & \(\alpha=0.01\), crossing at \(100\)\\
+Empirical cycle budget & at most 2 notifications in 255,000 opportunities\\
+Risk budgets & top \(2,20,200\) of 20,000 monitor shots\\
+Google randomization & 256 predeclared complete-shot swap streams\\
+Google threshold uncertainty & 2,000 shot-block draws, block length 128\\
+PNNL stream threshold & 4,096 shot-block draws, block length 32\\
+PNNL paired-swap audit & 256 seeds; 22 path--state episodes; five methods\\
+PNNL uncertainty & 10,000 path draws; 10,000 cluster sensitivity draws;
+all \(2^{11}\) paired signs\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Proof Detail for the Proper-Prior Process}
+\label{app:prior}
+
+Let \(\rho_u=1/H\) for \(u=1,\ldots,H\) and
+\(\rho_{>u}=(H-u)/H\).  From Eq.~(8) and conditional e-validity,
+\[
+\E_0[A_{u,r,c}\mid\cF_{u-1}]
+\le A_{u-1,r,c}+\rho_u.
+\]
+After fixed mixing,
+\[
+\E_0[E_u\mid\cF_{u-1}]
+\le \rho_{>u}
++\frac1{51}\sum_{r,c}\pi_c(A_{u-1,r,c}+\rho_u)
+=E_{u-1}.
+\]
+The initial tail mass gives \(E_0=1\); Ville's inequality yields
+Eq.~(12).  Replacing the proper start prior by an unnormalized SR clock
+changes the guarantee and cannot retain the same lifetime interpretation.
+
+\section{Result-Insertion Checklist}
+\label{app:checklist}
+
+Before a submission build, all of the following must hold:
+
+\begin{enumerate}
+  \item every keyed pending marker is absent from the compiled PDF;
+  \item the hash-bound publication bundle is independently regenerated from
+  all eight declared evidence inputs and matches every included byte;
+  \item the immutable detector binds the original pre-access ratification,
+  while every downstream arm and the final decision bind the separately
+  ratified repair;
+  \item the repair access record discloses diagnostic exposure and rejects
+  detector-blind or pristine end-to-end preregistration language;
+  \item the abstract calls the Google onset approximate and \PNNL{} a
+  constructed snapshot boundary;
+  \item exact e-validity is confined to the randomized complete-pair design;
+  \item all 51 roles remain one formal time step;
+  \item e-process lifetime control and SR ARL are not conflated;
+  \item paired \DFR{} and same-feature logistic both appear in the gate;
+  \item M0C, M1, and M2 are reported regardless of outcome;
+  \item the complete threshold/frontier and locked uncertainty tables are
+  included, including the descriptive 2,000-replicate threshold bootstrap;
+  \item PNNL pre-false-alarm, miss, macro-delay, and both comparator
+  retention conditions are included without selecting paths, together with
+  the complete paired-swap implementation-audit summary;
+  \item the recorded chain shows zero completed randomization replicates and
+  no outcome or held-\PNNL{} access before repair, with no detector rerun;
+  \item uncertainty is clustered by shot/event or path as declared;
+  \item a tied or failed gate produces the locked negative conclusion; and
+  \item no quantum speedup, universal sample-efficiency, topological,
+  string-theory, or holographic claim appears.
+\end{enumerate}
+
+\ifrunrevtex
+  \bibliographystyle{apsrev4-2}
+\else
+  \bibliographystyle{unsrtnat}
+\fi
+\bibliography{references}
+
+\end{document}
