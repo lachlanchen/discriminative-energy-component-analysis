@@ -1,0 +1,164 @@
+{
+  "claim_boundary": [
+    "This experiment is an offline diagnostic benchmark; it has no sequential, ARL, false-alarm-rate, or detection-delay guarantee.",
+    "All methods receive identical train, validation, and test windows within each scenario and effect.",
+    "Classifier hyperparameters are fixed in this configuration. Decision thresholds use validation labels only.",
+    "Only the D4 Fourier/pair-lift simplex receives the indicator positive-support-projector ECA/AOC interpretation. Positive-part directions on count, first-moment, or translation features are generic linear mean contrasts and are not Helstrom or AOC optima.",
+    "The exact spatial likelihood ratio and full temporal HMM likelihood ratio are known-model ceilings, not proposed algorithms.",
+    "Results apply only to the declared exact L=5 phenomenological model and are not hardware or universal sample-efficiency evidence."
+  ],
+  "config_sha256": "d5938c08099e858dcfd6ba266a8a48123040c0d1a7322e0802f4b49949bc053f",
+  "configuration": "run5-offline-diagnostic-locked-v2-objective-corrected",
+  "count_sequence_auc_range": {
+    "interpretation": "These are finite-sample offline results for an exact count-pushforward no-go feature family.",
+    "maximum": 0.524807,
+    "minimum": 0.488435
+  },
+  "design_provenance": "The feature families, fixed model hyperparameters, split sizes, effects, and seeds were frozen after theoretical design and small code smoke tests. An independent audit after the first locked execution found that one estimator label/objective incorrectly extended the simplex positive-support-projector interpretation to non-simplex features. Before the corrected rerun, v2 freezes the indicator projector only for the D4 Fourier/pair-lift simplex and relabels all other positive-part contrasts as generic mean directions. No v2 test labels are used for fitting, model selection, threshold selection, or this correction.",
+  "design_status": "locked offline diagnostic",
+  "exact_llr_ceiling": [
+    {
+      "effect": 0.45,
+      "method": "Exact spatial window LLR ceiling",
+      "scenario": "spatial",
+      "test_balanced_accuracy": 0.7125,
+      "test_roc_auc": 0.7961779999999999
+    },
+    {
+      "effect": 0.55,
+      "method": "Exact spatial window LLR ceiling",
+      "scenario": "spatial",
+      "test_balanced_accuracy": 0.8625,
+      "test_roc_auc": 0.9357179999999999
+    },
+    {
+      "effect": 0.65,
+      "method": "Exact spatial window LLR ceiling",
+      "scenario": "spatial",
+      "test_balanced_accuracy": 0.9495,
+      "test_roc_auc": 0.9898380000000001
+    },
+    {
+      "effect": 0.5,
+      "method": "Exact full-HMM window LLR ceiling",
+      "scenario": "temporal",
+      "test_balanced_accuracy": 0.9005000000000001,
+      "test_roc_auc": 0.9648730000000001
+    },
+    {
+      "effect": 0.75,
+      "method": "Exact full-HMM window LLR ceiling",
+      "scenario": "temporal",
+      "test_balanced_accuracy": 0.984,
+      "test_roc_auc": 0.9992460000000001
+    },
+    {
+      "effect": 0.9,
+      "method": "Exact full-HMM window LLR ceiling",
+      "scenario": "temporal",
+      "test_balanced_accuracy": 0.997,
+      "test_roc_auc": 0.999989
+    }
+  ],
+  "methods_per_task": 18,
+  "mmd_included": true,
+  "model": {
+    "event_probability": 0.65,
+    "null_chain2_probability": 0.35,
+    "readout_error": 0.03,
+    "size": 5
+  },
+  "objective_correction": {
+    "non_simplex_estimator": "positive_part_mean_direction",
+    "non_simplex_objective": "L1-normalized positive part of the training mean difference, used only as a generic linear contrast",
+    "simplex_estimator": "simplex_positive_support_projector",
+    "simplex_family": "symmetry_fourier",
+    "simplex_objective": "indicator of the positive support of the training mean difference, interpreted as a diagonal effect on the D4 Fourier or pair-lift probability simplex",
+    "status": "frozen before corrected locked rerun",
+    "superseded_result_note": "Any v1 offline output using magnitude-weighted positive support under a Raw AOC label is superseded and must not be reported."
+  },
+  "publication_grade": true,
+  "sequential_guarantees_tested": false,
+  "tasks": 6,
+  "test_tuning_performed": false,
+  "validation_selected_non_ceiling": [
+    {
+      "effect": 0.45,
+      "method": "Translation statistic / pair lift \u00b7 Linear logistic",
+      "scenario": "spatial",
+      "selection_rule": "largest validation ROC AUC among non-ceilings",
+      "test_balanced_accuracy": 0.6945,
+      "test_roc_auc": 0.7793595,
+      "validation_roc_auc": 0.7787000000000001
+    },
+    {
+      "effect": 0.55,
+      "method": "D4 Fourier / pair lift \u00b7 Regularized Hotelling",
+      "scenario": "spatial",
+      "selection_rule": "largest validation ROC AUC among non-ceilings",
+      "test_balanced_accuracy": 0.8380000000000001,
+      "test_roc_auc": 0.921865,
+      "validation_roc_auc": 0.92534375
+    },
+    {
+      "effect": 0.65,
+      "method": "D4 Fourier / pair lift \u00b7 Regularized Hotelling",
+      "scenario": "spatial",
+      "selection_rule": "largest validation ROC AUC among non-ceilings",
+      "test_balanced_accuracy": 0.941,
+      "test_roc_auc": 0.984515,
+      "validation_roc_auc": 0.98811875
+    },
+    {
+      "effect": 0.5,
+      "method": "D4 Fourier / pair lift \u00b7 Linear logistic",
+      "scenario": "temporal",
+      "selection_rule": "largest validation ROC AUC among non-ceilings",
+      "test_balanced_accuracy": 0.772,
+      "test_roc_auc": 0.849434,
+      "validation_roc_auc": 0.86650625
+    },
+    {
+      "effect": 0.75,
+      "method": "D4 Fourier / pair lift \u00b7 Linear logistic",
+      "scenario": "temporal",
+      "selection_rule": "largest validation ROC AUC among non-ceilings",
+      "test_balanced_accuracy": 0.8685,
+      "test_roc_auc": 0.9466760000000001,
+      "validation_roc_auc": 0.9501499999999999
+    },
+    {
+      "effect": 0.9,
+      "method": "D4 Fourier / pair lift \u00b7 RBF SVM",
+      "scenario": "temporal",
+      "selection_rule": "largest validation ROC AUC among non-ceilings",
+      "test_balanced_accuracy": 0.9145000000000001,
+      "test_roc_auc": 0.9749850000000001,
+      "validation_roc_auc": 0.9773687499999999
+    }
+  ],
+  "window_design": {
+    "spatial": {
+      "alternatives": [
+        0.45,
+        0.55,
+        0.65
+      ],
+      "window_cycles": 64
+    },
+    "split_windows_per_class": {
+      "test": 1000,
+      "train": 800,
+      "validation": 400
+    },
+    "temporal": {
+      "alternatives": [
+        0.5,
+        0.75,
+        0.9
+      ],
+      "window_cycles": 128,
+      "window_pairs": 64
+    }
+  }
+}

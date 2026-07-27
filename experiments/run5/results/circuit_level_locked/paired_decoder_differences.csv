@@ -1,0 +1,19 @@
+distance,rounds,regime,first_decoder,second_decoder,estimand,shots,confidence,ci_method,bootstrap_resamples,bootstrap_seed,difference,ci_low,ci_high,both_correct,first_correct_second_error,first_error_second_correct,both_error
+3,3,reference,static_null,ordinary_post,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,564000,-0.000765,-0.001105,-0.000425,192673,673,520,6134
+3,3,reference,static_null,correlation_aware,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,564001,-0.00089,-0.001295,-0.00048,192389,957,779,5875
+3,3,reference,ordinary_post,correlation_aware,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,564002,-0.000125,-0.000395,0.000145,192804,389,364,6443
+3,3,correlated,static_null,ordinary_post,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,564100,0.000815,0.00053,0.0011,189909,337,500,9254
+3,3,correlated,static_null,correlation_aware,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,564101,0.00211,0.001735,0.00249,189714,532,954,8800
+3,3,correlated,ordinary_post,correlation_aware,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,564102,0.001295,0.00101,0.00158,190117,292,551,9040
+5,5,reference,static_null,ordinary_post,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,566000,-0.001845,-0.002255,-0.001435,193520,1045,676,4759
+5,5,reference,static_null,correlation_aware,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,566001,-0.005145,-0.005755,-0.00454,192155,2410,1381,4054
+5,5,reference,ordinary_post,correlation_aware,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,566002,-0.0033,-0.00381,-0.002795,192520,1676,1016,4788
+5,5,correlated,static_null,ordinary_post,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,566100,-0.000355,-0.000755,4.5e-05,194342,861,790,4007
+5,5,correlated,static_null,correlation_aware,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,566101,0.003635,0.0031,0.00417,194060,1143,1870,2927
+5,5,correlated,ordinary_post,correlation_aware,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,566102,0.00399,0.003545,0.004435,194501,631,1429,3439
+7,7,reference,static_null,ordinary_post,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,568000,-0.00182,-0.002225,-0.001415,195000,1043,679,3278
+7,7,reference,static_null,correlation_aware,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,568001,-0.00239,-0.00293,-0.001855,194298,1745,1267,2690
+7,7,reference,ordinary_post,correlation_aware,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,568002,-0.00057,-0.001015,-0.00012,194593,1086,972,3349
+7,7,correlated,static_null,ordinary_post,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,568100,0.00127,0.000905,0.001635,196132,562,816,2490
+7,7,correlated,static_null,correlation_aware,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,568101,0.00533,0.00487,0.00579,196122,572,1638,1668
+7,7,correlated,ordinary_post,correlation_aware,logical_error_rate(first)-logical_error_rate(second),200000,0.95,paired multinomial bootstrap,50000,568102,0.00406,0.00369,0.004435,196624,324,1136,1916

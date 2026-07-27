@@ -1,0 +1,13 @@
+family,effect,evaluation,comparison,mean_delay_difference_cycles,ci95_low,ci95_high
+spatial,0.55,restart_at_change,vAOC minus exact one-cycle likelihood grid SR,133.40625,126.05703125000001,140.7515625
+spatial,0.55,restart_at_change,vAOC minus known-post one-cycle likelihood SR,133.40625,126.05703125000001,140.7515625
+spatial,0.55,restart_at_change,vAOC minus matched correlation witness,11.0,8.06171875,14.3125
+spatial,0.55,restart_at_change,vAOC minus raw symmetry-resolved AOC,14.1875,2.1867187500000007,26.0
+spatial,0.55,restart_at_change,vAOC minus validation-trained linear logistic effect,6.59375,3.1859375000000014,10.15625
+temporal,0.75,restart_at_change,vAOC minus exact pair-restricted likelihood grid SR,134.6875,122.9984375,145.753125
+temporal,0.75,restart_at_change,vAOC minus full-HMM block-boundary grid SR,167.1875,158.5609375,174.4390625
+temporal,0.75,restart_at_change,vAOC minus known-post full-HMM block-boundary SR,167.1875,158.5609375,174.4390625
+temporal,0.75,restart_at_change,vAOC minus known-post pair-restricted likelihood SR,134.6875,122.9984375,145.753125
+temporal,0.75,restart_at_change,vAOC minus matched correlation witness,2.1875,-0.875,5.4375
+temporal,0.75,restart_at_change,vAOC minus raw symmetry-resolved AOC,-5.0,-19.006249999999994,9.067187499999996
+temporal,0.75,restart_at_change,vAOC minus validation-trained linear logistic effect,-0.3125,-11.0,10.129687499999996

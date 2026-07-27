@@ -1,0 +1,73 @@
+scenario,effect,split,feature_family,feature_label,windows,cycles_per_window,feature_dimension,extraction_seconds,seconds_per_1000_windows
+spatial,0.45,train,dfr_count_sequence,DFR/count sequence,1600,64,64,0.00275694602169,0.00172309126356
+spatial,0.45,train,detector_first_moment,Detector first moment,1600,64,25,0.00243711401708,0.00152319626068
+spatial,0.45,train,translation,Translation statistic / pair lift,1600,64,3,0.0653917079326,0.0408698174579
+spatial,0.45,train,symmetry_fourier,D4 Fourier / pair lift,1600,64,6,0.0974000809947,0.0608750506217
+spatial,0.45,validation,dfr_count_sequence,DFR/count sequence,800,64,64,0.00115351693239,0.00144189616549
+spatial,0.45,validation,detector_first_moment,Detector first moment,800,64,25,0.00166787393391,0.00208484241739
+spatial,0.45,validation,translation,Translation statistic / pair lift,800,64,3,0.0329355669674,0.0411694587092
+spatial,0.45,validation,symmetry_fourier,D4 Fourier / pair lift,800,64,6,0.032562092063,0.0407026150788
+spatial,0.45,test,dfr_count_sequence,DFR/count sequence,2000,64,64,0.00339808897115,0.00169904448558
+spatial,0.45,test,detector_first_moment,Detector first moment,2000,64,25,0.00250574306119,0.0012528715306
+spatial,0.45,test,translation,Translation statistic / pair lift,2000,64,3,0.0784866070608,0.0392433035304
+spatial,0.45,test,symmetry_fourier,D4 Fourier / pair lift,2000,64,6,0.109003454912,0.0545017274562
+spatial,0.55,train,dfr_count_sequence,DFR/count sequence,1600,64,64,0.00374310894404,0.00233944309002
+spatial,0.55,train,detector_first_moment,Detector first moment,1600,64,25,0.00342493189964,0.00214058243728
+spatial,0.55,train,translation,Translation statistic / pair lift,1600,64,3,0.137351087062,0.0858444294136
+spatial,0.55,train,symmetry_fourier,D4 Fourier / pair lift,1600,64,6,0.143650404061,0.0897815025382
+spatial,0.55,validation,dfr_count_sequence,DFR/count sequence,800,64,64,0.00180317403283,0.00225396754104
+spatial,0.55,validation,detector_first_moment,Detector first moment,800,64,25,0.00159634894226,0.00199543617782
+spatial,0.55,validation,translation,Translation statistic / pair lift,800,64,3,0.0339936380042,0.0424920475052
+spatial,0.55,validation,symmetry_fourier,D4 Fourier / pair lift,800,64,6,0.0353684580186,0.0442105725233
+spatial,0.55,test,dfr_count_sequence,DFR/count sequence,2000,64,64,0.00314988195896,0.00157494097948
+spatial,0.55,test,detector_first_moment,Detector first moment,2000,64,25,0.0026072160108,0.0013036080054
+spatial,0.55,test,translation,Translation statistic / pair lift,2000,64,3,0.0834798939759,0.0417399469879
+spatial,0.55,test,symmetry_fourier,D4 Fourier / pair lift,2000,64,6,0.106765200966,0.053382600483
+spatial,0.65,train,dfr_count_sequence,DFR/count sequence,1600,64,64,0.00226474099327,0.00141546312079
+spatial,0.65,train,detector_first_moment,Detector first moment,1600,64,25,0.002036624006,0.00127289000375
+spatial,0.65,train,translation,Translation statistic / pair lift,1600,64,3,0.0602212289814,0.0376382681134
+spatial,0.65,train,symmetry_fourier,D4 Fourier / pair lift,1600,64,6,0.0840523589868,0.0525327243668
+spatial,0.65,validation,dfr_count_sequence,DFR/count sequence,800,64,64,0.00149160099681,0.00186450124602
+spatial,0.65,validation,detector_first_moment,Detector first moment,800,64,25,0.00112346792594,0.00140433490742
+spatial,0.65,validation,translation,Translation statistic / pair lift,800,64,3,0.0232690590201,0.0290863237751
+spatial,0.65,validation,symmetry_fourier,D4 Fourier / pair lift,800,64,6,0.0382432669867,0.0478040837334
+spatial,0.65,test,dfr_count_sequence,DFR/count sequence,2000,64,64,0.00301170896273,0.00150585448137
+spatial,0.65,test,detector_first_moment,Detector first moment,2000,64,25,0.0027470519999,0.00137352599995
+spatial,0.65,test,translation,Translation statistic / pair lift,2000,64,3,0.0928547449876,0.0464273724938
+spatial,0.65,test,symmetry_fourier,D4 Fourier / pair lift,2000,64,6,0.11525726493,0.0576286324649
+temporal,0.5,train,dfr_count_sequence,DFR/count sequence,1600,128,128,0.00600659498014,0.00375412186258
+temporal,0.5,train,detector_first_moment,Detector first moment,1600,128,25,0.00521542003844,0.00325963752402
+temporal,0.5,train,translation,Translation statistic / pair lift,1600,128,9,0.135499275057,0.0846870469104
+temporal,0.5,train,symmetry_fourier,D4 Fourier / pair lift,1600,128,36,0.46721869905,0.292011686906
+temporal,0.5,validation,dfr_count_sequence,DFR/count sequence,800,128,128,0.00275458197575,0.00344322746969
+temporal,0.5,validation,detector_first_moment,Detector first moment,800,128,25,0.00555857596919,0.00694821996149
+temporal,0.5,validation,translation,Translation statistic / pair lift,800,128,9,0.131071299897,0.163839124871
+temporal,0.5,validation,symmetry_fourier,D4 Fourier / pair lift,800,128,36,0.104513428989,0.130641786236
+temporal,0.5,test,dfr_count_sequence,DFR/count sequence,2000,128,128,0.00567002303433,0.00283501151716
+temporal,0.5,test,detector_first_moment,Detector first moment,2000,128,25,0.00498043105472,0.00249021552736
+temporal,0.5,test,translation,Translation statistic / pair lift,2000,128,9,0.221507212962,0.110753606481
+temporal,0.5,test,symmetry_fourier,D4 Fourier / pair lift,2000,128,36,0.332537345006,0.166268672503
+temporal,0.75,train,dfr_count_sequence,DFR/count sequence,1600,128,128,0.00443383504171,0.00277114690107
+temporal,0.75,train,detector_first_moment,Detector first moment,1600,128,25,0.00412899500225,0.0025806218764
+temporal,0.75,train,translation,Translation statistic / pair lift,1600,128,9,0.125750308973,0.078593943108
+temporal,0.75,train,symmetry_fourier,D4 Fourier / pair lift,1600,128,36,0.187208140967,0.117005088105
+temporal,0.75,validation,dfr_count_sequence,DFR/count sequence,800,128,128,0.00233077898156,0.00291347372695
+temporal,0.75,validation,detector_first_moment,Detector first moment,800,128,25,0.0023078758968,0.00288484487101
+temporal,0.75,validation,translation,Translation statistic / pair lift,800,128,9,0.0566403439734,0.0708004299668
+temporal,0.75,validation,symmetry_fourier,D4 Fourier / pair lift,800,128,36,0.0871136070928,0.108892008866
+temporal,0.75,test,dfr_count_sequence,DFR/count sequence,2000,128,128,0.00616389897186,0.00308194948593
+temporal,0.75,test,detector_first_moment,Detector first moment,2000,128,25,0.00602144596633,0.00301072298316
+temporal,0.75,test,translation,Translation statistic / pair lift,2000,128,9,0.176403739955,0.0882018699776
+temporal,0.75,test,symmetry_fourier,D4 Fourier / pair lift,2000,128,36,0.259457428008,0.129728714004
+temporal,0.9,train,dfr_count_sequence,DFR/count sequence,1600,128,128,0.0051539700944,0.003221231309
+temporal,0.9,train,detector_first_moment,Detector first moment,1600,128,25,0.00483102095313,0.00301938809571
+temporal,0.9,train,translation,Translation statistic / pair lift,1600,128,9,0.132891044021,0.0830569025129
+temporal,0.9,train,symmetry_fourier,D4 Fourier / pair lift,1600,128,36,0.206137347035,0.128835841897
+temporal,0.9,validation,dfr_count_sequence,DFR/count sequence,800,128,128,0.00219724397175,0.00274655496469
+temporal,0.9,validation,detector_first_moment,Detector first moment,800,128,25,0.00191417208407,0.00239271510509
+temporal,0.9,validation,translation,Translation statistic / pair lift,800,128,9,0.063272677944,0.0790908474301
+temporal,0.9,validation,symmetry_fourier,D4 Fourier / pair lift,800,128,36,0.0949924989836,0.11874062373
+temporal,0.9,test,dfr_count_sequence,DFR/count sequence,2000,128,128,0.00588315096684,0.00294157548342
+temporal,0.9,test,detector_first_moment,Detector first moment,2000,128,25,0.00598888192326,0.00299444096163
+temporal,0.9,test,translation,Translation statistic / pair lift,2000,128,9,0.217012761976,0.108506380988
+temporal,0.9,test,symmetry_fourier,D4 Fourier / pair lift,2000,128,36,0.280884609092,0.140442304546

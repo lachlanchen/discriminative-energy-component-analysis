@@ -1,0 +1,8 @@
+scenario,access,roc_auc,status
+spatial q drift,complete detector count,0.5,exact no-go
+spatial q drift,translation sufficient statistic,0.5737746915374998,Monte Carlo LLR AUC
+spatial q drift,full syndrome likelihood,0.5737746915374998,identical score by sufficiency
+temporal persistence drift,one-cycle full syndrome,0.5,exact no-go
+temporal persistence drift,nonoverlapping two-cycle likelihood,0.5769941396999999,Monte Carlo pair-LLR AUC
+logical-loop drift,complete syndrome history,0.5,pathwise exact no-go
+logical-loop drift,separate logical/Wilson audit,1.0,extra measurement access

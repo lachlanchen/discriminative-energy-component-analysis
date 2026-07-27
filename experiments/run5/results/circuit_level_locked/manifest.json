@@ -1,0 +1,116 @@
+{
+  "command": [
+    "/home/lachlan/miniconda3/bin/python3.10",
+    "experiments/run5/scripts/run_circuit_level_validation.py"
+  ],
+  "config": {
+    "claim_boundary": [
+      "This is a controlled Stim/PyMatching circuit simulation, not hardware evidence.",
+      "The injected post-change correlation channel and both decoder models are known.",
+      "The experiment evaluates decoder utility; it does not test sequential drift-detection advantage.",
+      "No claim is made of quantum acceleration, universal sample efficiency, or superiority to an oracle decoder."
+    ],
+    "confidence": 0.95,
+    "decoders": [
+      {
+        "dem": "reference",
+        "enable_correlations": false,
+        "id": "static_null"
+      },
+      {
+        "dem": "correlated_post",
+        "enable_correlations": false,
+        "id": "ordinary_post"
+      },
+      {
+        "dem": "correlated_post",
+        "enable_correlations": true,
+        "id": "correlation_aware"
+      }
+    ],
+    "design_provenance": "Noise settings were selected after small exploratory infrastructure pilots with different seeds. Distances, endpoint, sample sizes, and all reported-run seeds were frozen before this locked run.",
+    "distances": [
+      3,
+      5,
+      7
+    ],
+    "generator": {
+      "dem_decompose_errors": true,
+      "injected_fault_axis": "X",
+      "memory_basis": "Z",
+      "name": "surface_code:rotated_memory_z",
+      "pair_selection": "greedy_short_detector_disjoint_v1",
+      "rounds": "distance"
+    },
+    "locked": true,
+    "marginal_audit_tolerance": 1e-12,
+    "name": "run5-circuit-level-locked-v1",
+    "noise": {
+      "after_clifford_depolarization": 0.001,
+      "after_reset_flip_probability": 0.002,
+      "before_measure_flip_probability": 0.002,
+      "common_pair_x_error": 0.01,
+      "marginal_data_x_error": 0.02
+    },
+    "output_directory": "circuit_level_locked",
+    "paired_bootstrap_resamples": 50000,
+    "paired_bootstrap_seed_base": 561000,
+    "primary_endpoint": {
+      "distance": 7,
+      "estimand": "logical_error_rate(first_decoder)-logical_error_rate(second_decoder)",
+      "first_decoder": "ordinary_post",
+      "positive_value_means": "correlation-aware decoding has lower logical error",
+      "regime": "correlated",
+      "second_decoder": "correlation_aware"
+    },
+    "publication_grade": true,
+    "regimes": {
+      "correlated": "A separate stationary post-change circuit with common-plus-residual paired data-X faults in every round. There is no within-circuit transition.",
+      "reference": "A stationary circuit with independent data-X faults in every round."
+    },
+    "sampling_seeds": {
+      "3": {
+        "correlated": 560032,
+        "reference": 560031
+      },
+      "5": {
+        "correlated": 560052,
+        "reference": 560051
+      },
+      "7": {
+        "correlated": 560072,
+        "reference": 560071
+      }
+    },
+    "shots_per_regime": 200000
+  },
+  "experiment": "run5-circuit-level-locked-v1",
+  "finished_unix": 1785154875.1392686,
+  "git_commit": "9d59cba22f944b6574b429bcae39060a39c43c73",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run5/results/circuit_level_locked/decoder_validation.pdf": "93a203a25a8813cf03ba0e732a28fb3cb8e8a16ed69a89e3806d2630f589be64",
+    "experiments/run5/results/circuit_level_locked/decoder_validation.png": "493081c20f106a16bbac4d32c18d98a445423a7384e2b7244a90dff1aa914095",
+    "experiments/run5/results/circuit_level_locked/dem_marginal_audit.csv": "2eade47ba4dc1a6b94ee4301c863f04d9645a124a55ccde41e5a394fe29af3f4",
+    "experiments/run5/results/circuit_level_locked/logical_error_rates.csv": "4dca37fe7b63d946f2c4d520bff3747e35ecd508201ba8215d8e725238a6c9c2",
+    "experiments/run5/results/circuit_level_locked/pair_assignments.csv": "967a630739f0a2035c93de17fe0db4f4bdbd8f0325e27cb02ac6e5033bc558e5",
+    "experiments/run5/results/circuit_level_locked/paired_decoder_differences.csv": "dc08564e49e4ee9da0cc1af1bf716a566b86ba045b4de4ba66e418312fd41f00",
+    "experiments/run5/results/circuit_level_locked/sampling_audit.csv": "88327f871b5f0de796983890da2d7f1109f39886a13b40fcaa10289a3f8c3bfe",
+    "experiments/run5/results/circuit_level_locked/summary.json": "522df845bd27ce6ae7907ca766f013172565e21425a2ea52b3e843a54d107c90"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "pymatching": "2.4.0",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3",
+    "stim": "1.16.0"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785154860.3672745,
+  "wall_seconds": 14.771994352340698
+}

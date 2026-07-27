@@ -56,6 +56,29 @@ directory:
 .venv/bin/python experiments/run5/scripts/run_circuit_level_validation.py
 ```
 
+## Frozen result
+
+The publication-grade sequential decision is negative. At the two
+predeclared middle effects, the paired restart-delay difference
+`vAOC - validation-trained logistic` was \(+70.176\) physical cycles for the
+spatial task and \(-9.180\) cycles for the temporal task. The simultaneous
+one-sided upper bounds were \(+244.013\) and \(+164.657\) cycles,
+respectively, and both Holm-adjusted p-values were 1. The required two-task
+comparison flag is therefore false.
+
+This does not make the run null. Count and single-detector marginals are
+exactly blind while correlation likelihoods have AUC \(0.5738\) and
+\(0.5770\), establishing an information-access separation. In the controlled
+Stim/PyMatching arm, a correlation-aware decoder for the known injected
+post-channel reduced the \(d=7\) logical-error rate from \(1.526\%\) to
+\(1.120\%\), but it degraded reference-channel decoding. That is decoder
+utility under known simulated noise, not sequential-detector or hardware
+advantage.
+
+See the
+[`result and advantage audit`](../../references/run5_surface_code_drift_results_and_advantage_audit.md)
+for the full evidence hierarchy and limitations.
+
 `paper.json` is a cycle-fair locked design. `calibration_cycles`,
 `change_time_cycles`, `post_change_horizon_cycles`, and
 `null_horizon_cycles` always mean physical syndrome cycles. The spatial
@@ -114,8 +137,20 @@ The publication run also writes `spatial_scaling.csv` for the locked
 fresh-start streams, the declared post-change horizon, per-size covariance
 calibration, and the spatial ridge selected at \(L=5\). The table records the
 analytic translation-feature gap, restricted delay/miss metrics, and a fixed
-10,000-sample feature/likelihood wall-clock measurement. The timing is an
-engineering measurement, not a complexity theorem.
+10,000-sample feature/likelihood wall-clock measurement. It also records peak
+Python/NumPy allocations from separate `tracemalloc` calls; these are not
+total process RSS. The timing and memory fields are engineering measurements,
+not complexity theorems.
+
+`aggregate_metrics.csv` includes the preregistered restart-delay median,
+quartiles, miss fraction, and detection-within-64/128-cycle fractions in
+addition to the restricted mean.
+
+One secondary preregistration item remains deliberately unfilled:
+`witness overlap/localization` did not freeze a target witness, overlap
+formula, or time aggregation for the adaptive vAOC history, and that history
+was not persisted. No post-hoc localization scalar is introduced, and no
+localization claim is made from Run 5.
 
 Generated result tables, figures, summaries, and manifests are committed.
 Large raw detector tensors are regenerated from fixed seeds and are not

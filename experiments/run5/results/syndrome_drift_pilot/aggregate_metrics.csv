@@ -1,0 +1,17 @@
+family,effect,method,mean_restart_delay_cycles,median_restart_delay_cycles,restart_miss_fraction,restart_replicates,restart_horizon_cycles,surveillance_prechange_false_alarm_fraction,surveillance_replicates,surveillance_conditional_mean_delay_cycles,surveillance_conditional_median_delay_cycles,surveillance_miss_fraction_among_survivors,surveillance_survivors,restricted_mean_run_length_cycles,null_censor_fraction,null_replicates,no_change_rmst_at_restart_horizon_cycles,restart_delay_reduction_vs_no_change_cycles,restart_delay_ratio_to_no_change
+spatial,0.55,DFR/count exact pushforward,200.0,200.0,0.0,32,384,0.0,32,72.0,72.0,0.0,32,200.0,0.0,32,200.0,0.0,1.0
+spatial,0.55,exact one-cycle likelihood grid SR,42.0,36.0,0.0,32,384,0.34375,32,31.333333333333332,29.0,0.0,21,241.53125,0.0,32,226.34375,184.34375,0.18555847024713518
+spatial,0.55,known-post one-cycle likelihood SR,42.0,36.0,0.0,32,384,0.34375,32,31.333333333333332,29.0,0.0,21,241.53125,0.0,32,226.34375,184.34375,0.18555847024713518
+spatial,0.55,matched correlation witness,164.40625,163.5,0.0,32,384,0.0,32,53.96875,53.0,0.0,32,204.0,0.0,32,204.0,39.59375,0.8059129901960784
+spatial,0.55,raw symmetry-resolved AOC,161.21875,152.5,0.0,32,384,0.125,32,77.0,75.0,0.0,28,189.84375,0.0,32,189.84375,28.625,0.8492181069958847
+spatial,0.55,vAOC / same-feature Hotelling,175.40625,173.0,0.0,32,384,0.0,32,66.0,63.0,0.0,32,199.6875,0.0,32,199.6875,24.28125,0.8784037558685446
+spatial,0.55,validation-trained linear logistic effect,168.8125,169.5,0.0,32,384,0.0,32,54.46875,53.5,0.0,32,204.0625,0.0,32,204.0625,35.25,0.8272588055130169
+temporal,0.75,DFR/count exact pushforward,200.0,200.0,0.0,32,384,0.0,32,72.0,72.0,0.0,32,200.0,0.0,32,200.0,0.0,1.0
+temporal,0.75,exact pair-restricted likelihood grid SR,67.0,59.0,0.0,32,384,0.25,32,52.416666666666664,44.0,0.0,24,220.3125,0.0,32,206.25,139.25,0.32484848484848483
+temporal,0.75,full-HMM block-boundary grid SR,34.5,31.0,0.0,32,384,0.34375,32,25.904761904761905,22.0,0.0,21,234.375,0.0,32,198.6875,164.1875,0.1736395092796477
+temporal,0.75,known-post full-HMM block-boundary SR,34.5,31.0,0.0,32,384,0.34375,32,25.904761904761905,22.0,0.0,21,234.375,0.0,32,198.6875,164.1875,0.1736395092796477
+temporal,0.75,known-post pair-restricted likelihood SR,67.0,59.0,0.0,32,384,0.25,32,52.416666666666664,44.0,0.0,24,220.3125,0.0,32,206.25,139.25,0.32484848484848483
+temporal,0.75,matched correlation witness,199.5,200.0,0.0,32,384,0.0,32,72.1875,72.0,0.0,32,200.875,0.0,32,200.875,1.375,0.9931549471064095
+temporal,0.75,raw symmetry-resolved AOC,206.6875,205.0,0.0,32,384,0.03125,32,78.12903225806451,70.0,0.0,31,195.9375,0.0,32,195.9375,-10.75,1.0548644338118023
+temporal,0.75,vAOC / same-feature Hotelling,201.6875,202.0,0.0,32,384,0.0,32,72.5,72.0,0.0,32,201.3125,0.0,32,201.3125,-0.375,1.001862775535548
+temporal,0.75,validation-trained linear logistic effect,202.0,199.0,0.0,32,384,0.0,32,80.0,76.0,0.0,32,202.4375,0.0,32,202.4375,0.4375,0.9978388391478852

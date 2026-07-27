@@ -1,0 +1,94 @@
+{
+  "command": [
+    "/home/lachlan/miniconda3/bin/python3.10",
+    "experiments/run5/scripts/run_shadow_measurement_audit.py"
+  ],
+  "config": {
+    "copy_budgets": [
+      64,
+      128,
+      256,
+      512,
+      1024,
+      2048,
+      4096
+    ],
+    "local_pauli_basis_probabilities": {
+      "X": 0.3333333333333333,
+      "Y": 0.3333333333333333,
+      "Z": 0.3333333333333333
+    },
+    "locked_config_path": "experiments/run5/configs/shadow_measurement_locked.json",
+    "locked_config_sha256": "9d789c64204ec7c51c42c2ed324335779b5ed2d94d7b1aa229d1ec0cb9acab48",
+    "model": {
+      "event_probability": 0.65,
+      "readout_error": 0.03,
+      "size": 5
+    },
+    "name": "run5-shadow-measurement-locked",
+    "output_directory": "shadow_measurement",
+    "publication_grade": true,
+    "repetitions": 256,
+    "seed": 550001,
+    "single_qubit_inverse_channel_factor": 3,
+    "snapshot_audit_copies": 64,
+    "states": [
+      {
+        "chain2_probability": 0.35,
+        "name": "null_q035"
+      },
+      {
+        "chain2_probability": 0.65,
+        "name": "changed_q065"
+      }
+    ],
+    "target_displacements": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        0
+      ]
+    ],
+    "zz_inverse_channel_factor": 9
+  },
+  "experiment": "run5-local-pauli-shadow-measurement-audit",
+  "finished_unix": 1785154864.9826052,
+  "git_commit": "9d59cba22f944b6574b429bcae39060a39c43c73",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run5/results/shadow_measurement/aggregate_metrics.csv": "6476a0a6b28569c2c3a08e1264eff6cbc4463c4793b9cb5764edfca0376298ac",
+    "experiments/run5/results/shadow_measurement/declared_observables.csv": "b3690f2fe4bf4dbe9cb0ae52d87431b6795dc1489f299ebf149a264ca08aa17e",
+    "experiments/run5/results/shadow_measurement/observable_metrics.csv": "a77ef403c6df5fa071051d294273f53305f91c561b0ad4f51cd24fc4f3e6bca6",
+    "experiments/run5/results/shadow_measurement/replicate_metrics.csv": "80059a3702b65b5ec3e42127c3bff6460fe1305de2f5da8ede4b189d5cc0daf8",
+    "experiments/run5/results/shadow_measurement/shadow_measurement_audit.pdf": "ca46c1012d634d7d8fc903212b53aadc32d637cd4bd460584dd547bb3d32bfe7",
+    "experiments/run5/results/shadow_measurement/shadow_measurement_audit.png": "213f4596c0d164ba1c1f0e4c90edbaa9dee3b849c194dd1cdd72d70f51e9a7ff",
+    "experiments/run5/results/shadow_measurement/snapshot_audit.csv": "4b26ed1894c147fe79aa5233cd0213824b6070c7d40f26e2e351bf48fa6c9f11",
+    "experiments/run5/results/shadow_measurement/summary.json": "3f2bddfa3f8d2728984e306d893be3e9e04f69bed66febc625babe25b4cedcde"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "pymatching": "2.4.0",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3",
+    "stim": "1.16.0"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785154860.3552506,
+  "wall_seconds": 4.627355337142944
+}

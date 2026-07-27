@@ -1,0 +1,37 @@
+family,effect,evaluation,comparison,mean_delay_difference_cycles,ci95_low,ci95_high
+spatial,0.45,restart_at_change,vAOC minus exact one-cycle likelihood grid SR,601.61328125,578.37099609375,624.1564453125
+spatial,0.45,restart_at_change,vAOC minus known-post one-cycle likelihood SR,592.98828125,570.917578125,614.7505859375
+spatial,0.45,restart_at_change,vAOC minus matched correlation witness,167.96484375,152.35927734375,184.05273437499997
+spatial,0.45,restart_at_change,vAOC minus raw symmetry-resolved AOC,1.96484375,-19.949414062499997,24.625390624999994
+spatial,0.45,restart_at_change,vAOC minus validation-trained linear logistic effect,160.66796875,144.93662109375,176.99638671875
+spatial,0.55,restart_at_change,vAOC minus exact one-cycle likelihood grid SR,452.046875,439.99609375,464.46884765625
+spatial,0.55,restart_at_change,vAOC minus known-post one-cycle likelihood SR,453.484375,441.45693359375,465.9029296875
+spatial,0.55,restart_at_change,vAOC minus matched correlation witness,80.5234375,72.47558593750001,88.89482421874999
+spatial,0.55,restart_at_change,vAOC minus raw symmetry-resolved AOC,-52.46484375,-73.48056640625,-32.05390625000001
+spatial,0.55,restart_at_change,vAOC minus validation-trained linear logistic effect,70.17578125,62.05849609375,78.6447265625
+spatial,0.65,restart_at_change,vAOC minus exact one-cycle likelihood grid SR,341.75,335.41396484375,348.05078125
+spatial,0.65,restart_at_change,vAOC minus known-post one-cycle likelihood SR,347.48046875,341.14033203125,353.87900390625
+spatial,0.65,restart_at_change,vAOC minus matched correlation witness,34.02734375,30.52724609375,37.58994140625
+spatial,0.65,restart_at_change,vAOC minus raw symmetry-resolved AOC,-44.85546875,-60.7970703125,-29.320019531250004
+spatial,0.65,restart_at_change,vAOC minus validation-trained linear logistic effect,22.62890625,19.031054687500003,26.24228515625
+temporal,0.5,restart_at_change,vAOC minus exact pair-restricted likelihood grid SR,813.0,797.96875,826.953125
+temporal,0.5,restart_at_change,vAOC minus full-HMM block-boundary grid SR,878.546875,868.382421875,888.3830078125
+temporal,0.5,restart_at_change,vAOC minus known-post full-HMM block-boundary SR,875.7890625,866.1328125,885.023828125
+temporal,0.5,restart_at_change,vAOC minus known-post pair-restricted likelihood SR,799.40625,785.108984375,812.711328125
+temporal,0.5,restart_at_change,vAOC minus matched correlation witness,3.71875,-3.265625,10.4140625
+temporal,0.5,restart_at_change,vAOC minus raw symmetry-resolved AOC,95.5625,73.9763671875,118.0
+temporal,0.5,restart_at_change,vAOC minus validation-trained linear logistic effect,9.453125,-0.26601562499999654,19.141015624999994
+temporal,0.75,restart_at_change,vAOC minus exact pair-restricted likelihood grid SR,848.4453125,837.179296875,859.2267578125
+temporal,0.75,restart_at_change,vAOC minus full-HMM block-boundary grid SR,906.1171875,895.90625,915.84375
+temporal,0.75,restart_at_change,vAOC minus known-post full-HMM block-boundary SR,907.5234375,897.4216796875,917.0783203125
+temporal,0.75,restart_at_change,vAOC minus known-post pair-restricted likelihood SR,849.8203125,838.6171875,860.4845703125
+temporal,0.75,restart_at_change,vAOC minus matched correlation witness,-4.375,-13.78125,4.609570312499997
+temporal,0.75,restart_at_change,vAOC minus raw symmetry-resolved AOC,96.453125,74.1080078125,119.6017578125
+temporal,0.75,restart_at_change,vAOC minus validation-trained linear logistic effect,-9.1796875,-22.000195312499997,3.2890625
+temporal,0.9,restart_at_change,vAOC minus exact pair-restricted likelihood grid SR,801.0546875,786.163671875,815.6798828125
+temporal,0.9,restart_at_change,vAOC minus full-HMM block-boundary grid SR,852.71875,837.9529296875,866.65625
+temporal,0.9,restart_at_change,vAOC minus known-post full-HMM block-boundary SR,856.234375,841.5310546875,870.171875
+temporal,0.9,restart_at_change,vAOC minus known-post pair-restricted likelihood SR,806.5546875,791.4609375,821.3126953125
+temporal,0.9,restart_at_change,vAOC minus matched correlation witness,-65.40625,-79.71210937499998,-51.6951171875
+temporal,0.9,restart_at_change,vAOC minus raw symmetry-resolved AOC,106.578125,82.616796875,131.2353515625
+temporal,0.9,restart_at_change,vAOC minus validation-trained linear logistic effect,-67.4453125,-83.671875,-51.8826171875

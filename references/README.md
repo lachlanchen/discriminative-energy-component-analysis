@@ -17,6 +17,10 @@ Discriminative Energy Component Analysis (DECA).
 | [`global_run_architecture_plan.md`](global_run_architecture_plan.md) | Immutable run layout and verification record | Repository provenance |
 | [`run2_additive_observable_contrast_plan.md`](run2_additive_observable_contrast_plan.md) | Pre-change run 2 claim/evidence plan | Traceability record |
 | [`run3_symmetry_resolved_observable_contrast_plan.md`](run3_symmetry_resolved_observable_contrast_plan.md) | Pre-change run 3 claim/evidence plan | Traceability record |
+| [`run4_gauge_sector_results_and_advantage_audit.md`](run4_gauge_sector_results_and_advantage_audit.md) | Integrated run 3+4 result and claim audit | Exact local-blindness and gauge-witness record |
+| [`run5_surface_code_drift_preregistered_plan.md`](run5_surface_code_drift_preregistered_plan.md) | Cycle-fair run 5 protocol frozen before the publication-grade sequential test | Preregistration and estimand record |
+| [`run5_prior_art_and_claim_boundary.md`](run5_prior_art_and_claim_boundary.md) | Primary-source comparison and prohibited-claim matrix | Prior-art and novelty boundary |
+| [`run5_surface_code_drift_results_and_advantage_audit.md`](run5_surface_code_drift_results_and_advantage_audit.md) | Frozen run 5 evidence and algorithm-advantage decision | Final reproducibility audit |
 | [`publication_plan.md`](publication_plan.md) | Claim, evidence, file, and verification plan for the new manuscript | Traceability record |
 
 The executable implementation and paper generated from this analysis now live

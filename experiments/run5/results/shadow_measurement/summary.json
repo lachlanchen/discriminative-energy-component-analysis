@@ -1,0 +1,59 @@
+{
+  "claim_boundary": "This is a standalone measurement-estimation audit on controlled diagonal states. It is not an implementation or comparison of eSCD and establishes no quantum or sequential-detection advantage.",
+  "copy_budgets": [
+    64,
+    128,
+    256,
+    512,
+    1024,
+    2048,
+    4096
+  ],
+  "declared_pair_observables": 100,
+  "empirical_local_basis_fractions": {
+    "X": 0.33345584869384765,
+    "Y": 0.3332393264770508,
+    "Z": 0.33330482482910156
+  },
+  "experiment": "genuine local-Pauli classical-shadow measurement audit",
+  "interpretation": "Native all-Z is the task-matched policy for declared diagonal ZZ observables and is expected to be more copy-efficient. Any observed shadow penalty is the cost of a universal measurement policy, not evidence that AOC outperforms classical shadows.",
+  "largest_budget_mean_rmse": {
+    "changed_q065/local_pauli_shadow": 0.04519164594586039,
+    "changed_q065/native_all_z": 0.01067429719901256,
+    "null_q035/local_pauli_shadow": 0.045054024963907764,
+    "null_q035/native_all_z": 0.010737242276130028
+  },
+  "largest_copy_budget": 4096,
+  "locked_config": "experiments/run5/configs/shadow_measurement_locked.json",
+  "locked_config_sha256": "9d789c64204ec7c51c42c2ed324335779b5ed2d94d7b1aa229d1ec0cb9acab48",
+  "measurement_policies": {
+    "local_pauli_shadow": "Each qubit independently uses uniform X/Y/Z local-Clifford measurement; ZZ uses estimator 9 I[Z,Z] b_i b_j.",
+    "native_all_z": "Every copy is measured in Z and contributes to every declared ZZ."
+  },
+  "model": {
+    "detectors": 25,
+    "event_probability": 0.65,
+    "readout_error": 0.03,
+    "size": 5,
+    "states": [
+      {
+        "chain2_probability": 0.35,
+        "name": "null_q035"
+      },
+      {
+        "chain2_probability": 0.65,
+        "name": "changed_q065"
+      }
+    ]
+  },
+  "native_zz_contribution_probability_per_copy": 1.0,
+  "repetitions": 256,
+  "seed": 550001,
+  "shadow_to_native_rmse_ratio": {
+    "changed_q065": 4.233688186051341,
+    "null_q035": 4.196051817147445
+  },
+  "shadow_zz_contribution_probability_per_copy": 0.1111111111111111,
+  "single_qubit_inverse_channel_factor": 3,
+  "zz_inverse_channel_factor": 9
+}

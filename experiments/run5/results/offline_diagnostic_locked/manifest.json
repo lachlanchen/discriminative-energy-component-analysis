@@ -1,0 +1,155 @@
+{
+  "command": [
+    "/home/lachlan/miniconda3/bin/python3.10",
+    "experiments/run5/scripts/run_offline_diagnostic_audit.py",
+    "--config",
+    "experiments/run5/configs/offline_diagnostic_locked.json"
+  ],
+  "config": {
+    "claim_boundary": [
+      "This experiment is an offline diagnostic benchmark; it has no sequential, ARL, false-alarm-rate, or detection-delay guarantee.",
+      "All methods receive identical train, validation, and test windows within each scenario and effect.",
+      "Classifier hyperparameters are fixed in this configuration. Decision thresholds use validation labels only.",
+      "Only the D4 Fourier/pair-lift simplex receives the indicator positive-support-projector ECA/AOC interpretation. Positive-part directions on count, first-moment, or translation features are generic linear mean contrasts and are not Helstrom or AOC optima.",
+      "The exact spatial likelihood ratio and full temporal HMM likelihood ratio are known-model ceilings, not proposed algorithms.",
+      "Results apply only to the declared exact L=5 phenomenological model and are not hardware or universal sample-efficiency evidence."
+    ],
+    "design_provenance": "The feature families, fixed model hyperparameters, split sizes, effects, and seeds were frozen after theoretical design and small code smoke tests. An independent audit after the first locked execution found that one estimator label/objective incorrectly extended the simplex positive-support-projector interpretation to non-simplex features. Before the corrected rerun, v2 freezes the indicator projector only for the D4 Fourier/pair-lift simplex and relabels all other positive-part contrasts as generic mean directions. No v2 test labels are used for fitting, model selection, threshold selection, or this correction.",
+    "fixed_method_parameters": {
+      "hotelling_absolute_floor": 1e-08,
+      "hotelling_ridge_fraction": 0.05,
+      "likelihood_batch_windows": 64,
+      "logistic_c": 1.0,
+      "logistic_max_iter": 2000,
+      "mmd_prototypes_per_class": 128,
+      "mmd_query_batch_size": 64,
+      "mmd_seed_base": 573000,
+      "rbf_svm_c": 1.0,
+      "rbf_svm_gamma": "scale"
+    },
+    "locked": true,
+    "metrics": {
+      "primary": "test_roc_auc",
+      "secondary": "test_balanced_accuracy_at_validation_threshold",
+      "threshold_selection": "maximize validation balanced accuracy with deterministic finite-threshold tie breaking"
+    },
+    "model": {
+      "event_probability": 0.65,
+      "null_chain2_probability": 0.35,
+      "readout_error": 0.03,
+      "size": 5
+    },
+    "name": "run5-offline-diagnostic-locked-v2-objective-corrected",
+    "objective_correction": {
+      "non_simplex_estimator": "positive_part_mean_direction",
+      "non_simplex_objective": "L1-normalized positive part of the training mean difference, used only as a generic linear contrast",
+      "simplex_estimator": "simplex_positive_support_projector",
+      "simplex_family": "symmetry_fourier",
+      "simplex_objective": "indicator of the positive support of the training mean difference, interpreted as a diagonal effect on the D4 Fourier or pair-lift probability simplex",
+      "status": "frozen before corrected locked rerun",
+      "superseded_result_note": "Any v1 offline output using magnitude-weighted positive support under a Raw AOC label is superseded and must not be reported."
+    },
+    "output_directory": "offline_diagnostic_locked",
+    "publication_grade": true,
+    "sampling_seeds": {
+      "spatial": {
+        "alternative": {
+          "0.45": {
+            "test": 571453,
+            "train": 571451,
+            "validation": 571452
+          },
+          "0.55": {
+            "test": 571553,
+            "train": 571551,
+            "validation": 571552
+          },
+          "0.65": {
+            "test": 571653,
+            "train": 571651,
+            "validation": 571652
+          }
+        },
+        "null": {
+          "test": 571003,
+          "train": 571001,
+          "validation": 571002
+        }
+      },
+      "temporal": {
+        "alternative": {
+          "0.5": {
+            "test": 572503,
+            "train": 572501,
+            "validation": 572502
+          },
+          "0.75": {
+            "test": 572753,
+            "train": 572751,
+            "validation": 572752
+          },
+          "0.9": {
+            "test": 572903,
+            "train": 572901,
+            "validation": 572902
+          }
+        },
+        "null": {
+          "test": 572003,
+          "train": 572001,
+          "validation": 572002
+        }
+      }
+    },
+    "spatial": {
+      "alternatives": [
+        0.45,
+        0.55,
+        0.65
+      ],
+      "window_cycles": 64
+    },
+    "split_windows_per_class": {
+      "test": 1000,
+      "train": 800,
+      "validation": 400
+    },
+    "temporal": {
+      "alternatives": [
+        0.5,
+        0.75,
+        0.9
+      ],
+      "window_cycles": 128,
+      "window_pairs": 64
+    }
+  },
+  "experiment": "run5-offline-diagnostic-locked-v2-objective-corrected",
+  "finished_unix": 1785156457.952172,
+  "git_commit": "3ebf211821599d6bdd73687cce5dc22273597ca3",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run5/results/offline_diagnostic_locked/feature_runtime.csv": "a7d8c5d46a92c2f08f83243f05cdf7d5c18e4c4b21fcf07ddfbc2897518156bf",
+    "experiments/run5/results/offline_diagnostic_locked/metrics.csv": "49e24a2dd16d5ff15aeb380a646e5dcc00a246239a4acac4259481d0b69b3791",
+    "experiments/run5/results/offline_diagnostic_locked/offline_diagnostic.pdf": "bd186dab4204f26708da4b22def2de8c3694b6355b4d2b9b9986b7f1ba6b3d3a",
+    "experiments/run5/results/offline_diagnostic_locked/offline_diagnostic.png": "2850ccc08e11e24bc6dd782b4fa9bb015815f226f7735d6b47388ee093ea830a",
+    "experiments/run5/results/offline_diagnostic_locked/sample_manifest.csv": "90d23e83fbd6c4729555ec9013465a6c2ec07b0dc93763e8f6fcfac5772f7771",
+    "experiments/run5/results/offline_diagnostic_locked/summary.json": "070d024715688ccb40c64cc33e8c75bf5df06bc39fc75464285c81ec2b65c05f",
+    "experiments/run5/results/offline_diagnostic_locked/test_window_scores.csv.gz": "63bebec6cd249085bde26bf1b13083e6d5c58be289b48f0facebab7e8d9e5c69"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "pymatching": "2.4.0",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3",
+    "stim": "1.16.0"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785156436.9172928,
+  "wall_seconds": 21.034879446029663
+}

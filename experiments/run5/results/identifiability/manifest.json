@@ -1,0 +1,43 @@
+{
+  "command": [
+    "/home/lachlan/miniconda3/bin/python3.10",
+    "experiments/run5/scripts/run_identifiability_certificate.py"
+  ],
+  "config": {
+    "event_probability": 0.65,
+    "kappa": 0.75,
+    "q0": 0.35,
+    "q1": 0.55,
+    "readout_error": 0.03,
+    "samples_per_spatial_regime": 200000,
+    "seed": 540001,
+    "size": 5,
+    "temporal_pairs_per_regime": 100000
+  },
+  "experiment": "run5-accessibility-identifiability-certificate",
+  "finished_unix": 1785154870.1353438,
+  "git_commit": "9d59cba22f944b6574b429bcae39060a39c43c73",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run5/results/identifiability/accessibility_hierarchy.csv": "3a7d23817dfdc7b6514614cba7afa02693d1405f6c9590ee9074d22985f0ac9d",
+    "experiments/run5/results/identifiability/accessibility_hierarchy.pdf": "2c24209746828558fc4d10f1550dce017c91d4abb7bd2742618cc972205ee48d",
+    "experiments/run5/results/identifiability/accessibility_hierarchy.png": "6034b9c322f73ec973841868b083f8332110b9a059e28f714d18928933255b15",
+    "experiments/run5/results/identifiability/identity_checks.csv": "b71d597b757104a10ec2adca515316cd0001b8bf3f2bc1be4ca2822e4f6bfe35",
+    "experiments/run5/results/identifiability/summary.json": "03cbc8b3543e261468a9738ac811370c258f06eedeb9cdd1b9becf47e4033a27"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "pymatching": "2.4.0",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3",
+    "stim": "1.16.0"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785154860.5106409,
+  "wall_seconds": 9.624703168869019
+}

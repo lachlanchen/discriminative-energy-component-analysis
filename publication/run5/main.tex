@@ -18,10 +18,6 @@
 \newcommand{\one}{\mathbf 1}
 \newcommand{\AOC}{\textsc{AOC}}
 \newcommand{\vAOC}{\textsc{vAOC}}
-\newcommand{\TBD}[1]{\textcolor{red}{[\textbf{LOCKED RESULT PENDING
-AUDIT:} #1]}}
-\newcommand{\TBDSequential}{\TBD{sequential endpoint}}
-\newcommand{\TBDOffline}{\TBD{offline endpoint}}
 
 \begin{document}
 
@@ -31,9 +27,9 @@ Topological Quantum Error Correction}
 
 \author{Rongzhou (Lachlan) Chen%
 \thanks{Run 5 working paper. Exact statements, controlled-model results,
-circuit-level results, and unrun or unaudited endpoints are labeled
-separately. The sequential and offline locked-result fields in this staged
-draft are explicit placeholders and support no present advantage claim.}}
+circuit-level results, and absent hardware evidence are labeled separately.
+All numerical claims are backed by frozen configurations, raw records, and
+manifests in the accompanying repository.}}
 
 \maketitle
 
@@ -60,10 +56,14 @@ for local-Pauli shadows versus native all-$Z$ readout on declared $ZZ$
 observables, and a controlled Stim/PyMatching experiment reduces the
 distance-seven correlated-regime logical-error rate from $0.01526$ to
 $0.01120$ when the injected post-change correlation model is known.
-That circuit result tests decoder utility, not change detection. The
-preregistered sequential and offline endpoints remain withheld in this staged
-draft pending their locked audits; consequently no algorithmic-advantage
-claim is made here.
+That circuit result tests decoder utility, not change detection. In the
+cycle-fair locked sequential test, \vAOC\ has restart delays $540.30$ versus
+$470.13$ cycles for the named validation-trained logistic comparator at the
+spatial endpoint; at the temporal endpoint they are $959.36$ versus $968.54$.
+The corresponding \vAOC-minus-logistic differences are $70.18$ and $-9.18$
+cycles, but neither predeclared hypothesis passes the simultaneous
+distribution-free/Holm criterion. Thus the experiment supports no \vAOC\
+advantage over the named comparator on either task or overall.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -105,10 +105,9 @@ are equal while adjacent-pair laws differ.
 established bounded e-factor/Shiryaev--Roberts construction, clearly
 separating one-shot mean-gap, variance-sensitive, and likelihood-growth
 objectives.
-\item It reports locked identifiability, measurement-policy, and
-circuit-level decoder-utility audits. The primary locked sequential and
-offline diagnostic conclusions are intentionally not filled in until their
-outputs pass the declared audit.
+\item It reports locked identifiability, offline diagnostic,
+measurement-policy, sequential, scaling, and circuit-level decoder-utility
+audits. The predeclared named-comparator test is negative.
 \end{enumerate}
 
 This is neither a claim of the first QEC drift detector nor a new covariance
@@ -532,7 +531,7 @@ Exact likelihoods and full-HMM/known-post procedures are ceilings, not
 targets to beat. Failure is an informative negative result and does not alter
 the no-go theorems.
 
-\section{Locked Results Available in This Draft}
+\section{Frozen Results}
 
 \subsection{Exact identifiability certificates}
 
@@ -564,15 +563,64 @@ Syndrome-only / logical-audit success & $0.5/1.0$\\
 \end{tabular}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{../../experiments/run5/results/identifiability/accessibility_hierarchy.pdf}
+\includegraphics[width=\textwidth]{../../experiments/run5/results/identifiability/accessibility_hierarchy.pdf}
 \caption{Locked controlled-model access hierarchy. Count blindness is exact
 for the spatial iid family; one-cycle equality in the temporal family does
 not imply path blindness. The logical loop is syndrome-invisible and requires
 a separately costed logical audit.}
 \label{fig:hierarchy}
-\end{figure}
+\end{figure*}
+
+\subsection{Offline fixed-window diagnostic}
+
+The objective-corrected locked offline audit uses 800 training, 400
+validation, and 1000 test windows per class. Spatial windows contain 64
+cycles; temporal windows contain 64 nonoverlapping pairs, or 128 cycles.
+Table~\ref{tab:offline} reports the non-ceiling method selected by validation
+ROC AUC and its untouched test AUC. Detector-count sequence AUCs range only
+from $0.488435$ to $0.524807$, consistent with finite-sample fluctuation under
+the exact count-process no-go. Known-model likelihoods remain ceilings.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\caption{Locked offline test ROC AUC. ``D4'' denotes the dihedral
+Fourier/pair-lift bank; selection used validation labels only.}
+\label{tab:offline}
+\begin{tabular}{@{}cclrr@{}}
+\toprule
+Family & Effect & Selected non-ceiling & Test AUC & Ceiling\\
+\midrule
+Spatial & $q=.45$ & Translation logistic & .77936 & .79618\\
+Spatial & $q=.55$ & D4 Hotelling & .92187 & .93572\\
+Spatial & $q=.65$ & D4 Hotelling & .98452 & .98984\\
+Temporal & $\kappa=.50$ & D4 logistic & .84943 & .96487\\
+Temporal & $\kappa=.75$ & D4 logistic & .94668 & .99925\\
+Temporal & $\kappa=.90$ & D4 RBF SVM & .97499 & .99999\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+An independent objective audit corrected the estimator interpretation before
+this frozen rerun. Only the indicator of the positive support on the D4
+Fourier/pair-lift probability simplex is called an \AOC\ effect. Positive-part
+directions on count, first-moment, or translation features are generic linear
+mean contrasts, not Helstrom or \AOC\ optima. At the two middle effects, the
+simplex positive-support projector obtains AUC $0.67465$ spatially and
+$0.51848$ temporally, compared with $0.92187$ and $0.76853$ for same-bank
+regularized Hotelling and $0.92216$ and $0.94668$ for same-bank logistic.
+This offline benchmark has no sequential or ARL guarantee.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{../../experiments/run5/results/offline_diagnostic_locked/offline_diagnostic.pdf}
+\caption{Objective-corrected locked offline audit. Structured feature banks
+recover the controlled correlation changes, while count sequences remain at
+chance. Exact spatial and full-HMM likelihoods are model-aware ceilings.}
+\label{fig:offline}
+\end{figure*}
 
 \subsection{Measurement-policy audit}
 
@@ -589,15 +637,15 @@ mean RMSEs were $0.045054$ (shadow) versus $0.010737$ (native) at
 $q=0.35$, and $0.045192$ versus $0.010674$ at $q=0.65$. The ratios are
 $4.20$ and $4.23$.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{../../experiments/run5/results/shadow_measurement/shadow_measurement_audit.pdf}
+\includegraphics[width=0.72\textwidth]{../../experiments/run5/results/shadow_measurement/shadow_measurement_audit.pdf}
 \caption{Locked measurement-policy audit. Native all-$Z$ is matched to the
 declared diagonal $ZZ$ bank; the shadow penalty measures universality cost.
 This is not an implementation of eSCD and does not establish superiority to
 classical-shadow sequential detection.}
 \label{fig:shadow}
-\end{figure}
+\end{figure*}
 
 \subsection{Circuit-level decoder utility}
 
@@ -620,47 +668,138 @@ regime, however, the same three rates were $0.019785$, $0.021605$, and
 $0.022175$: applying the correlation-aware model when it is wrong degrades
 performance.
 
-\begin{figure}[t]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{../../experiments/run5/results/circuit_level_locked/decoder_validation.pdf}
+\includegraphics[width=\textwidth]{../../experiments/run5/results/circuit_level_locked/decoder_validation.pdf}
 \caption{Locked Stim/PyMatching circuit-level simulation. Correlation-aware
 decoding helps only in the injected correlated regime and is harmful under
 the reference regime, motivating reliable model selection. The injected
 channel and decoder models are known; no online detector is tested here.}
 \label{fig:decoder}
-\end{figure}
+\end{figure*}
 
 This result supports downstream utility of correct correlation modeling under
 the specified simulator. It does not show that \AOC/\vAOC\ detects the
 change, does not compare a full DGR reproduction, and is neither hardware
 evidence nor an oracle-beating result.
 
-\subsection{Sequential and offline locked endpoints}
+\subsection{Cycle-fair sequential detection}
 
-The following fields are intentionally unresolved in this staged draft:
+The publication-grade sequential run uses 512 null streams through 5000
+cycles and 256 paired changed streams per effect, with change time 256 and a
+1024-cycle post-change restriction horizon. Ridge selection on independent
+streams freezes $\lambda=10^{-3}$ spatially and $10^{-4}$ temporally. For the
+spatial family one detector update is one physical cycle and the threshold is
+1000; for the temporal family one update is a nonoverlapping two-cycle pair
+and the threshold is 500. Both therefore target ARL at least 1000 physical
+cycles.
+
 \begin{table}[t]
 \centering
-\caption{Fields that must be replaced only from audited locked outputs.}
-\label{tab:pending}
-\begin{tabular}{@{}p{0.43\columnwidth}p{0.48\columnwidth}@{}}
+\scriptsize
+\caption{Locked middle-effect sequential results in physical cycles.
+NRL is the null restricted mean run length through 5000 cycles; RMDD is
+restart-at-change restricted mean delay through 1024 cycles, with miss
+fraction in parentheses. ``Grid'' uses the exact spatial likelihood and the
+full-HMM temporal likelihood.}
+\label{tab:sequential}
+\begin{tabular}{@{}lrrr rrr@{}}
 \toprule
-Endpoint & Current status\\
+& \multicolumn{3}{c}{Spatial $q_1=.55$}
+& \multicolumn{3}{c}{Temporal $\kappa=.75$}\\
+\cmidrule(lr){2-4}\cmidrule(l){5-7}
+Method & NRL & RMDD & Miss & NRL & RMDD & Miss\\
 \midrule
-Null ARL/censoring audit & \TBDSequential\\
-Spatial restart-at-change RMDD & \TBDSequential\\
-Temporal restart-at-change RMDD & \TBDSequential\\
-Hoeffding/Holm audit for \eqref{eq:comparison-estimand} & \TBDSequential\\
-Scaling runtime/memory & \TBDSequential\\
-Offline fixed-window diagnostic ROC AUC & \TBDOffline\\
-Final named-comparator decision & \TBDSequential\\
+DFR/count & 1000.0 & 1000.0 & .000 & 1000.0 & 1000.0 & .000\\
+Model-aware grid & 1169.8 & 88.3 & .000 & 1364.4 & 53.2 & .000\\
+Matched witness & 1001.9 & 459.8 & .000 & 1001.1 & 963.7 & .000\\
+Raw \AOC & 1035.2 & 592.8 & .031 & 992.5 & 862.9 & .453\\
+\vAOC/Hotelling & 1009.4 & 540.3 & .000 & 1000.9 & 959.4 & .297\\
+Named logistic & 1001.6 & 470.1 & .000 & 1002.9 & 968.5 & .398\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-No pilot value may replace a locked endpoint. Until
-Table~\ref{tab:pending} is resolved from manifests and raw records, the
-abstract, conclusion, and repository documentation must say that the primary
-advantage question remains open.
+The exactly blind DFR control has zero restart-delay reduction relative to its
+same-horizon no-change run length. At the spatial endpoint, the corresponding
+reductions are $637.21$, $495.88$, $276.75$, $403.68$, and $486.92$ cycles for
+the likelihood grid, matched witness, raw \AOC, \vAOC, and logistic,
+respectively. At the temporal endpoint they are $694.64$, $37.38$, $3.07$,
+$18.50$, and $2.73$ cycles. The exact pair-restricted temporal likelihood has
+RMDD $110.91$; the known-post one-cycle spatial and full-HMM temporal ceilings
+have RMDD $86.82$ and $51.84$. These controls confirm that the injected
+changes are detectable when the correct model is supplied; they are not
+proposed-method victories.
+
+The preregistered secondary delay summaries tell the same story. Spatially,
+the \vAOC\ IQR is $[473,591.25]$ cycles and the logistic IQR is
+$[432.75,501]$; neither detects within 64 or 128 cycles, whereas the
+model-aware grid fractions are $0.3477$ and $0.8242$. Temporally, the
+\vAOC\ and logistic IQRs are $[914,1024]$ and $[934,1024]$, and both have
+zero within-64/128 fractions; the full-HMM grid fractions are $0.7109$ and
+$0.9844$. Miss fractions appear in Table~\ref{tab:sequential}.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{../../experiments/run5/results/syndrome_drift_paper/syndrome_drift.pdf}
+\caption{Cycle-fair locked sequential audit. Delays use fresh starts at the
+change; no-change and surveillance experiments are kept separate. The
+temporal threshold is counted in pair updates but all displayed budgets and
+delays are physical cycles.}
+\label{fig:sequential}
+\end{figure*}
+
+For the named comparison, the spatial mean difference
+$\bar D=\operatorname{RMDD}_{\vAOC}-\operatorname{RMDD}_{\rm logit}$ is
+$70.176$ cycles: \vAOC\ is slower. Its descriptive paired-bootstrap interval
+is $[61.937,78.672]$, while the predeclared simultaneous one-sided
+Hoeffding upper bound is $244.013$ and the Holm-adjusted p-value is $1$.
+Temporally, $\bar D=-9.180$ cycles, but the descriptive interval
+$[-21.758,3.148]$ crosses zero; the simultaneous upper bound is $164.657$,
+the raw one-sided Hoeffding p-value is $0.9898$, and the Holm-adjusted value is
+$1$. Both fixed effects retain the analytic-null ARL guarantee by design, and
+their empirical null restricted mean run lengths have zero censoring.
+Nevertheless, neither task passes the statistical criterion, so the
+two-hypothesis overall flag is false. The locked experiment therefore gives
+\emph{no support} for \vAOC\ over the named validation-trained logistic effect
+on either predeclared comparison or overall.
+
+\subsection{Spatial scaling audit}
+
+The scaling arm freezes the $L=5$ ridge, uses 128 paired repetitions per
+size, and retains $q_1=.55$. Table~\ref{tab:scaling} shows the analytic
+translation gap shrinking as $1/L^2$ and all non-oracle correlation-witness
+delays worsening. The likelihood ceiling remains much faster because it is
+given the exact alternative.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\caption{Locked spatial scaling. Delays are restart RMDD; timings are
+single-process seconds per 10,000 samples after warm-up.}
+\label{tab:scaling}
+\begin{tabular}{@{}crrrrrr@{}}
+\toprule
+$L$ & Gap$_{\max}$ & \vAOC & Matched & Known post & Feat. s & LR s\\
+\midrule
+5 & .009189 & 542.25 & 462.38 & 85.02 & .00292 & .03527\\
+7 & .004688 & 744.07 & 636.72 & 85.51 & .01579 & .16245\\
+9 & .002836 & 867.81 & 740.40 & 99.89 & .00897 & .12271\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Raw-\AOC\ delays are $608.77$, $719.54$, and $827.98$ cycles for
+$L=5,7,9$; count remains at $1000$. These wall-clock measurements are an
+engineering audit, not a complexity theorem. They provide no computational or
+sample-efficiency scaling advantage. Separate \texttt{tracemalloc} calls give
+peak traced allocations of $7.79/19.51$, $15.11/37.82$, and
+$24.88/62.23$ MiB for translation features/exact likelihood at
+$L=5,7,9$. These are Python/NumPy allocation peaks, not total process RSS or
+a memory-complexity theorem.
+
+% Keep the locked result plates before the interpretation and references.
+\clearpage
 
 \section{What the Evidence Does and Does Not Show}
 
@@ -670,6 +809,14 @@ observables remain informative; one-cycle equality can coexist with
 detectable temporal dependence; and a logical cycle can be pathwise invisible
 to all syndrome-only rules. They do not establish universal sample
 efficiency, realistic device completeness, or asymptotic scalability.
+
+The offline and sequential results separate feature access from algorithmic
+advantage. Structured features recover information unavailable to count
+compression, but the \AOC\ projector is not the strongest offline rule and
+\vAOC\ does not beat the named validation-trained logistic effect under the
+predeclared sequential inference. This is a negative result for that named
+comparison, not a theorem that \vAOC\ is inferior for all distributions,
+budgets, or access restrictions.
 
 The circuit result establishes that correct correlation-aware decoder
 modeling can lower logical error in one known injected channel. It also shows
@@ -705,7 +852,7 @@ Finite estimation of the null mean without uncertainty protection generally
 does not; confidence-valid centering or separate threshold calibration is
 then required. Second, the controlled
 model has deliberately low-dimensional sufficient statistics. Exact
-likelihood and full-HMM methods should win when the model is known; a
+likelihood and full-HMM methods win here when the model is known; a
 constrained witness is valuable only if it remains competitive under model
 uncertainty, interpretability, or computational restrictions. Third, the
 circuit arm uses stationary reference and correlated circuits rather than a
@@ -718,6 +865,13 @@ shadow audit says only that measurement universality is costly for a known
 diagonal observable bank; universal shadows remain useful when future
 observables are not known in advance. Fifth, distances three through seven
 and one circuit family do not support a scaling theorem.
+
+The preregistration also listed ``witness overlap/localization'' but did not
+freeze a target witness, overlap formula, or time aggregation for the dynamic
+\vAOC\ history, and the locked run did not persist that history. We therefore
+do not manufacture a post-hoc localization number. This secondary item
+remains unfulfilled, supports no localization claim, and does not alter the
+predeclared paired-delay decision.
 
 The string/gauge extension is therefore framed as a concrete future
 experiment, not a solved theory problem: in a lattice gauge model or tensor
@@ -743,13 +897,17 @@ identifiability checks validate the analytic likelihood reductions; the
 measurement audit quantifies the cost of universal local-Pauli readout for a
 known $ZZ$ bank; and circuit-level simulation demonstrates the downstream
 value, and the risk, of correlation-aware decoding under a known channel.
-The physically matched named-comparator sequential test and corrected offline
-diagnostics remain \TBDSequential. Accordingly, this draft establishes a
-rigorous benchmark and claim boundary, not a general algorithmic, quantum,
-topological, or string-theoretic advantage.
+The corrected offline audit favors standard logistic/Hotelling rules over the
+simplex positive-support projector, and the cycle-fair sequential test gives
+no support for \vAOC\ over the named validation-trained logistic effect on
+either predeclared task or overall. Accordingly, Run 5 establishes a
+reproducible information-access benchmark and an honest negative
+named-comparator result, not a general algorithmic, quantum,
+sample-efficiency, topological, or string-theoretic advantage.
 
 % The archived author template includes IEEEtran.cls but not IEEEtran.bst.
 % Use the available numeric style for this working-paper build.
+\IEEEtriggeratref{12}
 \bibliographystyle{unsrt}
 \bibliography{references}
 

@@ -1,0 +1,124 @@
+{
+  "claim_boundary": [
+    "This is a controlled Stim/PyMatching circuit simulation, not hardware evidence.",
+    "The injected post-change correlation channel and both decoder models are known.",
+    "The experiment evaluates decoder utility; it does not test sequential drift-detection advantage.",
+    "No claim is made of quantum acceleration, universal sample efficiency, or superiority to an oracle decoder."
+  ],
+  "config_sha256": "7b208f844ab90cca53815dbcc82e67989716c42e5297d5b4ef6fbe35d7376e9a",
+  "configuration": "run5-circuit-level-locked-v1",
+  "decoders": [
+    {
+      "dem": "reference",
+      "enable_correlations": false,
+      "id": "static_null"
+    },
+    {
+      "dem": "correlated_post",
+      "enable_correlations": false,
+      "id": "ordinary_post"
+    },
+    {
+      "dem": "correlated_post",
+      "enable_correlations": true,
+      "id": "correlation_aware"
+    }
+  ],
+  "design_provenance": "Noise settings were selected after small exploratory infrastructure pilots with different seeds. Distances, endpoint, sample sizes, and all reported-run seeds were frozen before this locked run.",
+  "design_status": "locked controlled simulation",
+  "detector_advantage_tested": false,
+  "distances": [
+    3,
+    5,
+    7
+  ],
+  "exact_dem_marginal_audit": {
+    "all_passed": true,
+    "declared_tolerance": 1e-12,
+    "maximum_gap": 3.3306690738754696e-16
+  },
+  "generator": {
+    "dem_decompose_errors": true,
+    "injected_fault_axis": "X",
+    "memory_basis": "Z",
+    "name": "surface_code:rotated_memory_z",
+    "pair_selection": "greedy_short_detector_disjoint_v1",
+    "rounds": "distance"
+  },
+  "interpretation": "At the predeclared d=7 endpoint, correlation-aware PyMatching had a lower logical-error rate than ordinary post-DEM matching within this known-channel controlled simulation.",
+  "logical_error_rates_by_regime": {
+    "correlated": [
+      {
+        "correlation_aware": 0.04666,
+        "distance": 3,
+        "ordinary_post": 0.047955,
+        "static_null": 0.04877
+      },
+      {
+        "correlation_aware": 0.02035,
+        "distance": 5,
+        "ordinary_post": 0.02434,
+        "static_null": 0.023985
+      },
+      {
+        "correlation_aware": 0.0112,
+        "distance": 7,
+        "ordinary_post": 0.01526,
+        "static_null": 0.01653
+      }
+    ],
+    "reference": [
+      {
+        "correlation_aware": 0.03416,
+        "distance": 3,
+        "ordinary_post": 0.034035,
+        "static_null": 0.03327
+      },
+      {
+        "correlation_aware": 0.03232,
+        "distance": 5,
+        "ordinary_post": 0.02902,
+        "static_null": 0.027175
+      },
+      {
+        "correlation_aware": 0.022175,
+        "distance": 7,
+        "ordinary_post": 0.021605,
+        "static_null": 0.019785
+      }
+    ]
+  },
+  "noise": {
+    "after_clifford_depolarization": 0.001,
+    "after_reset_flip_probability": 0.002,
+    "before_measure_flip_probability": 0.002,
+    "common_pair_x_error": 0.01,
+    "marginal_data_x_error": 0.02
+  },
+  "practical_implication": "The correlation-aware post model improved decoding after the injected drift but degraded decoding when applied to reference shots. An operational system therefore needs calibrated model selection or change detection; that detector is not evaluated in this circuit-level experiment.",
+  "primary_endpoint": {
+    "ci_high": 0.004435,
+    "ci_low": 0.00369,
+    "ci_method": "paired multinomial bootstrap",
+    "confidence": 0.95,
+    "difference": 0.00406,
+    "distance": 7,
+    "estimand": "logical_error_rate(first_decoder)-logical_error_rate(second_decoder)",
+    "first_decoder": "ordinary_post",
+    "first_decoder_error_rate": 0.01526,
+    "lower_error_supported_at_declared_interval": true,
+    "positive_value_means": "correlation-aware decoding has lower logical error",
+    "regime": "correlated",
+    "relative_error_reduction": 0.2660550458715596,
+    "second_decoder": "correlation_aware",
+    "second_decoder_error_rate": 0.0112
+  },
+  "publication_grade": true,
+  "rounds_rule": "rounds = distance",
+  "sampled_regimes": {
+    "correlated": "A separate stationary post-change circuit with common-plus-residual paired data-X faults in every round. There is no within-circuit transition.",
+    "reference": "A stationary circuit with independent data-X faults in every round."
+  },
+  "shots_per_regime_per_distance": 200000,
+  "total_sampled_shots": 1200000
+}

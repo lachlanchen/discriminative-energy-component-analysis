@@ -1,0 +1,173 @@
+{
+  "claim_boundary": [
+    "No cross-family sample-efficiency claim is permitted unless physical-cycle, calibration, and labeled-training budgets are matched explicitly.",
+    "The validation-trained linear logistic effect is the named predeclared non-oracle comparator; matched analytic witnesses and exact likelihood ratios are model-aware controls or ceilings.",
+    "A positive comparison flag requires both the distribution-free simultaneous confidence bound and Holm-adjusted one-sided test to pass for both preregistered middle-effect hypotheses, with the ARL guarantee intact.",
+    "A pass supports only vAOC versus the named logistic comparator on these two controlled tasks; it is not a strongest-baseline, general algorithmic-advantage, or universal sample-efficiency result.",
+    "No superiority to Helstrom, a Wilson oracle, an exact likelihood ratio, or a threshold/logistic rule on the identical sufficient statistic is claimed.",
+    "No quantum acceleration, universal sample efficiency, scalable computational advantage, new topological-order theorem, Wilson-loop discovery, string-theory result, or holographic-duality result is claimed."
+  ],
+  "configuration": "run5-paper-locked-v2-cycle-fair",
+  "cycle_fair_budgets": {
+    "calibration_cycles_per_family": 4096,
+    "change_time_cycles": 256,
+    "detector_threshold_updates": {
+      "spatial": 1000,
+      "temporal": 500
+    },
+    "null_horizon_cycles": 5000,
+    "post_change_horizon_cycles": 1024,
+    "ridge_validation_horizon_cycles": 512,
+    "ridge_validation_streams": 8,
+    "ridge_validation_total_alternative_cycles": 4096,
+    "target_arl_cycles": 1000
+  },
+  "design_provenance": "Cycle-fair locked design frozen after the reduced pilot and independent pre-freeze audit, before the publication-grade sequential test. The audit corrected a temporal pair-versus-cycle unit error, separated every validation/training seed from locked-test seeds, and added a named validation-trained linear logistic comparator plus a multiplicity-controlled primary comparison. This comparator was chosen after inspecting the independent offline diagnostic audit but before any sequential locked test; it is predeclared here rather than claimed to be the strongest generic baseline. No publication-grade sequential result was inspected before this v2 design was frozen.",
+  "evaluation_note": "Primary delays restart detectors at the changepoint on the same post-change segment. Surveillance delays are reported separately conditional on no pre-change alarm; null rows retain the ARL and censoring audit.",
+  "locked": true,
+  "model": {
+    "detectors": 25,
+    "event_probability": 0.65,
+    "q0": 0.35,
+    "readout_error": 0.03,
+    "size": 5
+  },
+  "primary_named_comparator_audit": {
+    "hypotheses": [
+      {
+        "arl_basis": "Both effects are fixed/predictable simplex effects centered at the analytic null; the family threshold in detector updates maps exactly to target ARL cycles.",
+        "arl_requirement_met_by_design": true,
+        "baseline_method": "validation-trained linear logistic effect",
+        "bootstrap_resamples": 10000,
+        "comparison_supported_for_hypothesis": false,
+        "delay_bound_horizon_cycles": 1024.0,
+        "descriptive_bootstrap_ci95_high_cycles": 78.67236328125,
+        "descriptive_bootstrap_ci95_low_cycles": 61.93740234375,
+        "descriptive_bootstrap_inferential_status": "Descriptive only; not used for the comparator decision.",
+        "effect": 0.55,
+        "estimand": "mean delay(proposed)-mean delay(baseline), cycles",
+        "evaluation": "restart_at_change",
+        "family": "spatial",
+        "holm_adjusted_one_sided_p": 1.0,
+        "hypothesis": "spatial@0.55",
+        "inference_assumptions": "Conditional on the frozen auxiliary fits, paired test streams are independent across replicates; both restricted delays lie in [0,H], so their difference lies in [-H,H]. No symmetry or parametric assumption.",
+        "mean_delay_difference_cycles": 70.17578125,
+        "overall_two_hypothesis_comparison_supported": false,
+        "paired_replicates": 256,
+        "proposed_method": "vAOC / same-feature Hotelling",
+        "raw_one_sided_hoeffding_p": 1.0,
+        "scope_statement": "Support is limited to vAOC versus the named predeclared logistic comparator on these two controlled tasks.",
+        "simultaneous_familywise_confidence": 0.95,
+        "simultaneous_method": "Bonferroni-Hoeffding one-sided upper confidence bounds",
+        "simultaneous_upper_cycles": 244.0127752647993,
+        "statistical_criteria_pass": false,
+        "support_direction": "negative"
+      },
+      {
+        "arl_basis": "Both effects are fixed/predictable simplex effects centered at the analytic null; the family threshold in detector updates maps exactly to target ARL cycles.",
+        "arl_requirement_met_by_design": true,
+        "baseline_method": "validation-trained linear logistic effect",
+        "bootstrap_resamples": 10000,
+        "comparison_supported_for_hypothesis": false,
+        "delay_bound_horizon_cycles": 1024.0,
+        "descriptive_bootstrap_ci95_high_cycles": 3.1484375,
+        "descriptive_bootstrap_ci95_low_cycles": -21.7578125,
+        "descriptive_bootstrap_inferential_status": "Descriptive only; not used for the comparator decision.",
+        "effect": 0.75,
+        "estimand": "mean delay(proposed)-mean delay(baseline), cycles",
+        "evaluation": "restart_at_change",
+        "family": "temporal",
+        "holm_adjusted_one_sided_p": 1.0,
+        "hypothesis": "temporal@0.75",
+        "inference_assumptions": "Conditional on the frozen auxiliary fits, paired test streams are independent across replicates; both restricted delays lie in [0,H], so their difference lies in [-H,H]. No symmetry or parametric assumption.",
+        "mean_delay_difference_cycles": -9.1796875,
+        "overall_two_hypothesis_comparison_supported": false,
+        "paired_replicates": 256,
+        "proposed_method": "vAOC / same-feature Hotelling",
+        "raw_one_sided_hoeffding_p": 0.9897662668325602,
+        "scope_statement": "Support is limited to vAOC versus the named predeclared logistic comparator on these two controlled tasks.",
+        "simultaneous_familywise_confidence": 0.95,
+        "simultaneous_method": "Bonferroni-Hoeffding one-sided upper confidence bounds",
+        "simultaneous_upper_cycles": 164.6573065147993,
+        "statistical_criteria_pass": false,
+        "support_direction": "negative"
+      }
+    ],
+    "overall_two_hypothesis_comparison_supported": false,
+    "path": "primary_named_comparator_audit.csv",
+    "scope": "Only vAOC versus the named predeclared logistic comparator on the two declared controlled tasks."
+  },
+  "publication_grade": true,
+  "scaling_arm": {
+    "path": "spatial_scaling.csv",
+    "q1": 0.55,
+    "repetitions": 128,
+    "ridge_frozen_from_size5": 0.001,
+    "sizes": [
+      5,
+      7,
+      9
+    ],
+    "timing_samples": 10000
+  },
+  "selected_ridge": {
+    "spatial": 0.001,
+    "temporal": 0.0001
+  },
+  "target_spatial_delay_reduction_vs_no_change_cycles": {
+    "DFR/count exact pushforward": 0.0,
+    "exact one-cycle likelihood grid SR": 637.205078125,
+    "known-post one-cycle likelihood SR": 635.787109375,
+    "matched correlation witness": 495.8828125,
+    "raw symmetry-resolved AOC": 276.751953125,
+    "vAOC / same-feature Hotelling": 403.68359375,
+    "validation-trained linear logistic effect": 486.921875
+  },
+  "target_spatial_q": 0.55,
+  "target_spatial_restart_mean_delay_cycles": {
+    "DFR/count exact pushforward": 1000.0,
+    "exact one-cycle likelihood grid SR": 88.2578125,
+    "known-post one-cycle likelihood SR": 86.8203125,
+    "matched correlation witness": 459.78125,
+    "raw symmetry-resolved AOC": 592.76953125,
+    "vAOC / same-feature Hotelling": 540.3046875,
+    "validation-trained linear logistic effect": 470.12890625
+  },
+  "target_temporal_delay_reduction_vs_no_change_cycles": {
+    "DFR/count exact pushforward": 0.0,
+    "exact pair-restricted likelihood grid SR": 630.546875,
+    "full-HMM block-boundary grid SR": 694.640625,
+    "known-post full-HMM block-boundary SR": 696.96875,
+    "known-post pair-restricted likelihood SR": 628.53515625,
+    "matched correlation witness": 37.37890625,
+    "raw symmetry-resolved AOC": 3.0703125,
+    "vAOC / same-feature Hotelling": 18.50390625,
+    "validation-trained linear logistic effect": 2.7265625
+  },
+  "target_temporal_kappa": 0.75,
+  "target_temporal_restart_mean_delay_cycles": {
+    "DFR/count exact pushforward": 1000.0,
+    "exact pair-restricted likelihood grid SR": 110.9140625,
+    "full-HMM block-boundary grid SR": 53.2421875,
+    "known-post full-HMM block-boundary SR": 51.8359375,
+    "known-post pair-restricted likelihood SR": 109.5390625,
+    "matched correlation witness": 963.734375,
+    "raw symmetry-resolved AOC": 862.90625,
+    "vAOC / same-feature Hotelling": 959.359375,
+    "validation-trained linear logistic effect": 968.5390625
+  },
+  "units": {
+    "calibration_and_horizons": "physical syndrome cycles",
+    "detector_thresholds": "detector updates; 1000 spatial updates and 500 temporal pair updates both correspond to a target ARL of at least 1000 physical cycles",
+    "spatial_detector_update": "one physical syndrome cycle",
+    "target_arl": "physical syndrome cycles",
+    "temporal_detector_update": "one nonoverlapping pair = two physical syndrome cycles",
+    "witness_window_and_update_interval": "detector updates within each family"
+  },
+  "validation_trained_baseline": {
+    "cross_family_sample_efficiency_claim": false,
+    "method": "validation-trained linear logistic effect",
+    "path": "validation_trained_baseline.json",
+    "physical_cycles_per_class_per_family": 4096
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "command": [
+    "/home/lachlan/miniconda3/bin/python3.10",
+    "experiments/run5/scripts/run_syndrome_drift.py",
+    "--config",
+    "experiments/run5/configs/pilot.json"
+  ],
+  "config": {
+    "bet_fractions": [
+      0.02,
+      0.05,
+      0.1,
+      0.2,
+      0.4,
+      0.8
+    ],
+    "bootstrap_resamples": 1000,
+    "calibration_cycles": 1024,
+    "change_time_cycles": 128,
+    "changed_test_streams": 32,
+    "claim_boundary": [
+      "This is a reduced pilot and cannot support a publication-grade named-comparator claim.",
+      "No cross-family sample-efficiency claim is permitted.",
+      "Matched analytic and exact-likelihood methods are model-aware controls, not the named logistic comparator.",
+      "Any positive flag supports only vAOC versus the named logistic comparator on these two pilot tasks and is not publication-grade evidence.",
+      "No quantum acceleration, universal sample efficiency, or string-theory/holography claim is made."
+    ],
+    "design_provenance": "Reduced smoke-test design. Its earlier output exposed the blind-SR clock artifact and the later independent audit exposed temporal pair-versus-cycle unfairness. The named logistic comparator was chosen after inspecting the independent offline diagnostic audit but before the corrected sequential run. This v2 metadata uses the corrected cycle convention but remains a pilot and cannot support a publication-grade comparator claim.",
+    "detector_threshold_updates": {
+      "spatial": 200,
+      "temporal": 100
+    },
+    "locked": false,
+    "model": {
+      "event_probability": 0.65,
+      "null_chain2_probability": 0.35,
+      "readout_error": 0.03,
+      "size": 5
+    },
+    "name": "run5-pilot-v2-cycle-fair",
+    "null_horizon_cycles": 1000,
+    "null_test_streams": 32,
+    "post_change_horizon_cycles": 384,
+    "primary_comparison_hypotheses": {
+      "baseline_method": "validation-trained linear logistic effect",
+      "estimand": "paired restart-at-change restricted mean delay difference in physical cycles: proposed minus baseline",
+      "familywise_alpha": 0.05,
+      "proposed_method": "vAOC / same-feature Hotelling",
+      "required_decision": "Pilot-only descriptive implementation of the locked decision rule.",
+      "spatial_effect": 0.55,
+      "support_direction": "negative",
+      "temporal_effect": 0.75
+    },
+    "publication_grade": false,
+    "ridge_grid": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "ridge_validation_horizon_cycles": 512,
+    "seed_partition_note": "All sampling and analysis seed partitions are explicit and load_config verifies that validation and test sampling intervals are disjoint.",
+    "seeds": {
+      "analysis": {
+        "bootstrap": 88000000
+      },
+      "baseline_training": {
+        "spatial_alternative": 811002,
+        "spatial_null": 811001,
+        "temporal_alternative": 811004,
+        "temporal_null": 811003
+      },
+      "calibration": {
+        "spatial": 810001,
+        "temporal": 810002
+      },
+      "locked_test": {
+        "spatial_start": 60000000,
+        "temporal_start": 70000000
+      },
+      "ridge_validation": {
+        "spatial_start": 820000,
+        "temporal_start": 821000
+      }
+    },
+    "spatial_alternatives": [
+      0.55
+    ],
+    "target_arl_cycles": 200,
+    "temporal_persistence": [
+      0.75
+    ],
+    "units": {
+      "calibration_and_horizons": "physical syndrome cycles",
+      "detector_thresholds": "detector updates; 200 spatial updates and 100 temporal pair updates both correspond to a target ARL of at least 200 physical cycles",
+      "spatial_detector_update": "one physical syndrome cycle",
+      "target_arl": "physical syndrome cycles",
+      "temporal_detector_update": "one nonoverlapping pair = two physical syndrome cycles",
+      "witness_window_and_update_interval": "detector updates within each family"
+    },
+    "validation_streams": 2,
+    "validation_trained_baseline": {
+      "budget_note": "Both families receive 1024 labeled physical cycles per class; no cross-family sample-efficiency comparison is made.",
+      "cycles_per_stream": 512,
+      "logistic_c": 1.0,
+      "logistic_max_iter": 2000,
+      "method": "validation-trained linear logistic effect",
+      "spatial_training_examples_per_class": 1024,
+      "temporal_pair_training_examples_per_class": 512,
+      "total_physical_cycles_per_class": 1024,
+      "training_effects": {
+        "spatial_q": 0.55,
+        "temporal_kappa": 0.75
+      },
+      "training_streams_per_class": 2
+    },
+    "witness_update_interval_updates": 8,
+    "witness_window_updates": 64
+  },
+  "experiment": "run5-syndrome-drift-pilot",
+  "finished_unix": 1785154798.4758475,
+  "git_commit": "8ab520e4bcadbd28281aa43584b0f442944add4b",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run5/results/syndrome_drift_pilot/aggregate_metrics.csv": "0cf2b51d289e94fd241b386039314eeaac6e5eea8983af1b44eb58e71311b814",
+    "experiments/run5/results/syndrome_drift_pilot/paired_bootstrap.csv": "5c5820a64c6b4ea2168a75fb6df91c3d72ec42c2a6ddbd7edb6d5405bac8388a",
+    "experiments/run5/results/syndrome_drift_pilot/primary_named_comparator_audit.csv": "9e89aa3407030688876ddbc65712a755d45d51df42f382bdece570ec48bcb4af",
+    "experiments/run5/results/syndrome_drift_pilot/replicate_metrics.csv": "52a74ff7cea9fd2b9c22550f0389eef118a451527a5d0f8baf4d39dceb103cc4",
+    "experiments/run5/results/syndrome_drift_pilot/ridge_selection.csv": "6afd96e818d71c053435447b573a8d196ab207071afada46bb37fa7530f9a9b2",
+    "experiments/run5/results/syndrome_drift_pilot/summary.json": "a0d9487e10aa0519f66a4880c6d842fdcbc5ff12dd596f1a6a13bf84f70ac3da",
+    "experiments/run5/results/syndrome_drift_pilot/syndrome_drift.pdf": "b6378a7ed3582b40bd4492e38e221ed5182d5e211dff4968b13129c959a88b08",
+    "experiments/run5/results/syndrome_drift_pilot/syndrome_drift.png": "0fe208925b17d5cc3a3b3415135c4145aba9e0674edb1fa1ed8d45ea9487bc07",
+    "experiments/run5/results/syndrome_drift_pilot/validation_trained_baseline.json": "c17a5ee7a44d83f51197bb2cde26d1899b138fd1fa92b46259b4ebf9b4421322"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "pymatching": "2.4.0",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3",
+    "stim": "1.16.0"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785154791.949326,
+  "wall_seconds": 6.526521682739258
+}

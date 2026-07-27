@@ -1,8 +1,8 @@
 # 可访问观测差异研究
 
 [![研究状态](https://img.shields.io/badge/状态-可复现工作论文-2b6cb0)](publication/)
-[![测试](https://img.shields.io/badge/测试-41%20项通过-2ea44f)](experiments/)
-[![研究轮次](https://img.shields.io/badge/研究轮次-4-6f42c1)](experiments/)
+[![测试](https://img.shields.io/badge/测试-93%20项通过-2ea44f)](experiments/)
+[![研究轮次](https://img.shields.io/badge/研究轮次-5-6f42c1)](experiments/)
 [![ISCAS 2025](https://img.shields.io/badge/ECA%20起点-ISCAS%202025-00629B)](https://doi.org/10.1109/ISCAS56072.2025.11044249)
 [![English](https://img.shields.io/badge/README-English-blue)](README.md)
 
@@ -42,7 +42,7 @@ run 3 进一步加入物理约束。若 \(\mathcal A\) 是可访问观测代数�
 群对称性是其中一个特例：先做 twirling，再取正谱部分。表示论分块还能指出
 变化由哪个 parity、frequency、charge 或其它物理扇区承载。
 
-## 四个不可覆盖的研究轮次
+## 五个不可覆盖的研究轮次
 
 | 轮次 | 问题 | 论文 |
 |---|---|---|
@@ -50,6 +50,7 @@ run 3 进一步加入物理约束。若 \(\mathcal A\) 是可访问观测代数�
 | [run 2](experiments/run2/) | 最大差异观测能否逐样本累积、合并、限制秩并用于在线检测？ | [AOC PDF](publication/run2/main.pdf) |
 | [run 3](experiments/run3/) | 在对称性或物理读出代数下，精确最优解是什么？哪个扇区发生变化？ | [SAOC PDF](publication/run3/main.pdf) |
 | [run 4](experiments/run4/) | 能否先证明局域观测代数看不见拓扑扇区，再恢复第一个非收缩 witness？ | [Run 3+4 合并论文 PDF](publication/run4/main.pdf)；[结果与优势审计](references/run4_gauge_sector_results_and_advantage_audit.md) |
+| [run 5](experiments/run5/) | syndrome 边缘不变时，相关结构能否在相同物理 cycle 预算下检测 drift 并改善解码？ | [Run 5 PDF](publication/run5/main.pdf)；[结果与优势审计](references/run5_surface_code_drift_results_and_advantage_audit.md) |
 
 run 1 是冻结的 DECA 基线。后续轮次不会覆盖其代码、结果或论文。持续维护的
 公共实现位于 [`experiments/aoc/`](experiments/aoc/)。
@@ -69,6 +70,8 @@ CSP/广义特征值、kernel MMD 和 symmetry-resolved entanglement 都明确作
 - 对称性/子代数约束下的精确最优 effect；
 - 可加的扇区诊断，以及 \(O(d\log d)\) 的循环平移特例；
 - toric-code 局域无信息证书，以及第一个 Wilson-loop-equivalent flux witness；
+- 可访问过程 no-go 证书、cycle-fair e-detector，以及受控的
+  Stim/PyMatching 解码效用审计；
 - 同时报告打平、失败和适用边界的跨领域实验。
 
 完整推导见
@@ -87,6 +90,9 @@ CSP/广义特征值、kernel MMD 和 symmetry-resolved entanglement 都明确作
 | Hückel 差分密度 | attachment/detachment 守恒误差 \(5.55\times10^{-17}\) | 仅为受控 tight-binding 模型 |
 | 模拟六轴机器人接触 | 学习 screw 重叠 \(0.99925\) | 不是硬件部署证据 |
 | \(3\times3\) toric-code 通量扇区 | 1,431 个低于码距的 Pauli gap 全为 0；Wilson-loop trace distance 为 1 | 在相同 symmetry/access model 下与 Wilson、Helstrom oracle 打平 |
+| \(5\times5\) 边缘保持 syndrome drift | count TV 与最大单 detector 边缘差都为 0；相关 likelihood AUC 为 \(0.5738/0.5770\) | 这是信息可访问性分离，不是 AOC 优势 |
+| 同预算顺序检测 | spatial vAOC 比命名 logistic effect 慢 70.18 cycles；temporal 快 9.18 cycles 但无统计支持 | 预注册的两任务优势判定为 false |
+| Stim/PyMatching 注入相关噪声，\(d=7\) | correlation-aware 解码把逻辑错误率从 \(1.526\%\) 降至 \(1.120\%\) | 已知模拟 post-channel 下相对降低 26.6%；不是 detector 或硬件结果 |
 
 显著优势发生在预先设计的均值盲、低秩或对称干扰场景中。本项目不声称普适
 准确率、量子加速、隐私保证、ASIC/FPGA 优势，也不声称已经完成真实机器人或
@@ -101,19 +107,20 @@ CSP/广义特征值、kernel MMD 和 symmetry-resolved entanglement 都明确作
 电子差分密度和 spectroscopy、EEG/CSP 空间功率变化，以及建立在 SOAP/ACE
 之上的旋转不变分子特征。
 
-run 4 已完成这个设想的有限 fixed-point 版本：比较 toric-code flux sectors，
+run 4 完成了这个设想的有限 fixed-point 版本：比较 toric-code flux sectors，
 证明码距以下的局域不可区分性，并恢复 Wilson-loop-equivalent effect。这是
-\(\mathbb Z_2\) lattice-gauge/QEC testbed，不是弦论或 holography 结果。可信
-的下一步理论问题是带明确 boundary observable algebra 的已发表
-tensor-network/holographic-code state；可信的实际问题是同预算
-surface-code syndrome drift detection。
+\(\mathbb Z_2\) lattice-gauge/QEC testbed，不是弦论或 holography 结果。
+run 5 已执行同预算 surface-code syndrome drift 这一步：没有发现 vAOC
+优于命名学习对照，但验证了相关结构能恢复边缘统计丢失的信息，并且正确选择的
+post-change decoder 在受控仿真中有用。下一步需要真实硬件 syndrome stream、
+在线模型选择与 decoder switching 的端到端验证。
 
 ## 快速开始
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
-.venv/bin/python -m pip install -e './experiments[quantum,test]'
+.venv/bin/python -m pip install -e './experiments[quantum,qec,test]'
 .venv/bin/python -m pytest -q
 ```
 
@@ -141,6 +148,18 @@ python3 -m venv .venv
 .venv/bin/python experiments/run4/scripts/run_topological_flux.py
 ```
 
+运行 run 5 的冻结实验：
+
+```bash
+.venv/bin/python experiments/run5/scripts/run_identifiability_certificate.py
+.venv/bin/python experiments/run5/scripts/run_syndrome_drift.py \
+  --config experiments/run5/configs/paper.json
+.venv/bin/python experiments/run5/scripts/run_offline_diagnostic_audit.py \
+  --config experiments/run5/configs/offline_diagnostic_locked.json
+.venv/bin/python experiments/run5/scripts/run_shadow_measurement_audit.py
+.venv/bin/python experiments/run5/scripts/run_circuit_level_validation.py
+```
+
 构建全部论文：
 
 ```bash
@@ -159,7 +178,8 @@ manifest，其中记录命令、依赖、Git 状态、运行时间和输出哈�
 | [`experiments/run2/`](experiments/run2/) | 加性/流式观测差异验证 |
 | [`experiments/run3/`](experiments/run3/) | 对称分辨与跨领域验证 |
 | [`experiments/run4/`](experiments/run4/) | 精确局域不可区分性与拓扑通量验证 |
-| [`publication/`](publication/) | run 1–4 的四份独立论文源码与编译 PDF |
+| [`experiments/run5/`](experiments/run5/) | cycle-fair syndrome drift、测量与解码验证 |
+| [`publication/`](publication/) | run 1–5 的五份独立论文源码与编译 PDF |
 | [`references/`](references/) | ECA/Ising 原始材料、审稿意见、研究计划和理论分析 |
 
 ## 研究谱系、引用与权利
@@ -169,7 +189,7 @@ manifest，其中记录命令、依赖、Git 状态、运行时间和输出哈�
 ISCAS 源文件、Ising 聚类探索稿和早期讨论保存在 [`references/`](references/)
 中作为 provenance，不会改写历史来制造“后来理论早已存在”的印象。
 
-四份工作稿暂以 `Rongzhou (Lachlan) Chen` 作为仓库作者占位。正式投稿前，
+五份工作稿暂以 `Rongzhou (Lachlan) Chen` 作为仓库作者占位。正式投稿前，
 作者、单位、致谢和期刊必须由人类合作者确认。
 
 GitHub 使用 [`CITATION.cff`](CITATION.cff) 生成引用界面：
@@ -181,7 +201,7 @@ GitHub 使用 [`CITATION.cff`](CITATION.cff) 生成引用界面：
              From Eigen-Components to Additive and
              Symmetry-Resolved Physical Witnesses},
   year    = {2026},
-  version = {4.0.0},
+  version = {5.0.0},
   url     = {https://github.com/lachlanchen/discriminative-energy-component-analysis}
 }
 ```

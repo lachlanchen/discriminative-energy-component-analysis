@@ -1,0 +1,7 @@
+identity,error
+full observed count PMF gap across q,0.0
+maximum detector marginal gap across q,0.0
+direct versus sufficient spatial LLR,5.551115123125783e-15
+direct versus closed-form temporal pair LLR,8.909539772616881e-15
+analytic versus predicted pair-feature mean gap,8.673617379884035e-18
+logical-loop maximum syndrome difference,0.0

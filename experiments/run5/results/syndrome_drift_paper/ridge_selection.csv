@@ -1,0 +1,7 @@
+family,effect,ridge,validation_streams,evaluation,time_unit_cycles,restriction_horizon_updates,restriction_horizon_cycles,mean_restricted_delay_from_restart_updates,mean_restricted_delay_from_restart_cycles
+spatial,0.55,0.0001,8,restart_at_change,1,512,512,508.625,508.625
+spatial,0.55,0.001,8,restart_at_change,1,512,512,507.0,507.0
+spatial,0.55,0.01,8,restart_at_change,1,512,512,512.0,512.0
+temporal,0.75,0.0001,8,restart_at_change,2,256,512,256.0,512.0
+temporal,0.75,0.001,8,restart_at_change,2,256,512,256.0,512.0
+temporal,0.75,0.01,8,restart_at_change,2,256,512,256.0,512.0
