@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 from aoc.surface_code import PeriodicSurfaceSyndromeModel
 
 SCRIPT = (
@@ -24,6 +25,17 @@ def small_model() -> PeriodicSurfaceSyndromeModel:
         readout_error=0.04,
         allow_small_for_test=True,
     )
+
+
+def test_persisted_no_change_class_is_not_parsed_as_missing(
+    tmp_path: Path,
+) -> None:
+    path = tmp_path / "sample_manifest.csv"
+    expected = [MODULE.NO_CHANGE_CLASS_LABEL, "alternative"]
+    pd.DataFrame({"class": expected}).to_csv(path, index=False)
+    observed = pd.read_csv(path)
+    assert observed["class"].tolist() == expected
+    assert not observed["class"].isna().any()
 
 
 def test_pair_lift_mean_has_declared_outer_product() -> None:

@@ -31,6 +31,7 @@ from sklearn.svm import SVC
 RUN_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = RUN_ROOT / "configs" / "offline_diagnostic_locked.json"
 SPLITS = ("train", "validation", "test")
+NO_CHANGE_CLASS_LABEL = "no_change"
 FEATURE_LABELS = {
     "dfr_count_sequence": "DFR/count sequence",
     "detector_first_moment": "Detector first moment",
@@ -787,7 +788,7 @@ def main() -> None:
                 {
                     "scenario": scenario,
                     "effect": null_effect,
-                    "class": "null",
+                    "class": NO_CHANGE_CLASS_LABEL,
                     "split": split,
                     "windows": split_sizes[split],
                     "cycles_per_window": cycles,
