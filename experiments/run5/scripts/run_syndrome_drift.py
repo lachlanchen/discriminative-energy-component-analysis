@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import time
+import tracemalloc
 from dataclasses import dataclass
 from itertools import pairwise
 from pathlib import Path
@@ -1145,6 +1146,22 @@ def aggregate_metrics(frame: pd.DataFrame) -> pd.DataFrame:
     restart_summary = restart.groupby(keys, as_index=False).agg(
         mean_restart_delay_cycles=("restricted_delay_cycles", "mean"),
         median_restart_delay_cycles=("restricted_delay_cycles", "median"),
+        restart_delay_q1_cycles=(
+            "restricted_delay_cycles",
+            lambda values: values.quantile(0.25),
+        ),
+        restart_delay_q3_cycles=(
+            "restricted_delay_cycles",
+            lambda values: values.quantile(0.75),
+        ),
+        restart_detection_within_64_cycles_fraction=(
+            "restricted_delay_cycles",
+            lambda values: (values <= 64).mean(),
+        ),
+        restart_detection_within_128_cycles_fraction=(
+            "restricted_delay_cycles",
+            lambda values: (values <= 128).mean(),
+        ),
         restart_miss_fraction=("censored", "mean"),
         restart_replicates=("replicate", "count"),
         restart_horizon_cycles=("restriction_horizon_cycles", "first"),
@@ -1512,11 +1529,21 @@ def run_spatial_scaling_arm(
         feature_started = time.perf_counter()
         model.translation_pair_features(timing_observed)
         feature_seconds = time.perf_counter() - feature_started
+        tracemalloc.start()
+        model.translation_pair_features(timing_observed)
+        _, feature_peak_bytes = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
         likelihood_started = time.perf_counter()
         null_log = model.emission_log_likelihoods(timing_observed, q0)
         post_log = model.emission_log_likelihoods(timing_observed, q1)
         _ = post_log - null_log
         likelihood_seconds = time.perf_counter() - likelihood_started
+        tracemalloc.start()
+        null_log = model.emission_log_likelihoods(timing_observed, q0)
+        post_log = model.emission_log_likelihoods(timing_observed, q1)
+        _ = post_log - null_log
+        _, likelihood_peak_bytes = tracemalloc.get_traced_memory()
+        tracemalloc.stop()
 
         analytic_gap = np.abs(
             model.expected_translation_pair_features(q1)
@@ -1547,10 +1574,21 @@ def run_spatial_scaling_arm(
                     "analytic_translation_gap_max": float(analytic_gap.max()),
                     "translation_feature_seconds_per_10k": feature_seconds,
                     "exact_llr_seconds_per_10k": likelihood_seconds,
+                    "translation_feature_peak_tracemalloc_bytes_per_10k": int(
+                        feature_peak_bytes
+                    ),
+                    "exact_llr_peak_tracemalloc_bytes_per_10k": int(
+                        likelihood_peak_bytes
+                    ),
                     "timing_samples": timing_samples,
                     "timing_note": (
                         "Single-process wall-clock engineering measurement "
                         "after a 10-sample warm-up; not a complexity theorem."
+                    ),
+                    "memory_note": (
+                        "Peak Python/NumPy allocation traced by tracemalloc "
+                        "during a separate 10,000-sample call; not total "
+                        "process RSS or a complexity theorem."
                     ),
                 }
             )

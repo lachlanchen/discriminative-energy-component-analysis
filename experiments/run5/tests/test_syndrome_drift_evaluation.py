@@ -191,6 +191,10 @@ def test_restart_metric_removes_blind_sr_age_artifact() -> None:
     aggregate = aggregate_metrics(pd.DataFrame(data)).iloc[0]
     assert aggregate["surveillance_conditional_mean_delay_cycles"] == 6.0
     assert aggregate["mean_restart_delay_cycles"] == 10.0
+    assert aggregate["restart_delay_q1_cycles"] == 10.0
+    assert aggregate["restart_delay_q3_cycles"] == 10.0
+    assert aggregate["restart_detection_within_64_cycles_fraction"] == 1.0
+    assert aggregate["restart_detection_within_128_cycles_fraction"] == 1.0
     assert aggregate["no_change_rmst_at_restart_horizon_cycles"] == 10.0
     assert aggregate["restart_delay_reduction_vs_no_change_cycles"] == 0.0
     assert aggregate["restart_delay_ratio_to_no_change"] == 1.0
