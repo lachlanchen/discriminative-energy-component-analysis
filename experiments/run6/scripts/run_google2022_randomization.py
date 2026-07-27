@@ -27,7 +27,6 @@ from typing import Any
 import numpy as np
 from aoc.qec_real import parse_stim_detector_layout, read_b8_detector_shots
 from aoc.run6_protocol import (
-    RUN6_REQUIRED_FREEZE_PATHS,
     assert_no_outcome_paths,
     canonical_json_bytes,
     environment_fingerprint,
@@ -36,8 +35,8 @@ from aoc.run6_protocol import (
     require_exact_keys,
     require_thread_environment,
     sha256_file,
-    verify_committed_freeze_chain,
 )
+from aoc.run6_repair import verify_post_detector_repair_chain
 from aoc.space import ProperUniformStartEProcessBank
 from aoc.space_qec import (
     CHECK_COUNT,
@@ -57,6 +56,7 @@ from sklearn.covariance import LedoitWolf
 METHOD_IDS = ("m0", "m0c", "m1", "m2", "m3", "m4", "m5", "space")
 EXACT_METHOD_IDS = ("m0", "m1", "m3", "m4", "m5", "space")
 NONFORMAL_METHOD_IDS = ("m0c", "m2")
+REPAIR_RATIFICATION_RELATIVE = "experiments/run6/repair_ratification.json"
 DETECTOR_MANIFEST_KEYS = frozenset(
     {
         "schema_version",
@@ -129,6 +129,8 @@ RANDOMIZATION_SHARD_MANIFEST_KEYS = frozenset(
         "config_sha256",
         "method_spec_sha256",
         "freeze_ratification_sha256",
+        "repair_ratification_path",
+        "repair_ratification_sha256",
         "detector_manifest_sha256",
         "detector_manifest_git_commit",
         "script_sha256",
@@ -189,6 +191,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--config", type=Path)
     parser.add_argument("--freeze-ratification", type=Path)
+    parser.add_argument("--repair-ratification", type=Path)
     parser.add_argument("--detector-manifest", type=Path)
     parser.add_argument("--data-root", type=Path)
     parser.add_argument("--output", type=Path)
@@ -408,11 +411,13 @@ def _sha256_zip_member(archive: Path, member: str) -> str:
 def verify_freeze_ratification(
     path: Path,
     *,
+    repair_ratification_path: Path,
     repo_root: Path,
     config_path: Path,
     config: Mapping[str, Any],
+    detector_manifest_path: Path,
 ) -> dict[str, Any]:
-    """Verify the canonical, committed, pushed freeze chain before detector access."""
+    """Verify the original freeze plus committed post-detector repair chain."""
 
     expected_config_path = (
         repo_root / "experiments/run6/configs/google2022_locked.json"
@@ -426,10 +431,11 @@ def verify_freeze_ratification(
     if config["normative_method_spec"]["sha256"] != sha256_file(spec_path):
         raise ValueError("Normative method-spec hash embedded in config changed.")
     expected_threads = config["numeric_policy"]["thread_environment"]
-    return verify_committed_freeze_chain(
-        path,
+    return verify_post_detector_repair_chain(
+        original_ratification_path=path,
+        repair_ratification_path=repair_ratification_path,
         repo_root=repo_root,
-        required_paths=RUN6_REQUIRED_FREEZE_PATHS,
+        detector_manifest_path=detector_manifest_path,
         expected_environment=environment_fingerprint(),
         expected_thread_environment=expected_threads,
     )
@@ -815,6 +821,7 @@ def verify_randomization_shard_manifest(
     config_path: Path,
     config: Mapping[str, Any],
     ratification_path: Path,
+    repair_ratification_path: Path,
     detector_manifest_path: Path,
     detector_manifest: Mapping[str, Any],
 ) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -834,6 +841,8 @@ def verify_randomization_shard_manifest(
             repo_root / config["normative_method_spec"]["path"]
         ),
         "freeze_ratification_sha256": sha256_file(ratification_path),
+        "repair_ratification_path": REPAIR_RATIFICATION_RELATIVE,
+        "repair_ratification_sha256": sha256_file(repair_ratification_path),
         "detector_manifest_sha256": sha256_file(detector_manifest_path),
         "detector_manifest_git_commit": detector_manifest["git_commit"],
         "script_sha256": sha256_file(__file__),
@@ -1352,9 +1361,12 @@ def validate_formal_detector_artifacts(
         base_weights = np.asarray(priors[method].weights, dtype=np.float64)
         base_count = len(base_weights)
         expert_count = role_count * base_count
-        expected_component_weights = np.tile(
+        raw_expected_component_weights = np.tile(
             base_weights / role_count,
             role_count,
+        )
+        expected_component_weights = (
+            raw_expected_component_weights / raw_expected_component_weights.sum()
         )
         proper = summary["proper_prior"][method]
         sr = summary["shiryaev_roberts"][method]
@@ -1365,7 +1377,7 @@ def validate_formal_detector_artifacts(
             or not isinstance(metadata, Mapping)
         ):
             raise TypeError("Formal component summary rows must be objects.")
-        accumulator_keys = {
+        proper_accumulator_keys = {
             "component_weights",
             "role_count",
             "base_component_count",
@@ -1376,14 +1388,15 @@ def validate_formal_detector_artifacts(
             "first_crossing_update",
             "threshold",
         }
+        sr_accumulator_keys = proper_accumulator_keys - {"expert_id_rule"}
         require_exact_keys(
             proper,
-            accumulator_keys,
+            proper_accumulator_keys,
             context=f"formal proper-prior summary {method}",
         )
         require_exact_keys(
             sr,
-            accumulator_keys,
+            sr_accumulator_keys,
             context=f"formal SR summary {method}",
         )
         require_exact_keys(
@@ -1456,8 +1469,6 @@ def validate_formal_detector_artifacts(
             or not np.isclose(np.sum(proper_weights), 1.0, rtol=0.0, atol=1e-15)
             or not np.isclose(np.sum(sr_weights), 1.0, rtol=0.0, atol=1e-15)
             or proper["expert_id_rule"]
-            != "(role, *base_component_id), role-major then base-component-major"
-            or sr["expert_id_rule"]
             != "(role, *base_component_id), role-major then base-component-major"
             or proper["threshold"] != 100.0
             or sr["threshold"] != 1_000_000.0
@@ -2010,6 +2021,7 @@ def run_shard_real(args: argparse.Namespace) -> None:
     required = {
         "--config": args.config,
         "--freeze-ratification": args.freeze_ratification,
+        "--repair-ratification": args.repair_ratification,
         "--detector-manifest": args.detector_manifest,
         "--data-root": args.data_root,
         "--output": args.output,
@@ -2029,15 +2041,18 @@ def run_shard_real(args: argparse.Namespace) -> None:
     repo_root = Path(__file__).resolve().parents[3]
     config_path = args.config.resolve()
     ratification_path = args.freeze_ratification.resolve()
+    repair_ratification_path = args.repair_ratification.resolve()
     detector_manifest_path = args.detector_manifest.resolve()
     data_root = args.data_root.resolve()
     output = args.output.resolve()
     config = load_google_lock(config_path)
     verify_freeze_ratification(
         ratification_path,
+        repair_ratification_path=repair_ratification_path,
         repo_root=repo_root,
         config_path=config_path,
         config=config,
+        detector_manifest_path=detector_manifest_path,
     )
     detector_manifest, detector_artifacts = verify_detector_manifest(
         detector_manifest_path,
@@ -2211,6 +2226,8 @@ def run_shard_real(args: argparse.Namespace) -> None:
             repo_root / config["normative_method_spec"]["path"]
         ),
         "freeze_ratification_sha256": sha256_file(ratification_path),
+        "repair_ratification_path": REPAIR_RATIFICATION_RELATIVE,
+        "repair_ratification_sha256": sha256_file(repair_ratification_path),
         "detector_manifest_sha256": sha256_file(detector_manifest_path),
         "detector_manifest_git_commit": detector_manifest["git_commit"],
         "script_sha256": sha256_file(__file__),
@@ -2245,6 +2262,7 @@ def run_merge_real(args: argparse.Namespace) -> None:
     required = {
         "--config": args.config,
         "--freeze-ratification": args.freeze_ratification,
+        "--repair-ratification": args.repair_ratification,
         "--detector-manifest": args.detector_manifest,
         "--output": args.output,
     }
@@ -2259,6 +2277,7 @@ def run_merge_real(args: argparse.Namespace) -> None:
     repo_root = Path(__file__).resolve().parents[3]
     config_path = args.config.resolve()
     ratification_path = args.freeze_ratification.resolve()
+    repair_ratification_path = args.repair_ratification.resolve()
     detector_manifest_path = args.detector_manifest.resolve()
     output = args.output.resolve()
     shard_paths = [path.resolve() for path in args.merge_shard_manifest]
@@ -2268,9 +2287,11 @@ def run_merge_real(args: argparse.Namespace) -> None:
     config = load_google_lock(config_path)
     verify_freeze_ratification(
         ratification_path,
+        repair_ratification_path=repair_ratification_path,
         repo_root=repo_root,
         config_path=config_path,
         config=config,
+        detector_manifest_path=detector_manifest_path,
     )
     detector_manifest, detector_artifacts = verify_detector_manifest(
         detector_manifest_path,
@@ -2343,6 +2364,7 @@ def run_merge_real(args: argparse.Namespace) -> None:
             config_path=config_path,
             config=config,
             ratification_path=ratification_path,
+            repair_ratification_path=repair_ratification_path,
             detector_manifest_path=detector_manifest_path,
             detector_manifest=detector_manifest,
         )
@@ -2411,6 +2433,8 @@ def run_merge_real(args: argparse.Namespace) -> None:
             repo_root / config["normative_method_spec"]["path"]
         ),
         "freeze_ratification_sha256": sha256_file(ratification_path),
+        "repair_ratification_path": REPAIR_RATIFICATION_RELATIVE,
+        "repair_ratification_sha256": sha256_file(repair_ratification_path),
         "detector_manifest_sha256": sha256_file(detector_manifest_path),
         "detector_manifest_git_commit": detector_manifest["git_commit"],
         "script_sha256": sha256_file(__file__),

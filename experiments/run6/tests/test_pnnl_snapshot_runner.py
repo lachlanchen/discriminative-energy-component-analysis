@@ -551,7 +551,9 @@ def test_real_runner_cannot_reach_unblinding_before_freeze_gate(
     config = REPO_ROOT / "experiments/run6/configs/pnnl_snapshot_locked.json"
     manifest = REPO_ROOT / "experiments/run6/configs/pnnl_pittsburgh_locked.json"
     ratification = tmp_path / "bad-ratification.json"
+    repair_ratification = tmp_path / "bad-repair-ratification.json"
     ratification.write_text("{}", encoding="utf-8")
+    repair_ratification.write_text("{}", encoding="utf-8")
     reached_unblinding = False
 
     class Validation:
@@ -586,6 +588,7 @@ def test_real_runner_cannot_reach_unblinding_before_freeze_gate(
         config=config,
         manifest=manifest,
         freeze_ratification=ratification,
+        repair_ratification=repair_ratification,
         output=tmp_path / "out",
     )
     with pytest.raises(ValueError, match="freeze gate rejected"):

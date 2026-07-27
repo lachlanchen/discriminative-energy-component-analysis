@@ -17,17 +17,50 @@ from aoc.run6_protocol import canonical_json_bytes, load_google_lock, sha256_fil
 
 ROOT = Path(__file__).resolve().parents[3]
 SCRIPT = ROOT / "experiments/run6/scripts/run_google2022_detector.py"
+RANDOMIZATION_SCRIPT = ROOT / "experiments/run6/scripts/run_google2022_randomization.py"
+OUTCOMES_SCRIPT = ROOT / "experiments/run6/scripts/run_google2022_outcomes.py"
 CONFIG = ROOT / "experiments/run6/configs/google2022_locked.json"
 
 
-def _load_runner():
-    spec = importlib.util.spec_from_file_location("run6_google_detector", SCRIPT)
+def _load_script(module_name: str, path: Path):
+    spec = importlib.util.spec_from_file_location(module_name, path)
     if spec is None or spec.loader is None:
-        raise RuntimeError("Could not load the detector runner.")
+        raise RuntimeError(f"Could not load {module_name}.")
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def _load_runner():
+    return _load_script("run6_google_detector", SCRIPT)
+
+
+class _UnitFactorBank:
+    def __init__(self) -> None:
+        self.calls = 0
+
+    def update(self, role, reference, monitor):
+        del role, reference, monitor
+        self.calls += 1
+        empirical = SimpleNamespace(
+            m0=0.0,
+            m1=0.0,
+            m2=0.0,
+            m3=0.0,
+            m4=0.0,
+            m5=0.0,
+            space=0.0,
+        )
+        return SimpleNamespace(
+            empirical=empirical,
+            m0_factors=np.ones(8),
+            m1_factors=np.ones(8),
+            m3_factors=np.ones(12),
+            m4_factors=np.ones(64),
+            m5_factors=np.ones(24),
+            space_factors=np.ones(88),
+        )
 
 
 def test_synthetic_dry_run_is_deterministic_and_value_blind() -> None:
@@ -233,34 +266,9 @@ def test_shot_table_contains_rank_cumulative_count_and_window_metadata(
 def test_formal_accumulator_updates_once_per_complete_shot() -> None:
     runner = _load_runner()
 
-    class UnitFactorBank:
-        def __init__(self) -> None:
-            self.calls = 0
-
-        def update(self, role, reference, monitor):
-            self.calls += 1
-            empirical = SimpleNamespace(
-                m0=0.0,
-                m1=0.0,
-                m2=0.0,
-                m3=0.0,
-                m4=0.0,
-                m5=0.0,
-                space=0.0,
-            )
-            return SimpleNamespace(
-                empirical=empirical,
-                m0_factors=np.ones(8),
-                m1_factors=np.ones(8),
-                m3_factors=np.ones(12),
-                m4_factors=np.ones(64),
-                m5_factors=np.ones(24),
-                space_factors=np.ones(88),
-            )
-
     reference = np.zeros((2, runner.ROLE_COUNT, 24), dtype=np.uint8)
     monitor = np.zeros_like(reference)
-    bank = UnitFactorBank()
+    bank = _UnitFactorBank()
     _, log_e, log_sr, summary = runner.replay_scores(
         bank,
         reference,
@@ -277,6 +285,8 @@ def test_formal_accumulator_updates_once_per_complete_shot() -> None:
     assert len(summary.proper_prior["space"]["final_log_components"]) == (
         runner.ROLE_COUNT * 88
     )
+    assert "expert_id_rule" in summary.proper_prior["space"]
+    assert "expert_id_rule" not in summary.shiryaev_roberts["space"]
     assert summary.expert_metadata["space"]["factor_bounds_satisfied"] is True
     assert summary.expert_metadata["space"]["expert_count"] == (runner.ROLE_COUNT * 88)
     assert len(summary.expert_metadata["space"]["base_component_ids"]) == 88
@@ -285,6 +295,177 @@ def test_formal_accumulator_updates_once_per_complete_shot() -> None:
         summary.expert_metadata["space"]["full_role_component_prior_sum"],
         1.0,
     )
+
+
+def test_frozen_formal_summary_round_trips_through_both_consumers(
+    tmp_path: Path,
+) -> None:
+    detector = _load_runner()
+    randomization = _load_script(
+        "run6_google_randomization_schema_integration",
+        RANDOMIZATION_SCRIPT,
+    )
+    outcomes = _load_script(
+        "run6_google_outcomes_schema_integration",
+        OUTCOMES_SCRIPT,
+    )
+    consumers = (randomization, outcomes)
+    shot_count = 2
+    reference = np.zeros(
+        (shot_count, detector.ROLE_COUNT, 24),
+        dtype=np.uint8,
+    )
+    monitor = np.zeros_like(reference)
+    scores, log_e, log_sr, summary = detector.replay_scores(
+        _UnitFactorBank(),
+        reference,
+        monitor,
+        with_accumulators=True,
+        horizon=shot_count,
+    )
+    priors = detector.exact_component_priors()
+    assert len(detector.EXACT_METHOD_IDS) == 6
+    raw_differs_from_normalized = False
+    for method in detector.EXACT_METHOD_IDS:
+        raw_expected_weights = np.tile(
+            priors[method].weights / detector.ROLE_COUNT,
+            detector.ROLE_COUNT,
+        )
+        normalized_expected_weights = raw_expected_weights / raw_expected_weights.sum()
+        proper_weights = np.asarray(
+            summary.proper_prior[method]["component_weights"],
+            dtype=np.float64,
+        )
+        sr_weights = np.asarray(
+            summary.shiryaev_roberts[method]["component_weights"],
+            dtype=np.float64,
+        )
+        assert np.array_equal(proper_weights, normalized_expected_weights)
+        assert np.array_equal(sr_weights, normalized_expected_weights)
+        raw_differs_from_normalized |= not np.array_equal(
+            raw_expected_weights,
+            normalized_expected_weights,
+        )
+    assert raw_differs_from_normalized
+
+    thresholds = {method: {"threshold": 0.5} for method in detector.METHOD_IDS}
+    detector._save_cycle_arrays(
+        tmp_path,
+        phase="held",
+        scores=scores,
+        log_e=log_e,
+        log_sr=log_sr,
+        thresholds=thresholds,
+        protocol_id="run6-google2022-v2",
+        run_id="google2022-canonical-detector",
+        pair_index_start=0,
+        reference_archive_start=20_000,
+        monitor_archive_start=40_000,
+        common_hashes={},
+        include_formal_accumulators=True,
+        accumulator_summary=summary,
+    )
+    summary_path = tmp_path / "formal_component_summary.json"
+    detector._write_canonical_json(
+        summary_path,
+        {
+            "schema_version": "run6-formal-component-summary-v1",
+            "held_trace_interpretation": "synthetic producer-consumer integration",
+            "proper_prior": summary.proper_prior,
+            "shiryaev_roberts": summary.shiryaev_roberts,
+            "expert_metadata": summary.expert_metadata,
+        },
+    )
+    artifacts = {path.name: path for path in tmp_path.iterdir() if path.is_file()}
+    for consumer in consumers:
+        consumer.validate_formal_detector_artifacts(
+            artifacts,
+            thresholds,
+            protocol_id="run6-google2022-v2",
+            shot_count=shot_count,
+            role_count=detector.ROLE_COUNT,
+        )
+
+    payload = json.loads(summary_path.read_text(encoding="utf-8"))
+    baseline_payload = deepcopy(payload)
+    payload["shiryaev_roberts"]["space"]["expert_id_rule"] = (
+        "(role, *base_component_id), role-major then base-component-major"
+    )
+    detector._write_canonical_json(summary_path, payload)
+    for consumer in consumers:
+        with pytest.raises(
+            ValueError,
+            match="formal SR summary space schema mismatch",
+        ):
+            consumer.validate_formal_detector_artifacts(
+                artifacts,
+                thresholds,
+                protocol_id="run6-google2022-v2",
+                shot_count=shot_count,
+                role_count=detector.ROLE_COUNT,
+            )
+
+    payload = deepcopy(baseline_payload)
+    base_weights = detector.exact_component_priors()["space"].weights
+    payload["shiryaev_roberts"]["space"]["component_weights"] = np.tile(
+        base_weights / detector.ROLE_COUNT,
+        detector.ROLE_COUNT,
+    ).tolist()
+    detector._write_canonical_json(summary_path, payload)
+    for consumer in consumers:
+        with pytest.raises(
+            ValueError,
+            match="Formal component/prior accounting changed: space",
+        ):
+            consumer.validate_formal_detector_artifacts(
+                artifacts,
+                thresholds,
+                protocol_id="run6-google2022-v2",
+                shot_count=shot_count,
+                role_count=detector.ROLE_COUNT,
+            )
+
+    payload = deepcopy(baseline_payload)
+    perturbed_weights = np.asarray(
+        payload["shiryaev_roberts"]["space"]["component_weights"],
+        dtype=np.float64,
+    )
+    perturbed_weights[0] = np.nextafter(perturbed_weights[0], np.inf)
+    payload["shiryaev_roberts"]["space"]["component_weights"] = (
+        perturbed_weights.tolist()
+    )
+    detector._write_canonical_json(summary_path, payload)
+    for consumer in consumers:
+        with pytest.raises(
+            ValueError,
+            match="Formal component/prior accounting changed: space",
+        ):
+            consumer.validate_formal_detector_artifacts(
+                artifacts,
+                thresholds,
+                protocol_id="run6-google2022-v2",
+                shot_count=shot_count,
+                role_count=detector.ROLE_COUNT,
+            )
+
+    payload = deepcopy(baseline_payload)
+    payload["shiryaev_roberts"]["space"]["expert_flatten_order"] = [
+        "base_component",
+        "role",
+    ]
+    detector._write_canonical_json(summary_path, payload)
+    for consumer in consumers:
+        with pytest.raises(
+            ValueError,
+            match="Formal component/prior accounting changed: space",
+        ):
+            consumer.validate_formal_detector_artifacts(
+                artifacts,
+                thresholds,
+                protocol_id="run6-google2022-v2",
+                shot_count=shot_count,
+                role_count=detector.ROLE_COUNT,
+            )
 
 
 def test_freeze_ratification_delegates_to_committed_chain_and_binds_spec(

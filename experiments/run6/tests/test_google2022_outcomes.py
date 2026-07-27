@@ -407,6 +407,8 @@ def test_decision_requires_strict_top20_improvement_but_pnnl_remains_not_run() -
         uncertainty={"replicates": 2_000},
         detector_freeze_verified=True,
         method_input_parity_evidence=_valid_method_input_parity_evidence(),
+        repair_ratification_path=audit.REPAIR_RATIFICATION_RELATIVE,
+        repair_ratification_sha256="f" * 64,
     )
     assert decision["google_primary_pass"] is True
     assert decision["pnnl_retention_pass"] == "not_run"
@@ -420,6 +422,8 @@ def test_decision_requires_strict_top20_improvement_but_pnnl_remains_not_run() -
         uncertainty={"replicates": 2_000},
         detector_freeze_verified=True,
         method_input_parity_evidence=_valid_method_input_parity_evidence(),
+        repair_ratification_path=audit.REPAIR_RATIFICATION_RELATIVE,
+        repair_ratification_sha256="f" * 64,
     )
     assert tied["google_primary_pass"] is False
 
@@ -495,6 +499,8 @@ def test_extra_detector_records_fail_derived_method_input_parity_predicate() -> 
         uncertainty={"replicates": 2_000},
         detector_freeze_verified=True,
         method_input_parity_evidence=evidence,
+        repair_ratification_path=audit.REPAIR_RATIFICATION_RELATIVE,
+        repair_ratification_sha256="f" * 64,
     )
     assert (
         decision["atomic_predicates"][
@@ -571,7 +577,9 @@ def test_randomization_manifest_is_strictly_hash_verified(
 ) -> None:
     config = load_google_lock(GOOGLE_LOCK)
     ratification = tmp_path / "freeze_ratification.json"
+    repair_ratification = tmp_path / "repair_ratification.json"
     ratification.write_text("synthetic freeze\n", encoding="utf-8")
+    repair_ratification.write_text("synthetic repair\n", encoding="utf-8")
     detector_path = tmp_path / "detector_freeze_manifest.json"
     detector_path.write_text("synthetic detector\n", encoding="utf-8")
     commit = _git_commit()
@@ -665,6 +673,8 @@ def test_randomization_manifest_is_strictly_hash_verified(
             ROOT / config["normative_method_spec"]["path"]
         ),
         "freeze_ratification_sha256": sha256_file(ratification),
+        "repair_ratification_path": audit.REPAIR_RATIFICATION_RELATIVE,
+        "repair_ratification_sha256": sha256_file(repair_ratification),
         "detector_manifest_sha256": sha256_file(detector_path),
         "detector_manifest_git_commit": commit,
         "script_sha256": sha256_file(
@@ -751,6 +761,7 @@ def test_randomization_manifest_is_strictly_hash_verified(
         config_path=GOOGLE_LOCK,
         config=config,
         ratification_path=ratification,
+        repair_ratification_path=repair_ratification,
         detector_manifest_path=detector_path,
         detector_manifest=detector,
     )
@@ -764,6 +775,7 @@ def test_randomization_manifest_is_strictly_hash_verified(
             config_path=GOOGLE_LOCK,
             config=config,
             ratification_path=ratification,
+            repair_ratification_path=repair_ratification,
             detector_manifest_path=detector_path,
             detector_manifest=detector,
         )
@@ -801,7 +813,7 @@ def test_detector_manifest_is_required_and_must_match_ratification(
         )
 
 
-def test_outcome_freeze_gate_uses_committed_chain_helper(
+def test_outcome_freeze_gate_uses_post_detector_repair_helper(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -812,20 +824,26 @@ def test_outcome_freeze_gate_uses_committed_chain_helper(
     )
     calls: list[dict[str, object]] = []
 
-    def fake_verify(supplied: Path, **kwargs: object) -> dict[str, object]:
-        calls.append({"supplied": supplied, **kwargs})
+    def fake_verify(**kwargs: object) -> dict[str, object]:
+        calls.append(dict(kwargs))
         return {"verified": True}
 
-    monkeypatch.setattr(audit, "verify_committed_freeze_chain", fake_verify)
+    monkeypatch.setattr(audit, "verify_post_detector_repair_chain", fake_verify)
     ratification = tmp_path / "ratification.json"
+    repair_ratification = tmp_path / "repair_ratification.json"
+    detector_manifest = tmp_path / "detector_manifest.json"
     observed = audit.verify_freeze_ratification(
         ratification,
+        repair_ratification_path=repair_ratification,
         repo_root=ROOT,
         config_path=GOOGLE_LOCK,
         config=config,
+        detector_manifest_path=detector_manifest,
     )
     assert observed == {"verified": True}
-    assert calls[0]["required_paths"] == audit.RUN6_REQUIRED_FREEZE_PATHS
+    assert calls[0]["original_ratification_path"] == ratification
+    assert calls[0]["repair_ratification_path"] == repair_ratification
+    assert calls[0]["detector_manifest_path"] == detector_manifest
     assert calls[0]["expected_environment"] == environment_fingerprint()
     assert (
         calls[0]["expected_thread_environment"]
@@ -1282,30 +1300,35 @@ def test_formal_detector_artifacts_enforce_nonformal_nan_scope(
         "expert_metadata": {},
     }
     for method in audit.EXACT_METHOD_IDS:
-        weights = priors[method].weights.tolist()
-        count = len(weights)
+        base_weights = priors[method].weights
+        raw_component_weights = np.tile(
+            base_weights / role_count,
+            role_count,
+        )
+        component_weights = (
+            raw_component_weights / raw_component_weights.sum()
+        ).tolist()
+        base_count = len(base_weights)
+        expert_count = role_count * base_count
         summary["proper_prior"][method] = {
-            "component_weights": weights,
+            "component_weights": component_weights,
             "role_count": role_count,
-            "base_component_count": count,
+            "base_component_count": base_count,
             "expert_flatten_order": ["role", "base_component"],
             "expert_id_rule": (
                 "(role, *base_component_id), role-major then base-component-major"
             ),
-            "final_log_components": [0.0] * count,
+            "final_log_components": [0.0] * expert_count,
             "final_log_statistic": 0.1,
             "first_crossing_update": None,
             "threshold": 100.0,
         }
         summary["shiryaev_roberts"][method] = {
-            "component_weights": weights,
+            "component_weights": component_weights,
             "role_count": role_count,
-            "base_component_count": count,
+            "base_component_count": base_count,
             "expert_flatten_order": ["role", "base_component"],
-            "expert_id_rule": (
-                "(role, *base_component_id), role-major then base-component-major"
-            ),
-            "final_log_components": [0.0] * count,
+            "final_log_components": [0.0] * expert_count,
             "final_log_statistic": 0.1,
             "first_crossing_update": None,
             "threshold": 1_000_000.0,
@@ -1317,15 +1340,17 @@ def test_formal_detector_artifacts_enforce_nonformal_nan_scope(
             "base_component_ids": [
                 list(identifier) for identifier in priors[method].component_ids
             ],
-            "base_component_weights": weights,
-            "expert_count": count,
+            "base_component_weights": base_weights.tolist(),
+            "expert_count": expert_count,
             "observed_factor_minimum": 0.1,
             "observed_factor_maximum": 1.9,
             "all_factors_finite_and_nonnegative": True,
             "declared_factor_bounds": [0.1, 1.9],
             "factor_bounds_satisfied": True,
-            "base_prior_sum": 1.0,
-            "full_role_component_prior_sum": 1.0,
+            "base_prior_sum": float(base_weights.sum()),
+            "full_role_component_prior_sum": float(
+                np.sum(component_weights),
+            ),
         }
     summary_path = tmp_path / "formal_component_summary.json"
     _write_json(summary_path, summary)

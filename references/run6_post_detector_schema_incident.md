@@ -98,3 +98,47 @@ manifest → repair ratification chain must:
 
 Until that gate passes, Run 6 randomization and all advantage claims remain
 blocked.
+
+## Pre-repair addendum: exact producer-weight reconstruction
+
+Before the repair implementation was ratified or any new real-data process
+started, the requested producer-to-consumer synthetic integration test exposed
+a second deterministic validator mismatch. The accumulator constructor calls
+`_mixture_weights`, which returns `weights / weights.sum()`. The frozen
+consumers instead reconstructed the raw tiled vector
+`tile(base_weights / role_count, role_count)` and compared it directly with
+the serialized, once-more-normalized producer vector by `np.array_equal`.
+Floating-point summation makes those arrays differ by approximately one ULP
+for at least one locked prior.
+
+This finding came from the source path and a synthetic producer object, not
+from selecting or interpreting a real detector result. The authorized repair
+is expanded only as follows:
+
+1. reconstruct the raw tiled vector exactly as before;
+2. apply the producer's exact `raw / raw.sum()` operation;
+3. retain bit-exact `np.array_equal` comparisons in both consumers; and
+4. add negative tests proving that the raw tiled vector and a one-ULP
+   `np.nextafter` perturbation are rejected.
+
+No tolerance is introduced. No stored weight, prior, score, state, or
+threshold is changed.
+
+## Blinded repair selection
+
+A fresh source-only review compared two options. It approved correcting the
+two consumers to the exact executed producer-v1 schema and rejected making a
+modified copy of the detector evidence. The latter would retain native
+detector command, time, Git, and schema fields for a post-processed artifact
+and would therefore make provenance ambiguous.
+
+The selected repair preserves the original detector manifest, all 231
+detector artifacts, and all 32 failed attempts byte-for-byte. It uses two
+separate provenance inputs downstream:
+
+- the original ratification and immutable detector manifest; and
+- a new post-detector/pre-outcome repair ratification for the corrected
+  validators and runner plumbing.
+
+The repair does not rerun the detector and does not restore detector
+blindness.

@@ -584,7 +584,7 @@ def test_detector_manifest_gate_rejects_unknown_fields_and_tampering(
         )
 
 
-def test_freeze_gate_delegates_to_canonical_committed_chain(
+def test_freeze_gate_delegates_to_post_detector_repair_chain(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -593,26 +593,30 @@ def test_freeze_gate_delegates_to_canonical_committed_chain(
     spec_path = ROOT / config["normative_method_spec"]["path"]
     config["normative_method_spec"]["sha256"] = sha256_file(spec_path)
     path = tmp_path / "ratification.json"
+    repair_path = tmp_path / "repair_ratification.json"
+    detector_path = tmp_path / "detector_manifest.json"
     path.write_text("delegated\n", encoding="utf-8")
+    repair_path.write_text("repair\n", encoding="utf-8")
+    detector_path.write_text("detector\n", encoding="utf-8")
     calls: list[dict[str, object]] = []
 
-    def fake_verify(
-        supplied: Path,
-        **kwargs: object,
-    ) -> dict[str, object]:
-        calls.append({"supplied": supplied, **kwargs})
+    def fake_verify(**kwargs: object) -> dict[str, object]:
+        calls.append(dict(kwargs))
         return {"verified": True}
 
-    monkeypatch.setattr(audit, "verify_committed_freeze_chain", fake_verify)
+    monkeypatch.setattr(audit, "verify_post_detector_repair_chain", fake_verify)
     observed = audit.verify_freeze_ratification(
         path,
+        repair_ratification_path=repair_path,
         repo_root=ROOT,
         config_path=GOOGLE_LOCK,
         config=config,
+        detector_manifest_path=detector_path,
     )
     assert observed == {"verified": True}
-    assert calls[0]["supplied"] == path
-    assert calls[0]["required_paths"] == audit.RUN6_REQUIRED_FREEZE_PATHS
+    assert calls[0]["original_ratification_path"] == path
+    assert calls[0]["repair_ratification_path"] == repair_path
+    assert calls[0]["detector_manifest_path"] == detector_path
     assert calls[0]["expected_environment"] == environment_fingerprint()
     assert (
         calls[0]["expected_thread_environment"]
@@ -622,9 +626,11 @@ def test_freeze_gate_delegates_to_canonical_committed_chain(
     with pytest.raises(ValueError, match="canonical Google lock"):
         audit.verify_freeze_ratification(
             path,
+            repair_ratification_path=repair_path,
             repo_root=ROOT,
             config_path=tmp_path / "google2022_locked.json",
             config=config,
+            detector_manifest_path=detector_path,
         )
 
 

@@ -15,18 +15,18 @@ from pathlib import Path
 from typing import Any
 
 from aoc.run6_protocol import (
-    RUN6_REQUIRED_FREEZE_PATHS,
     assert_no_outcome_paths,
     canonical_json_bytes,
     environment_fingerprint,
     load_google_lock,
     require_thread_environment,
     sha256_file,
-    verify_committed_freeze_chain,
 )
+from aoc.run6_repair import verify_post_detector_repair_chain
 
 SHARD_WIDTH = 8
 SHARD_RANGES = tuple((start, start + SHARD_WIDTH) for start in range(0, 256, 8))
+REPAIR_RATIFICATION_RELATIVE = "experiments/run6/repair_ratification.json"
 
 
 class ConcurrencyTracker:
@@ -62,6 +62,10 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("experiments/run6/freeze_ratification.json"),
     )
+    parser.add_argument(
+        "--repair-ratification",
+        type=Path,
+    )
     parser.add_argument("--detector-manifest", type=Path)
     parser.add_argument("--data-root", type=Path)
     parser.add_argument("--output", type=Path)
@@ -88,6 +92,7 @@ def _shard_command(
     runner: Path,
     config: Path,
     ratification: Path,
+    repair_ratification: Path,
     detector_manifest: Path,
     data_root: Path,
     output: Path,
@@ -101,6 +106,8 @@ def _shard_command(
         str(config),
         "--freeze-ratification",
         str(ratification),
+        "--repair-ratification",
+        str(repair_ratification),
         "--detector-manifest",
         str(detector_manifest),
         "--data-root",
@@ -182,15 +189,22 @@ def _run_shard(
 
 
 def run_real(args: argparse.Namespace) -> None:
-    if args.detector_manifest is None or args.data_root is None or args.output is None:
+    if (
+        args.repair_ratification is None
+        or args.detector_manifest is None
+        or args.data_root is None
+        or args.output is None
+    ):
         raise ValueError(
-            "Real launch requires detector manifest, data root, and output."
+            "Real launch requires repair ratification, detector manifest, "
+            "data root, and output."
         )
     if isinstance(args.max_workers, bool) or not 1 <= args.max_workers <= 16:
         raise ValueError("--max-workers must be an integer in [1,16].")
     repo_root = Path(__file__).resolve().parents[3]
     config_path = args.config.resolve()
     ratification_path = args.freeze_ratification.resolve()
+    repair_ratification_path = args.repair_ratification.resolve()
     detector_manifest = args.detector_manifest.resolve()
     data_root = args.data_root.resolve()
     output = args.output.resolve()
@@ -200,18 +214,31 @@ def run_real(args: argparse.Namespace) -> None:
     expected_ratification = (
         repo_root / "experiments/run6/freeze_ratification.json"
     ).resolve()
-    if config_path != expected_config or ratification_path != expected_ratification:
+    expected_repair_ratification = (repo_root / REPAIR_RATIFICATION_RELATIVE).resolve()
+    if (
+        config_path != expected_config
+        or ratification_path != expected_ratification
+        or repair_ratification_path != expected_repair_ratification
+    ):
         raise ValueError("Launcher requires canonical config and ratification paths.")
     assert_no_outcome_paths(
-        [config_path, ratification_path, detector_manifest, data_root, output]
+        [
+            config_path,
+            ratification_path,
+            repair_ratification_path,
+            detector_manifest,
+            data_root,
+            output,
+        ]
     )
     config = load_google_lock(config_path)
     threads = config["numeric_policy"]["thread_environment"]
     require_thread_environment(threads)
-    verify_committed_freeze_chain(
-        ratification_path,
+    verify_post_detector_repair_chain(
+        original_ratification_path=ratification_path,
+        repair_ratification_path=repair_ratification_path,
         repo_root=repo_root,
-        required_paths=RUN6_REQUIRED_FREEZE_PATHS,
+        detector_manifest_path=detector_manifest,
         expected_environment=environment_fingerprint(),
         expected_thread_environment=threads,
     )
@@ -240,6 +267,7 @@ def run_real(args: argparse.Namespace) -> None:
                 runner=runner,
                 config=config_path,
                 ratification=ratification_path,
+                repair_ratification=repair_ratification_path,
                 detector_manifest=detector_manifest,
                 data_root=data_root,
                 output=attempt / "result",
@@ -270,6 +298,8 @@ def run_real(args: argparse.Namespace) -> None:
         str(config_path),
         "--freeze-ratification",
         str(ratification_path),
+        "--repair-ratification",
+        str(repair_ratification_path),
         "--detector-manifest",
         str(detector_manifest),
         "--output",
@@ -299,6 +329,8 @@ def run_real(args: argparse.Namespace) -> None:
         "git_commit": _git_commit(repo_root),
         "config_sha256": sha256_file(config_path),
         "freeze_ratification_sha256": sha256_file(ratification_path),
+        "repair_ratification_path": REPAIR_RATIFICATION_RELATIVE,
+        "repair_ratification_sha256": sha256_file(repair_ratification_path),
         "detector_manifest_sha256": sha256_file(detector_manifest),
         "runner_sha256": sha256_file(runner),
         "launcher_sha256": sha256_file(__file__),

@@ -43,14 +43,13 @@ import numpy as np
 import validate_pnnl_lock as pnnl_validator_module
 from aoc.qec_real import parse_qasm_register_maps, repetition_detection_events
 from aoc.run6_protocol import (
-    RUN6_REQUIRED_FREEZE_PATHS,
     canonical_json_bytes,
     environment_fingerprint,
     load_strict_json,
     require_exact_keys,
     sha256_file,
-    verify_committed_freeze_chain,
 )
+from aoc.run6_repair import verify_post_detector_repair_chain
 from aoc.space import (
     EWMASpectralWitness,
     EWMATopKWitness,
@@ -77,6 +76,7 @@ METHOD_ORDER = (
     "space_composite",
 )
 PACKAGE_LOCK_RELATIVE = "experiments/run6/configs/python_environment_lock.txt"
+REPAIR_RATIFICATION_RELATIVE = "experiments/run6/repair_ratification.json"
 LOG_E_100 = float(np.log(100.0))
 SCORE_TOLERANCE = 1e-12
 EIGENVALUE_TOLERANCE = 1e-10
@@ -151,6 +151,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         default=Path("experiments/run6/configs/pnnl_pittsburgh_locked.json"),
     )
     parser.add_argument("--freeze-ratification", type=Path)
+    parser.add_argument("--repair-ratification", type=Path)
     parser.add_argument("--output", type=Path)
     return parser.parse_args(argv)
 
@@ -332,6 +333,7 @@ def load_pnnl_config(path: str | Path) -> dict[str, Any]:
 def verify_freeze_ratification(
     path: Path,
     *,
+    repair_ratification_path: Path,
     repo_root: Path,
     config_path: Path,
     config: Mapping[str, Any],
@@ -386,10 +388,10 @@ def verify_freeze_ratification(
     google_relative = manifest["features_and_methods"]["inherited_from"]
     google_config = load_strict_json(repo_root / google_relative)
     expected_threads = google_config["numeric_policy"]["thread_environment"]
-    return verify_committed_freeze_chain(
-        path,
+    return verify_post_detector_repair_chain(
+        original_ratification_path=path,
+        repair_ratification_path=repair_ratification_path,
         repo_root=repo_root,
-        required_paths=RUN6_REQUIRED_FREEZE_PATHS,
         expected_environment=environment_fingerprint(),
         expected_thread_environment=expected_threads,
     )
@@ -1988,6 +1990,7 @@ def _first_unblinding_record(
     config_path: Path,
     manifest_path: Path,
     ratification_path: Path,
+    repair_ratification_path: Path,
     manifest: Mapping[str, Any],
     snapshot_ids: Sequence[str],
     artifact_root: Path,
@@ -2019,6 +2022,8 @@ def _first_unblinding_record(
         "config_sha256": sha256_file(config_path),
         "manifest_sha256": sha256_file(manifest_path),
         "freeze_ratification_sha256": sha256_file(ratification_path),
+        "repair_ratification_path": REPAIR_RATIFICATION_RELATIVE,
+        "repair_ratification_sha256": sha256_file(repair_ratification_path),
         "package_lock": {
             "path": PACKAGE_LOCK_RELATIVE,
             "bytes": (repo_root / PACKAGE_LOCK_RELATIVE).stat().st_size,
@@ -2121,12 +2126,20 @@ def run_real(args: argparse.Namespace) -> None:
     """Execute the locked Pittsburgh replay after all freeze checks."""
 
     run_started = time.time()
-    if args.freeze_ratification is None or args.output is None:
-        raise ValueError("Real replay requires --freeze-ratification and --output.")
+    if (
+        args.freeze_ratification is None
+        or args.repair_ratification is None
+        or args.output is None
+    ):
+        raise ValueError(
+            "Real replay requires --freeze-ratification, "
+            "--repair-ratification, and --output."
+        )
     repo_root = Path(__file__).resolve().parents[3]
     config_path = args.config.resolve()
     manifest_path = args.manifest.resolve()
     ratification_path = args.freeze_ratification.resolve()
+    repair_ratification_path = args.repair_ratification.resolve()
     output = args.output.resolve()
     config = load_pnnl_config(config_path)
 
@@ -2140,6 +2153,7 @@ def run_real(args: argparse.Namespace) -> None:
     cohorts = parse_cohorts(manifest)
     verify_freeze_ratification(
         ratification_path,
+        repair_ratification_path=repair_ratification_path,
         repo_root=repo_root,
         config_path=config_path,
         config=config,
@@ -2167,6 +2181,7 @@ def run_real(args: argparse.Namespace) -> None:
         config_path=config_path,
         manifest_path=manifest_path,
         ratification_path=ratification_path,
+        repair_ratification_path=repair_ratification_path,
         manifest=manifest,
         snapshot_ids=tuple(register_index),
         artifact_root=artifact_root,
@@ -2396,6 +2411,8 @@ def run_real(args: argparse.Namespace) -> None:
         "config_sha256": sha256_file(config_path),
         "pittsburgh_manifest_sha256": sha256_file(manifest_path),
         "freeze_ratification_sha256": sha256_file(ratification_path),
+        "repair_ratification_path": REPAIR_RATIFICATION_RELATIVE,
+        "repair_ratification_sha256": sha256_file(repair_ratification_path),
         "package_lock_sha256": sha256_file(repo_root / PACKAGE_LOCK_RELATIVE),
         "first_unblinding_record": _artifact_record(unblinding_path, base=output),
         "metadata_validation": {

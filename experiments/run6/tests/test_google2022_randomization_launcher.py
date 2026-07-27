@@ -52,6 +52,25 @@ def test_dry_run_reports_value_blind_plan() -> None:
     assert len(result["replicate_ranges"]) == 32
 
 
+def test_shard_command_forwards_both_ratification_layers(tmp_path: Path) -> None:
+    launcher = _load_launcher()
+    original = tmp_path / "freeze_ratification.json"
+    repair = tmp_path / "repair_ratification.json"
+    command = launcher._shard_command(
+        runner=tmp_path / "runner.py",
+        config=tmp_path / "config.json",
+        ratification=original,
+        repair_ratification=repair,
+        detector_manifest=tmp_path / "detector.json",
+        data_root=tmp_path / "data",
+        output=tmp_path / "output",
+        start=0,
+        stop=8,
+    )
+    assert command[command.index("--freeze-ratification") + 1] == str(original)
+    assert command[command.index("--repair-ratification") + 1] == str(repair)
+
+
 def test_complete_shard_is_reused_without_starting_a_process(
     tmp_path: Path,
 ) -> None:
