@@ -1,0 +1,401 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage[hidelinks]{hyperref}
+% \usepackage{xcolor}
+\usepackage[table,xcdraw,dvipsnames]{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\usepackage{booktabs}
+\usepackage{glossaries}
+% Enable the glossary package without hyperlinks
+\glsdisablehyper
+
+\makeglossaries
+\newacronym{eca}{ECA}{Eigen-Component Analysis}
+\newacronym{lor}{LoR}{Logistic Regression}
+\newacronym{lda}{LDA}{Linear Discriminant Analysis}
+\newacronym{qda}{QDA}{Quadratic Discriminant Analysis}
+\newacronym{svm}{SVM}{Support Vector Machine}
+\newacronym{ksvm}{Kernel SVM}{Kernel Support Vector Machine}
+\newacronym{pca}{PCA}{Principal Component Analysis}
+\newacronym{rbf}{RBF}{Radial Basis Function}
+\newacronym{ste}{STE}{Straight-Through Estimator}
+
+\begin{document}
+
+\title{
+% Quantum-Enhanced Linear Separability: 
+Eigen-Component Analysis: \\A Quantum Theory-Inspired Linear Model
+\thanks{
+% \textsuperscript{*}Co-first authors. \textsuperscript{\dag}Corresponding author.\\
+This work is supported in part by the Research Grants Council (GRF 17201822 and TRS T45-701/22-R) of Hong Kong SAR, China; and in part by Department of Science
+and Technology of Guangdong Province (2023B0909020003).}
+}
+
+\author{\IEEEauthorblockN{Rongzhou Chen\textsuperscript{1,*}, Yaping Zhao\textsuperscript{1,*}, Hanghang Liu\textsuperscript{2}, Haohan Xu\textsuperscript{2}, Shaohua Ma\textsuperscript{2,3}, Edmund Y. Lam\textsuperscript{1}}
+\IEEEauthorblockA{\textit{\textsuperscript{1}Department of Electrical and Electronic Engineering, The Univerisity of Hong Kong, Hong Kong SAR of China} \\
+\textit{\textsuperscript{2}Tsinghua Shenzhen International Graduate School, Tsinghua University, Shenzhen, China}\\
+\textit{\textsuperscript{3}Tsinghua-Berkeley Shenzhen Institute, Shenzhen, China}\\
+\textsuperscript{*}Co-first author \\ 
+% \textsuperscript{\dag}Corresponding author\\
+\texttt{
+% \{lachen,zhaoyp\}@connect.hku.hk\\
+elam@eee.hku.hk}}
+}
+
+%[ThumbsUp]
+
+% \author{
+% \IEEEauthorblockN{Rongzhou Chen\textsuperscript{1,*}, Yaping Zhao\textsuperscript{1,*}, Shaohua Ma\textsuperscript{2,3}, Hanghang Liu\textsuperscript{2}, Haohan Xu, Edmund Y. Lam\textsuperscript{\dag}}
+% \IEEEauthorblockA{\textit{\textsuperscript{1}Department of Electrical and Electronic Engineering, The Univerisity of Hong Kong, Hong Kong SAR of China\\
+% \textsuperscript{2}Tsinghua Shenzhen International Graduate School, Tsinghua University, Shenzhen, China\\
+% \textsuperscript{3}Tsinghua-Berkeley Shenzhen Institute, Shenzhen, China
+% }\\
+% }
+% }
+   
+
+\maketitle
+% \begingroup\renewcommand\thefootnote{\textsuperscript{*}}
+% \footnotetext{Co-first authors}
+
+\begin{abstract}
+In modern machine learning circuits and systems, the need for centralized, standardized data poses significant challenges, especially in privacy-sensitive, resource-constrained, real-time, or asynchronous environments. We introduce \Gls{eca}, a quantum-inspired linear model that circumvents these requirements by leveraging intrinsic data structures. \Gls{eca} uses an orthogonal transformation to extract meaningful features from decentralized, non-standardized data, ensuring high classification accuracy without extensive preprocessing. Unlike traditional linear models, \Gls{eca} adapts to complex data distributions and shows superior performance in feature extraction and classification across various datasets. Experiments indicate that \Gls{eca} achieves robust accuracy with fewer parameters, highlighting its potential where data centralization and standardization are impractical. Our work extends the feasibility of linear models in diverse scenarios, enhancing interpretability and efficiency in challenging data environments.
+\end{abstract}
+
+
+
+\begin{IEEEkeywords}
+Distributed Learning,
+Quantum-Inspired Algorithms,
+Linear Models, Feature Extraction, Classification
+\end{IEEEkeywords}
+
+\section{Introduction}
+In modern circuits and systems with complex data structures, effective feature extraction and classification pose critical challenges in machine learning~\cite{labrinidis2012challenges}. A fundamental problem is finding optimal methods to achieve high linear separability, essential for accurate classification across domains~\cite{hastie2009elements}. Conventional linear classifiers like \Gls{lor} and \Gls{lda} perform well under conditions where data are centralized, standardized, and follow simple, linearly separable distributions~\cite{hastie2009elements}. However, real-world data often violate these assumptions due to privacy restrictions, decentralization, and non-uniform distributions, necessitating approaches to handle these complexities while preserving data integrity and interpretability~\cite{yang2020federated,kaissis2020secure,li2021survey}.
+
+
+Achieving reliable classification without centralized and standardized data is both crucial and challenging. In distributed or privacy-sensitive environments, such as healthcare and finance, aggregating data can be infeasible due to regulatory and logistical constraints~\cite{kaissis2020secure,li2021survey}. Additionally, non-standardized data with intricate structures often leads traditional linear models to fail, as they rely heavily on assumptions of uniformity and centralized processing~\cite{singh2020investigating}. Addressing these issues requires a method that handles distributed data while minimizing preprocessing like standardization, ensuring that classification models remain adaptable to dynamic, resource-constrained settings without sacrificing accuracy or interpretability.
+
+Researchers have attempted to address these issues through various approaches. Some rely on dimensionality reduction techniques like \Gls{pca} or \Gls{lda}, which effectively condense data but are limited by their dependence on centralized, standardized inputs~\cite{hastie2009elements}. Others, such as \Gls{qda} and \Gls{svm}, offer better flexibility with non-linearity but tend to be computationally expensive and parameter-heavy, making them unsuitable for low-resource environments or real-time applications~\cite{pavlov2000scaling}. While these techniques perform well under controlled conditions, they often struggle with decentralized and heterogeneous datasets, limiting their scalability and practical applicability in complex real-world tasks~\cite{li2021survey}.
+
+To address these limitations, we propose Eigen-Component Analysis (ECA), a linear model inspired by quantum theory~\cite{tang2019quantum}. \Gls{eca} introduces an orthogonal transformation that enables meaningful feature extraction from distributed, non-standardized data~\cite{sanchez1996use,kanjilal1995application,yen1999simplifying}. By leveraging the structural properties within the data, \Gls{eca} circumvents the need for centralization or standardization, ensuring that classification occurs accurately across decentralized and diverse datasets. Our approach uses orthogonal transformations to map data into a feature space where class separability is maximized~\cite{sanchez1996use,kanjilal1995application}. Experiments demonstrate that \Gls{eca} outperforms traditional methods in accuracy and requires fewer parameters, showcasing its potential in real-world applications.
+
+
+Our main contributions are as follows:
+
+\begin{itemize}
+\item We propose \Gls{eca}, a quantum-inspired model for linear separability, effectively addressing the limitations of decentralized, non-standardized, undersampled, and asynchronous data in real-world settings.
+
+\item We develop a robust orthogonal transformation that captures intrinsic data structures, enabling feature extraction without centralization or standardization.
+% and enhancing model adaptability to diverse datasets.
+
+\item Experiments show \Gls{eca} beats traditional classifiers, superior for complex data and resource-limited environments.
+\end{itemize}
+
+
+\section{Methods}
+
+We develop a classification framework inspired by quantum mechanics~\cite{ciliberto2018quantum, schuld2015introduction}, aiming to find a transformation matrix \( P \) that maps input data into a space where each class corresponds to a distinct group of features represented by a mapping matrix \( L \). This section details the derivation of our method, starting from the problem formulation and leading to a practical algorithm implementable on classical computers.
+
+\subsection{Problem Formulation}
+
+Given a dataset \( \{ (\mathsf{x}^{(i)}, y^{(i)}) \}_{i=1}^n \), where \( \mathsf{x}^{(i)} \in \mathbb{R}^m \) is the input vector and \( y^{(i)} \in \{1, 2, \dots, l\} \) is its class label, our goal is to find an orthogonal transformation \( P \in \mathbb{R}^{m \times m} \) such that the transformed features \( \psi^{(i)} = P^\top \mathsf{x}^{(i)} \) can effectively discriminate between classes. The association between transformed features and classes is captured by a mapping matrix \( L \in [0,1]^{m \times l} \), where \( L_{jk} \) represents the degree of association between the \( j \)-th eigenfeature and class \( k \).
+
+\subsection{Orthogonal Transformation}
+
+To ensure that the transformation preserves the structure of the data, we require \( P \) to be orthogonal, i.e., \( P^\top P = I \), where \( I \) is the identity matrix. We achieve this by parametrizing \( P \) using the exponential of an antisymmetric matrix \( A \)~\cite{absil2008optimization}
+\begin{equation}
+P = e^{A},
+\end{equation}
+where \( A \in \mathbb{R}^{m \times m} \) satisfies \( A^\top = -A \). This parametrization ensures that \( P \) remains orthogonal during optimization.
+
+\Gls{eca} adopts a divide-and-conquer strategy by decomposing the multi-class classification problem into multiple binary classification problems at the level of eigenfeatures~\cite{dietterich2000ensemble}. We consider each eigenfeature independently to determine its association with each class.
+
+The mapping matrix \( L \) indicates whether an eigenfeature contributes to a particular class. We relax the binary constraint and allow \( L_{jk} \) to take continuous values in the interval \( (0,1) \), representing the probability of association~\cite{liu2011defense}.
+
+\subsection{Class Probability Estimation}
+
+Given an input vector \( \mathsf{x}^{(i)} \), we obtain the transformed features \( \psi_j^{(i)} = P^\top \mathsf{x}^{(i)} \) using the orthogonal transformation \( P = e^A \). Each transformed feature \( \psi_j^{(i)} \) corresponds to projections of the input data on each eigenfeature.
+
+We compute the probability of \( \mathsf{x}^{(i)} \) belonging to class \( k \) by summing the weighted contributions of all eigenfeatures
+\begin{align}
+    p_k^{(i)} = \sum_{j=1}^m |\psi_j^{(i)}|^2 L_{jk},
+\end{align}
+where \( |\psi_j^{(i)}|^2 \) represents the magnitude squared of the \( j \)-th transformed feature, and \( L_{jk} \) is the degree of association between the \( j \)-th eigenfeature and class \( k \). This mirrors the concept of probability amplitudes in quantum mechanics, where the magnitude squared of the amplitude reflects the likelihood of a particular state~\cite{nielsen2010quantum}.
+
+\subsection{Objective Function}
+
+To derive the objective function, we aim to maximize the likelihood of the observed class labels \( y^{(i)} \) for each input \( \mathsf{x}^{(i)} \). We model the likelihood of observing the true class label \( y^{(i)} \) for a given sample as the product of the estimated class probabilities
+\begin{align}
+    \mathcal{L}(\theta; \mathsf{x}, \mathsf{y}) = \prod_{i=1}^{n} \prod_{k=1}^{l} p_k^{(i)}{}^{y_k^{(i)}},
+\end{align}
+where \( y_k^{(i)} = 1 \) if the input belongs to class \( k \), and \( 0 \) otherwise. Taking the logarithm of the likelihood, we obtain
+\begin{align}
+    \log \mathcal{L}(\theta; \mathsf{x}, \mathsf{y}) = \sum_{i=1}^{n} \sum_{k=1}^{l} y_k^{(i)} \log p_k^{(i)}.
+\end{align}
+Since we wish to minimize the negative log-likelihood, the final objective function becomes the cross-entropy loss~\cite{bilmes1998gentle}
+\begin{align}
+    \mathcal{J}(A, L) = -\sum_{i=1}^{n} \sum_{k=1}^{l} y_k^{(i)} \log p_k^{(i)}.
+\end{align}
+
+We optimize the parameters \( A \) and \( L \) to minimize this loss. The orthogonal transformation \( P = e^A \) ensures that the transformation matrix remains valid, preserving the structure of the input data during optimization. We learn the association matrix \( L \), bounded within \( (0,1) \), using a sigmoid function to ensure probabilistic interpretation.
+
+\subsection{Optimization Constraints}
+
+The optimization problem is constrained by
+\begin{equation}
+P = e^{A}, \quad A =  A_{\text{raw}} - A_{\text{raw}}^\top  + \operatorname{diag}(D), \quad L_{jk} \in (0,1).
+\end{equation}
+
+We ensure \( P \) remains orthogonal during optimization by updating the trainable parameters \(A_{\text{raw}}\) and \(D\), then computing \( A \) and \( P \) accordingly~\cite{hu2020brief}. We keep the entries of \( L \) within \( (0,1) \) using a sigmoid function
+\begin{equation}
+L_{jk} = \sigma(\tilde{L}_{jk}) = \frac{1}{1 + e^{-\tilde{L}_{jk}}},
+\end{equation}
+where \( \tilde{L}_{jk} \) are the unconstrained parameters.
+%optimized during training.
+We adopt a \Gls{ste}~\cite{bengio2013estimating} to approximate gradients to binarize or apply discrete constraints to \(L\). This approach enables gradient flow through the thresholding operation, allowing \(L\) to remain interpretable while still being optimized using standard backpropagation techniques.
+
+\subsection{Implementation Details}
+
+We implement the \Gls{eca} model using PyTorch~\cite{baydin2018automatic}, leveraging automatic differentiation and optimization tools. We define the antisymmetric matrix \( A \) as trainable parameters and compute the orthogonal transformation matrix \( P = e^{A} \) using the matrix exponential. To ensure \( L \) remains in \( (0, 1) \), we use a sigmoid activation function on its raw parameters \( \tilde{L} \).
+
+We train the model using the Adam optimizer with a learning rate of \( 0.01 \).
+% , minimizing the cross-entropy loss between the predicted class probabilities and the true labels. 
+Training is performed over 1000 epochs.
+The implementation of \gls{eca} is available at 
+\href{https://github.com/lachlanchen/eca}{\texttt{https://github.com/lachlanchen/eca}}.
+
+
+% \subsection{Interpretability}
+
+% By analyzing the learned mapping matrix \( L \), we can interpret which eigenfeatures are most influential for each class~\cite{rudin2019stop, linardatos2020explainable}. This enhances the model's transparency and provides insights into the underlying data structure.
+
+\subsection{Interpretability}
+
+The interpretability of the \Gls{eca} model arises from the mapping matrix $ L $, which shows the association between eigenfeatures and classes. Each entry  $L_{jk}$  quantifies the $j$-th eigenfeature's influence on class $k$, providing insights into data structure and feature relevance for classification.
+
+
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/fig1.png}
+    \caption{Visualization of the synthetic 2D and 3D datasets.}
+    \label{fig:2d_3d_results}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/fig2_v3.png}
+    \caption{Visualization of the learned transformation matrix \( e^{A} \) (top row) and mapping matrix \( L \) (bottom row) for the synthetic datasets using \Gls{eca}.}
+    \label{fig:synthetic_p_l}
+\end{figure}
+
+\section{Results}
+
+To demonstrate the effectiveness and interpretability of ECA, we compare it with traditional classifiers on datasets including synthetic 2D and 3D datasets, the Iris dataset~\cite{fisher1936use}, the Digits dataset~\cite{alpaydin1998optical}, MNIST~\cite{lecun1998gradient}, and the Fashion MNIST~\cite{xiao2017fashion} datasets. We compare our model with \Gls{lor}, \Gls{lda}, \Gls{qda}, \Gls{svm}, and \Gls{ksvm} using the \Gls{rbf} kernel~\cite{hastie2009elements,cortes1995support,burges1998tutorial}.
+
+\subsection{Synthetic Datasets}
+
+We evaluate our method on synthetic datasets designed to challenge linear classifiers due to overlapping features and covariance structures. The datasets include a 2D dataset with two classes, a 3D dataset with two classes, and a 3D dataset with three classes (see Figure~\ref{fig:2d_3d_results}).
+
+In the 2D dataset, \Gls{eca} achieves an accuracy of \textbf{86.00\%}, outperforming others. The learned mapping matrix \( L \) associates each eigenfeature with a specific class, effectively capturing the class distinctions. The transformation matrix \( P \) finds the optimal rotation to enhance class separability (see Figure~\ref{fig:synthetic_p_l}).
+
+In the 3D dataset with two classes, \Gls{eca} achieves an accuracy of \textbf{74.33\%}. The model associates the first two eigenfeatures with the two classes, while the third eigenfeature is not associated with any class. This indicates that \Gls{eca} identifies and discards the irrelevant feature, enhancing classification.
+
+In the 3D dataset with three classes, \Gls{eca} achieves an accuracy of \textbf{73.50\%}. The mapping matrix \( L \) correctly associates each eigenfeature with one of the three classes, demonstrating \Gls{eca}'s capability in multiclass scenarios.
+
+\begin{table}[ht]
+    \caption{Comparison of Classifiers on Synthetic Datasets}
+    \centering
+    \begin{tabular}{@{}lccc@{}}
+        \toprule
+        \textbf{Dataset} & \textbf{Model} & \textbf{Accuracy (\%)} & \textbf{Parameters} \\ \midrule
+        2D & \Gls{lor} & 53.00 & 3 \\
+        2D & \Gls{lda} & 52.33 & 3 \\
+        2D & \Gls{qda} & 84.67 & 14 \\
+        2D & \Gls{svm} & 56.33 & 3 \\
+        2D & \Gls{ksvm} & 83.33 & 461 \\
+        2D & \Gls{eca} & \textbf{86.00} & 9 \\ \midrule
+        3D (2 classes) & \Gls{lor} & 49.67 & 4 \\
+        3D (2 classes) & \Gls{lda} & 49.67 & 4 \\
+        3D (2 classes) & \Gls{qda} & 71.67 & 26 \\
+        3D (2 classes) & \Gls{svm} & 48.67 & 4 \\
+        3D (2 classes) & \Gls{ksvm} & 70.00 & 774 \\
+        3D (2 classes) & \Gls{eca} & \textbf{74.33} & 15 \\ \midrule
+        3D (3 classes) & \Gls{lor} & 34.00 & 12 \\
+        3D (3 classes) & \Gls{lda} & 33.83 & 12 \\
+        3D (3 classes) & \Gls{qda} & 72.17 & 39 \\
+        3D (3 classes) & \Gls{svm} & 47.33 & 12 \\
+        3D (3 classes) & \Gls{ksvm} & 71.83 & 1,154 \\
+        3D (3 classes) & \Gls{eca} & \textbf{73.50} & 18 \\ \bottomrule
+    \end{tabular}
+    \label{tab:synthetic}
+\end{table}
+
+\begin{table}[ht]
+    \caption{Comparison of Classifiers on the Iris Dataset}
+    \centering
+    \begin{tabular}{@{}lcc@{}}
+        \toprule
+        \textbf{Model} & \textbf{Accuracy (\%)} & \textbf{Parameters} \\ \midrule
+        \Gls{lor} & 96.67 & 15 \\
+        \Gls{lda} & \textbf{100} & 15 \\
+        \Gls{qda} & \textbf{100} & 63 \\
+        \Gls{svm} & \textbf{100} & 15 \\
+        \Gls{ksvm} & 96.67 & 49 \\
+        \Gls{eca} & \textbf{100} & 26 \\ \bottomrule
+    \end{tabular}
+    \label{tab:iris}
+\end{table}
+
+\subsection{Iris Dataset}
+
+We apply \Gls{eca} to the Iris dataset~\cite{fisher1936use} to evaluate its performance on a well-known multiclass classification problem with four features and three classes. Additionally, we include a comparison with \Gls{pca}~\cite{abdi2010principal} to provide context for the class separability achieved by \Gls{eca} in contrast to traditional variance-based projections. Figure~\ref{fig:iris_pca_eca} displays the visualizations of both \Gls{pca} and \Gls{eca} projections for class comparisons on the Iris dataset, illustrating separations across selected eigenfeatures for Class 1 vs. 2, Class 2 vs. 3, and Class 1 vs. 3 based on the transformation matrix \( P \).
+
+\begin{figure*}[ht]
+    \centering
+    \includegraphics[width=1\linewidth]{figs/fig3_v7.png}
+    \caption{Visualization of \Gls{pca} and \Gls{eca} projections for class comparisons on the Iris dataset. The figure presents a comparison between \Gls{pca} (leftmost) and \Gls{eca} projections across selected eigenfeatures, demonstrating class separations: Class 1 vs. 2 (second from left), Class 2 vs. 3 (third from left), and Class 1 vs. 3 (fourth from left), based on the transformation matrix \( P \). \Gls{pca} shows a variance-maximizing reduction, while \Gls{eca} optimizes feature space for enhanced class-specific separability. The corresponding \( L \) matrix (rightmost) highlights the association between eigenfeatures and classes, providing interpretability.}
+    \label{fig:iris_pca_eca}
+\end{figure*}
+
+The \Gls{eca} model achieves an accuracy of \textbf{100\%} on the test data, matching the performance of \Gls{lda}, \Gls{qda}, and \Gls{svm}.
+
+\subsection{Digits Dataset}
+
+We test \Gls{eca} on the Digits dataset~\cite{alpaydin1998optical}, which consists of $8 \times 8$ images of handwritten digits (total 64 features) across ten classes. The \Gls{eca} model achieves an accuracy of \textbf{99.17\%}, outperforming \Gls{lor}, \Gls{lda}, and \Gls{svm}, and matching the performance of \Gls{ksvm}.
+
+\begin{table}[ht]
+    \caption{Comparison of Classifiers on the Digits Dataset}
+    \centering
+    \begin{tabular}{@{}lcc@{}}
+        \toprule
+        \textbf{Model} & \textbf{Accuracy (\%)} & \textbf{Parameters} \\ \midrule
+        \Gls{lor} & 86.67 & 650 \\
+        \Gls{lda} & 95.28 & 650 \\
+        \Gls{qda} & 73.33 & 41,610 \\
+        \Gls{svm} & 88.06 & 2,925 \\
+        \Gls{ksvm} & \textbf{99.17} & 663 \\
+        \Gls{eca} & \textbf{99.17} & 2,784 \\ \bottomrule
+    \end{tabular}
+    \label{tab:digits}
+\end{table}
+
+\subsection{Fashion MNIST Dataset}
+
+We apply \Gls{eca} to the Fashion MNIST dataset~\cite{xiao2017fashion}, which consists of $28 \times 28$ grayscale images of clothing items across ten classes. We downsample the data by a factor of 100 due to convergence difficulties for traditional algorithms. The \Gls{eca} model achieves an accuracy of \textbf{80.71\%}, outperforming other linear models, while \Gls{qda} suffered from colinearity issues in the high-dimensional, raw data.
+
+\begin{table}[ht]
+    \caption{Comparison on the Downsampled Fashion MNIST Dataset}
+    \centering
+    \begin{tabular}{@{}lcc@{}}
+        \toprule
+        \textbf{Model} & \textbf{Accuracy (\%)} & \textbf{Parameters} \\ \midrule
+        \Gls{lor} & 77.14 & 7,850 \\
+        \Gls{lda} & 53.57 & 7,850 \\
+        \Gls{qda} & 17.86 & 6,154,410 \\
+        \Gls{svm} & 77.14 & 35,325 \\
+        \Gls{ksvm} & 74.29 & 435 \\
+        \Gls{eca} & \textbf{80.71} & 316,344 \\ \bottomrule
+    \end{tabular}
+    \label{tab:fashion_mnist}
+\end{table}
+
+\subsection{MNIST Dataset}
+
+We evaluate \Gls{eca} on the MNIST dataset~\cite{lecun1998gradient}, which consists of $28 \times 28$ grayscale images of handwritten digits across ten classes. Due to convergence difficulties for traditional methods, we downsample the data by a factor of 100 (both train and test datasets). We also compare different algorithms with varying sample rates to observe their performance trends. The \Gls{eca} model achieves an accuracy of \textbf{88.57\%}, outperforming \Gls{lor} and closely matching \Gls{svm}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.9\linewidth]{figs/fig4_v2.png}
+    \caption{Accuracy comparison on MNIST varying downsample fractions.}
+    \label{fig:mnist_downsample}
+\end{figure}
+
+To further explore the robustness of \Gls{eca} over different training sample sizes, we conduct experiments by varying the downsample fraction of the training data while keeping the test data ratio fixed (0.2 of the full dataset). We downsample the training data from 48,000 samples to 48 samples.
+
+As shown in Figure \ref{fig:mnist_downsample}, \Gls{eca} consistently outperforms \Gls{lor} and \Gls{lda}, especially at lower downsample fractions. \Gls{eca} maintains high accuracy even with significantly reduced training data, showcasing its robustness on sparse data. 
+%The results for \Gls{svm} and \Gls{ksvm} at the lowest downsample rates are omitted due to convergence difficulties.
+
+
+% \section{Discussion}
+
+% \Gls{eca} consistently demonstrated competitive performance across datasets. In the synthetic datasets, \Gls{eca} outperformed other linear models, particularly when traditional models struggled due to overlapping classes and complex covariance structures. While \Gls{qda} achieved similar accuracies on some datasets, it required significantly more parameters, especially on higher-dimensional data~\cite{hastie2009elements}.
+
+% On the Iris dataset, \Gls{eca} matched the perfect accuracy achieved by \Gls{lda}, \Gls{qda}, and \Gls{svm}, while providing additional interpretability through the mapping matrix \( L \). In the Digits dataset, \Gls{eca} achieved high accuracy, closely matching \Gls{ksvm} but with a different approach to feature transformation.
+
+% In the Fashion MNIST dataset, \Gls{eca}'s performance was superior to other linear models. However, the number of parameters in \Gls{eca} was significantly higher due to the high dimensionality of the image data. This highlights a limitation in handling very high-dimensional data without dimensionality reduction or regularization techniques~\cite{hastie2009elements}.
+
+% For the MNIST dataset, \Gls{eca} showed remarkable robustness over different downsample fractions. As depicted in Figure \ref{fig:mnist_downsample}, \Gls{eca} maintained higher accuracy than \Gls{lor} and \Gls{lda} across all levels of downsampling. This indicates that \Gls{eca} is well-suited for scenarios with limited or distributed data, where training data may be sparse.
+
+
+% \section{Discussion}
+
+% \Gls{eca} consistently outperformed traditional linear models in both accuracy and interpretability. By modeling the class associations using continuous distributions and employing a divide-and-conquer approach, \Gls{eca} effectively captures the contributions of individual eigenfeatures to the classification task.
+
+% Our experiments demonstrate that \Gls{eca} is capable of handling complex data structures where traditional linear models may fail. The orthogonal transformation ensures that the inherent structure of the data is preserved, enabling effective feature extraction and classification without extensive data centralization or standardization.
+
+% The robustness of \Gls{eca} over varying training sample sizes, as shown in the MNIST experiments, underscores its suitability for distributed or sparse data scenarios. This is particularly relevant in modern applications where data may be decentralized due to privacy concerns or resource constraints.
+
+% However, the scalability of \Gls{eca} to very high-dimensional data is a challenge due to the quadratic increase in the number of parameters with the number of features. Future work could explore dimensionality reduction techniques or sparse representations to mitigate this issue.
+
+\section{Conclusion}
+
+This paper introduces \Gls{eca}, a quantum-inspired model designed to achieve linear separability without requiring data centralization or normalization. \Gls{eca} leverages a robust orthogonal transformation to capture intrinsic data structures, enabling effective feature extraction and classification even in distributed and privacy-sensitive environments. Extensive experimentation across various datasets demonstrates that \Gls{eca} consistently outperforms traditional linear classifiers, achieving high accuracy and efficiency, particularly in complex and resource-constrained settings.
+
+
+% \section*{Acknowledgment}
+
+% The preferred spelling of the word ``acknowledgment'' in America is without 
+% an ``e'' after the ``g''. Avoid the stilted expression ``one of us (R. B. 
+% G.) thanks $\ldots$''. Instead, try ``R. B. G. thanks$\ldots$''. Put sponsor 
+% acknowledgments in the unnumbered footnote on the first page.
+
+% \section*{References}
+
+% Please number citations consecutively within brackets \cite{b1}. The 
+% sentence punctuation follows the bracket \cite{b2}. Refer simply to the reference 
+% number, as in \cite{b3}---do not use ``Ref. \cite{b3}'' or ``reference \cite{b3}'' except at 
+% the beginning of a sentence: ``Reference \cite{b3} was the first $\ldots$''
+
+% Number footnotes separately in superscripts. Place the actual footnote at 
+% the bottom of the column in which it was cited. Do not put footnotes in the 
+% abstract or reference list. Use letters for table footnotes.
+
+% Unless there are six authors or more give all authors' names; do not use 
+% ``et al.''. Papers that have not been published, even if they have been 
+% submitted for publication, should be cited as ``unpublished'' \cite{b4}. Papers 
+% that have been accepted for publication should be cited as ``in press'' \cite{b5}. 
+% Capitalize only the first word in a paper title, except for proper nouns and 
+% element symbols.
+
+% For papers published in translation journals, please give the English 
+% citation first, followed by the original foreign-language citation \cite{b6}.
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{ref}
+
+
+% \begin{thebibliography}{00}
+% \bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
+% \bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
+% \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
+% \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
+% \bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
+% \bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
+% \bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
+% \end{thebibliography}
+% \vspace{12pt}
+% \color{red}
+% IEEE conference templates contain guidance text for composing and formatting conference papers. Please ensure that all template text is removed from your conference paper prior to submission to the conference. Failure to remove the template text from your paper may result in your paper not being published.
+
+\end{document}

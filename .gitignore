@@ -1,0 +1,56 @@
+# OS and editors
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Python and notebooks
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# LaTeX build products
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+
+# Local or sensitive research records: retained on the workstation, not published.
+references/tcas_ii_24755_2025_decision_and_reviews.md
+references/eca_research_analysis_plan.md
+references/recommendation_systems_methods_and_eca.md
+
+# This tree duplicates the candidate TCAS material already present in the ISCAS
+# archive and cannot be verified as the exact submitted artifact.
+references/_Rongzhou___TCAS_II___Eigen_Component_Analysis/
+
+# Local convenience symlinks point to sibling workspaces and would be broken
+# in a standalone GitHub checkout.
+/eca
+/eca_github
+/eca_paper
+/ising
+/ueca
+
+# Redundant IEEE distribution/reference files and an empty conference template.
+**/IEEEtran.cls
+**/IEEEtran_1.cls
+**/IEEEtran_HOWTO.pdf
+references/_Rongzhou___ISCAS2025__Eigen_Component_Analysis__A_Quantum_Theory_Inspired_Linear_Model/ISCAS2025/conference_101719.pdf

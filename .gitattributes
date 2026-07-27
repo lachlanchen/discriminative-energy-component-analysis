@@ -1,0 +1,10 @@
+# Preserve historical source snapshots verbatim. They contain legacy
+# whitespace, so content-level whitespace checks apply only to maintained
+# repository documents.
+references/1.*.md -diff
+references/_Rongzhou___ICIP2025__Ising_Clustering__A_Democratic_Voting_Approach/** -diff
+references/_Rongzhou___ISCAS2025__Eigen_Component_Analysis__A_Quantum_Theory_Inspired_Linear_Model/** -diff
+
+# Make binary intent explicit.
+*.pdf binary
+*.png binary
