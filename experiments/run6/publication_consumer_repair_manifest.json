@@ -1,0 +1,121 @@
+{
+  "access_record": {
+    "automated_detector_derived_access_before_repair": true,
+    "automated_randomization_derived_access_before_repair": true,
+    "human_performance_values_inspected_to_select_repair": false,
+    "outcome_blind_claim": false,
+    "outcome_manifest_reached_by_failed_extractor": false,
+    "outcome_production_complete_before_repair": true,
+    "pnnl_performance_artifacts_reached_by_failed_extractor": false,
+    "pnnl_results_manifest_loaded_by_failed_extractor": true,
+    "preregistered_repair_claim": false,
+    "repair_selected_from_producer_source_and_schema_only": true
+  },
+  "chronology": {
+    "failed_extraction_after_outcome": true,
+    "failed_extraction_exception": "PublicationDataError: PNNL adaptive-state ledger must be an object.",
+    "failed_extraction_output_absent_at_freeze": true,
+    "failed_extraction_output_path": "publication/run6/generated",
+    "incident_commit": "1fa2b86b86bbb56cc2625b4a8ab72e0024c79192",
+    "implementation_commit": "2d74325934f679ad2848c5f0832477227d672d35",
+    "implementation_parent_commit": "1fa2b86b86bbb56cc2625b4a8ab72e0024c79192",
+    "outcome_manifest_sha256": "fac31ab5cff646fd081ba0d4e6a8a73ba42747618997f35702d172e563b7f62b",
+    "pre_outcome_publication_commit": "0b4f9d3f9eadcfa2545daa608c1674009e1761d8"
+  },
+  "created_utc": "2026-07-27T21:57:31Z",
+  "environment": {
+    "implementation": "CPython",
+    "machine": "x86_64",
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+    "python": "3.10.13",
+    "python_environment_lock_sha256": "9c99a789e3202f93a8c6d5c517fb4fdbc4f9ee0ebcb30619648a37441c841d38",
+    "scikit_learn": "1.7.2",
+    "scipy": "1.15.3"
+  },
+  "implementation": {
+    "allowlisted_diff_status": {
+      "publication/run6/README.md": "M",
+      "publication/run6/analysis/README.md": "M",
+      "publication/run6/analysis/extract_results.py": "M",
+      "publication/run6/analysis/test_extract_results.py": "M",
+      "publication/run6/main.pdf": "M",
+      "publication/run6/main.tex": "M",
+      "publication/run6/manuscript_plan.md": "M"
+    },
+    "hashes": {
+      "publication/run6/README.md": "55b3449f34c42bc6b0d9362627a93c7d12144fe4d410012e89e559088a7c84ea",
+      "publication/run6/analysis/README.md": "9f18ed6ffcb09c036315911d2d81d478ab6fc99021542aa32f2ae441ad255a80",
+      "publication/run6/analysis/extract_results.py": "06cebe967a7178d2c42a83bb9af9ab5d08c1d2c2f009bad74c6e7c0732627e41",
+      "publication/run6/analysis/test_extract_results.py": "9d9244f71afaa2e8570422df74f718c7fdd811f8f8b4cace2911f62be35983e8",
+      "publication/run6/main.pdf": "878cfb6c574b383881b549993d237a5ded16f40acac9ee10bc0fe450a906e7f0",
+      "publication/run6/main.tex": "9b4bca770797b917053de87455b355bb02b33d64c3e9776d80dde116537daef8",
+      "publication/run6/manuscript_plan.md": "dbef36815432de337f7149f48b49e9928c94167f12ac8a8360f4d66c39488f82"
+    }
+  },
+  "incident": {
+    "record_commit": "1fa2b86b86bbb56cc2625b4a8ab72e0024c79192",
+    "record_path": "references/run6_post_outcome_publication_consumer_schema_incident.md",
+    "record_sha256": "e889080fa149eda5772ea0dcfe700ba77ac706d38c37e2fa1e0f025e4f31dfdf"
+  },
+  "schema_version": "run6-post-outcome-publication-consumer-repair-manifest-v1",
+  "scientific_immutability": {
+    "claim_boundary_changed": false,
+    "empirical_gate_changed": false,
+    "endpoint_changed": false,
+    "outcome_changed": false,
+    "outcome_producer_rerun": false,
+    "recorded_runtime_changed": false,
+    "scientific_producer_modified": false,
+    "scientific_producer_rerun": false,
+    "seed_changed": false,
+    "threshold_changed": false,
+    "upstream_evidence_mutated": false
+  },
+  "status": "post_outcome_publication_consumer_repair_implementation_frozen",
+  "upstream_evidence": {
+    "detector_manifest": {
+      "path": "experiments/run6/results/google_detector/detector_freeze_manifest.json",
+      "sha256": "ed9d9dcdcb2b3e78d144f2a2ce3cec6b6269ffce3f7e18f443784e5d6174c0c3"
+    },
+    "freeze_ratification": {
+      "path": "experiments/run6/freeze_ratification.json",
+      "sha256": "84bccb9f8e64f1ed41790a0e9481421ea6aa5bcd72689520e01c7b4682d1992b"
+    },
+    "outcome_manifest": {
+      "path": "experiments/run6/results/google_outcomes/outcome_manifest.json",
+      "sha256": "fac31ab5cff646fd081ba0d4e6a8a73ba42747618997f35702d172e563b7f62b"
+    },
+    "pittsburgh_manifest": {
+      "path": "experiments/run6/configs/pnnl_pittsburgh_locked.json",
+      "sha256": "14435b7b09fe3b103889260645aa014cb7ff22b84686f13fa21ae9a11e9e0702"
+    },
+    "pnnl_manifest": {
+      "path": "experiments/run6/results/pnnl_snapshot/results_manifest.json",
+      "sha256": "59f7ec3bcbcfb4927dc78671733a5de3d2efbb20fe478bfd4a5f878d609e92de"
+    },
+    "randomization_manifest": {
+      "path": "experiments/run6/results/google_randomization_repair1/merged/randomization_manifest.json",
+      "sha256": "0e758fd27181699d02d77a8a876fb3f95ff14d7aaf1db656eb1187fe7ad60e4c"
+    },
+    "repair_manifest": {
+      "path": "experiments/run6/repair_manifest.json",
+      "sha256": "d0cf9afb4ea72e8a529feb3f1a09eebfeb2728a284843b285544ada31fbbfcff"
+    },
+    "repair_ratification": {
+      "path": "experiments/run6/repair_ratification.json",
+      "sha256": "4d79fa582f5244bb85d8fb1b454d15048f5a7b55445fe240fe0842f8defc64c5"
+    }
+  },
+  "validation": {
+    "extractor_sha256": "06cebe967a7178d2c42a83bb9af9ab5d08c1d2c2f009bad74c6e7c0732627e41",
+    "generated_output_absent_at_freeze": true,
+    "metadata_only_real_manifest_validation": "pass",
+    "publication_tests_passed": 93,
+    "publication_tests_status": "pass",
+    "ruff_and_format_status": "pass",
+    "test_command": "./.venv/bin/pytest -q publication/run6/analysis/test_extract_results.py publication/run6/test_verify_generated_bundle.py",
+    "tests_sha256": "9d9244f71afaa2e8570422df74f718c7fdd811f8f8b4cace2911f62be35983e8"
+  }
+}
