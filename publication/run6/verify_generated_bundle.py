@@ -179,6 +179,12 @@ def _verify_bundle_with_validation_profile(
         source_paths,
         profile=profile,
     )
+    _, _, expected_publication_provenance = (
+        extract_results.validate_publication_repair_provenance(
+            profile=profile,
+            evidence_records=expected_evidence,
+        )
+    )
     sources = {role: path.resolve(strict=True) for role, path in source_paths.items()}
     if len(set(sources.values())) != 8:
         raise BundleVerificationError("The eight evidence inputs must be distinct.")
@@ -243,13 +249,17 @@ def _verify_bundle_with_validation_profile(
             "Bundle lacks its manifest, manuscript contract, or recomputed claim."
         )
     manifest = extract_results.load_json(observed["publication_bundle_manifest.json"])
-    if manifest.get("schema_version") != "run6-publication-bundle-v5":
+    if manifest.get("schema_version") != "run6-publication-bundle-v6":
         raise BundleVerificationError(
-            "Publication bundle is not the required anchored-provenance v5 schema."
+            "Publication bundle is not the required three-layer-provenance v6 schema."
         )
     if manifest.get("evidence_inputs") != expected_evidence:
         raise BundleVerificationError(
             "Publication bundle evidence roles, paths, or hashes changed."
+        )
+    if manifest.get("publication_provenance_inputs") != expected_publication_provenance:
+        raise BundleVerificationError(
+            "Publication-repair provenance paths or hashes changed."
         )
     verify_manuscript_macro_consumption(
         contract_path=observed["manuscript_artifact_contract.tex"],

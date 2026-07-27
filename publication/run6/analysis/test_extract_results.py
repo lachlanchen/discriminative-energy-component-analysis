@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import copy
 import csv
 import shutil
 import subprocess
 import sys
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -1195,11 +1197,55 @@ def make_fixture(root: Path, *, retention: bool = True) -> dict[str, Any]:
         "outcome": outcome,
     }
     repair = target.load_json(repair_manifest)
+    evidence_by_role = {
+        role: {
+            "path": FIXTURE_EVIDENCE_PATHS[role],
+            "sha256": target.sha256_file(
+                {
+                    "detector_manifest": detector,
+                    "freeze_ratification": freeze_ratification,
+                    "repair_manifest": repair_manifest,
+                    "repair_ratification": repair_ratification,
+                    "randomization_manifest": randomization,
+                    "pnnl_manifest": pnnl,
+                    "pittsburgh_manifest": pittsburgh,
+                    "outcome_manifest": outcome,
+                }[role]
+            ),
+        }
+        for role in FIXTURE_EVIDENCE_PATHS
+    }
+    repository_root = Path(__file__).resolve().parents[3]
+    publication_manifest = copy.deepcopy(
+        target.load_json(repository_root / target.PUBLICATION_REPAIR_MANIFEST_PATH)
+    )
+    publication_manifest["upstream_evidence"] = evidence_by_role
+    publication_manifest["chronology"]["outcome_manifest_sha256"] = evidence_by_role[
+        "outcome_manifest"
+    ]["sha256"]
+    publication_manifest_bytes = (
+        target.canonical_json_bytes(publication_manifest) + b"\n"
+    )
+    publication_ratification = copy.deepcopy(
+        target.load_json(repository_root / target.PUBLICATION_REPAIR_RATIFICATION_PATH)
+    )
+    publication_ratification["upstream_evidence"] = evidence_by_role
+    publication_ratification["repair_manifest"]["sha256"] = target.sha256_bytes(
+        publication_manifest_bytes
+    )
+    publication_ratification_bytes = (
+        target.canonical_json_bytes(publication_ratification) + b"\n"
+    )
     paths["_validation_profile"] = target._make_internal_validation_profile(
         original_ratification_bytes=freeze_ratification.read_bytes(),
         repair_manifest_bytes=repair_manifest.read_bytes(),
         repair_ratification_bytes=repair_ratification.read_bytes(),
         implementation_hashes=repair["hashes"],
+        publication_repair_manifest_bytes=publication_manifest_bytes,
+        publication_repair_ratification_bytes=publication_ratification_bytes,
+        publication_implementation_hashes=publication_manifest["implementation"][
+            "hashes"
+        ],
         evidence_paths=FIXTURE_EVIDENCE_PATHS,
     )
     return paths
@@ -1289,7 +1335,7 @@ def test_completed_positive_bundle_is_cross_checked_and_generated(
     }
     assert {path.name for path in output.iterdir()} == expected
     manifest = target.load_json(output / "publication_bundle_manifest.json")
-    assert manifest["schema_version"] == "run6-publication-bundle-v5"
+    assert manifest["schema_version"] == "run6-publication-bundle-v6"
     input_paths = {
         "detector_manifest": paths["detector"],
         "freeze_ratification": paths["freeze_ratification"],
@@ -1306,9 +1352,19 @@ def test_completed_positive_bundle_is_cross_checked_and_generated(
             "sha256": target.sha256_file(path),
         }
     assert (
-        manifest["dual_provenance"]["post_detector_repair_chain"]["access_record"]
+        manifest["provenance"]["post_detector_repair_chain"]["access_record"]
         == target.REPAIR_ACCESS_RECORD
     )
+    assert (
+        manifest["provenance"]["post_outcome_publication_consumer_repair"][
+            "access_record"
+        ]
+        == target.PUBLICATION_REPAIR_ACCESS_RECORD
+    )
+    assert set(manifest["publication_provenance_inputs"]) == {
+        "publication_repair_manifest",
+        "publication_repair_ratification",
+    }
     assert manifest["decision"]["overall_run6_advantage"] is True
     positive_claim = manifest["decision"]["claim_sentence"]
     assert "both satisfied" in positive_claim
@@ -1557,6 +1613,14 @@ def test_production_profile_is_grounded_in_exact_git_blobs() -> None:
         profile.repair_ratification_bytes,
         context="test repair ratification",
     )
+    publication_manifest = target.load_json_bytes(
+        profile.publication_repair_manifest_bytes,
+        context="test publication-repair manifest",
+    )
+    publication_ratification = target.load_json_bytes(
+        profile.publication_repair_ratification_bytes,
+        context="test publication-repair ratification",
+    )
 
     assert profile.evidence_path_map() == target.PRODUCTION_EVIDENCE_PATHS
     assert manifest["hashes"] == profile.implementation_hash_map()
@@ -1566,6 +1630,16 @@ def test_production_profile_is_grounded_in_exact_git_blobs() -> None:
     assert {
         path: ratification["hashes"][path] for path in target.REPAIR_DIFF_STATUS
     } == profile.implementation_hash_map()
+    assert publication_manifest["implementation"]["hashes"] == (
+        profile.publication_implementation_hash_map()
+    )
+    assert publication_ratification["repair_manifest"]["sha256"] == (
+        target.sha256_bytes(profile.publication_repair_manifest_bytes)
+    )
+    assert (
+        publication_ratification["upstream_evidence"]
+        == (publication_manifest["upstream_evidence"])
+    )
 
     failures = manifest["failed_attempt_evidence"]
     assert failures["root"] == "experiments/run6/results/google_randomization"
@@ -1611,6 +1685,58 @@ def test_production_profile_is_grounded_in_exact_git_blobs() -> None:
         "aoc.space": "experiments/aoc/space.py",
         "aoc.space_qec": "experiments/aoc/space_qec.py",
     }
+
+
+@pytest.mark.parametrize(
+    "tamper",
+    (
+        "access_record",
+        "upstream_hash",
+        "implementation_hash",
+        "ratification_check",
+        "coordinated_outcome_blind_claim",
+    ),
+)
+def test_publication_repair_provenance_tamper_is_refused(
+    tmp_path: Path,
+    tamper: str,
+) -> None:
+    paths = make_fixture(tmp_path / "input")
+    profile = paths["_validation_profile"]
+    manifest = target.load_json_bytes(
+        profile.publication_repair_manifest_bytes,
+        context="fixture publication-repair manifest",
+    )
+    ratification = target.load_json_bytes(
+        profile.publication_repair_ratification_bytes,
+        context="fixture publication-repair ratification",
+    )
+    if tamper == "access_record":
+        manifest["access_record"][
+            "human_performance_values_inspected_to_select_repair"
+        ] = True
+    elif tamper == "upstream_hash":
+        manifest["upstream_evidence"]["outcome_manifest"]["sha256"] = DIGEST
+    elif tamper == "implementation_hash":
+        manifest["implementation"]["hashes"][
+            "publication/run6/analysis/extract_results.py"
+        ] = DIGEST
+    elif tamper == "ratification_check":
+        ratification["ratification_checks"]["canonical_outcome_not_rerun"] = False
+    else:
+        manifest["access_record"]["outcome_blind_claim"] = True
+        ratification["access_record"]["outcome_blind_claim"] = True
+    manifest_bytes = target.canonical_json_bytes(manifest) + b"\n"
+    if tamper == "coordinated_outcome_blind_claim":
+        ratification["repair_manifest"]["sha256"] = target.sha256_bytes(manifest_bytes)
+    ratification_bytes = target.canonical_json_bytes(ratification) + b"\n"
+    paths["_validation_profile"] = replace(
+        profile,
+        publication_repair_manifest_bytes=manifest_bytes,
+        publication_repair_ratification_bytes=ratification_bytes,
+    )
+    with pytest.raises(target.PublicationDataError, match="Publication-repair"):
+        run_fixture(paths, tmp_path / "generated")
 
 
 def test_incomplete_decision_is_refused(tmp_path: Path) -> None:

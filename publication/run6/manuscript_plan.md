@@ -375,7 +375,16 @@ computational, quantum, topological, string-theory, or holographic claim.
 - the publication-repair manifest and ratification bind the historical
   implementation commit, incident record, allowlisted diff, access truth,
   and upstream hashes;
+- final bundle schema `run6-publication-bundle-v6` records the eight
+  experimental evidence inputs separately from the two immutable
+  publication-provenance records;
 - a fresh extraction and final PDF audit pass only through the repaired
   consumer; and
 - the paper discloses the post-outcome chronology without outcome-blind
   language.
+
+**Three-layer integration audit:** 98 extractor/verifier tests pass after
+adding immutable Git anchors for both publication-repair records, five
+adversarial provenance mutations (including coordinated manifest and
+ratification fabrication), bundle schema v6, and explicit separation of the
+eight experimental inputs from the two publication-provenance records.

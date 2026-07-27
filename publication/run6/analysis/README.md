@@ -13,6 +13,10 @@ The extractor fails unless:
 - the original ratification, repair manifest, and repair ratification match
   their hardcoded immutable Git blobs, and every repair implementation digest
   is recomputed from the hardcoded implementation commit;
+- the post-outcome publication-consumer manifest and ratification match two
+  further immutable Git blobs, recursively bind the incident and exact
+  allowlisted implementation commit, and reproduce all eight unchanged
+  experimental input hashes;
 - the original ratification binds the immutable detector chain, while the
   repair manifest/ratification bind the exact allowlisted source/schema
   repair, detector registry, failed-attempt chronology, access record,
@@ -50,8 +54,8 @@ before emitting a bundle or reaching the outcome manifest.  Its repair is a
 post-outcome publication-consumer amendment: it changes no scientific
 producer or upstream evidence and is not described as outcome-blind.
 
-Run it only after both provenance chains and the four real-data stages are
-complete:
+Run it only after all three provenance layers and the four real-data stages
+are complete:
 
 ```bash
 python publication/run6/analysis/extract_results.py \
@@ -83,9 +87,10 @@ The output directory must be empty. The command generates:
   requirements and non-colliding `\RunSixVerified...` include macros; and
 - a single-sentence claim include;
 - `publication_bundle_manifest.json`, which binds each generated file to all
-  eight exact role--canonical-path--hash evidence records, records both
-  provenance chains and the truthful repair access record, and records the
-  exact locked conclusion. Its schema is `run6-publication-bundle-v5`.
+  eight exact role--canonical-path--hash experimental evidence records,
+  separately records the two publication-repair provenance inputs, all three
+  provenance layers, and both truthful access records, and records the exact
+  locked conclusion. Its schema is `run6-publication-bundle-v6`.
 
 The bundle has 22 files in total: fourteen tables, four figures, one claim
 include, two manuscript contracts, and the bundle manifest.  PNNL paired-swap

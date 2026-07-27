@@ -64,6 +64,20 @@ ORIGINAL_FREEZE_COMMIT = "eabc640d446c239f0c84d4f7d8f6a9b256fca72f"
 REPAIR_IMPLEMENTATION_COMMIT = "1bd2d3af1e5a74b791f46c4034cda02cf8118b61"
 REPAIR_MANIFEST_COMMIT = "fc92f7bda9f9711e8f2439d5d95c3330e4361bf1"
 REPAIR_RATIFICATION_COMMIT = "eb2df6a4d8962e2c561a7d4dbb242c464b033d8c"
+PUBLICATION_INCIDENT_PATH = (
+    "references/run6_post_outcome_publication_consumer_schema_incident.md"
+)
+PUBLICATION_REPAIR_MANIFEST_PATH = (
+    "experiments/run6/publication_consumer_repair_manifest.json"
+)
+PUBLICATION_REPAIR_RATIFICATION_PATH = (
+    "experiments/run6/publication_consumer_repair_ratification.json"
+)
+PUBLICATION_INCIDENT_COMMIT = "1fa2b86b86bbb56cc2625b4a8ab72e0024c79192"
+PUBLICATION_REPAIR_IMPLEMENTATION_COMMIT = "2d74325934f679ad2848c5f0832477227d672d35"
+PUBLICATION_REPAIR_MANIFEST_COMMIT = "fd165c9dd92a0d93eaf7c0e3b2fb12e340bb1b1d"
+PUBLICATION_REPAIR_RATIFICATION_COMMIT = "2047cbf8bb59dce2282d91ed1f849f2e21f74a27"
+PRE_OUTCOME_PUBLICATION_COMMIT = "0b4f9d3f9eadcfa2545daa608c1674009e1761d8"
 
 PRODUCTION_EVIDENCE_PATHS = {
     "detector_manifest": (
@@ -97,6 +111,9 @@ class ValidationProfile:
     repair_manifest_bytes: bytes
     repair_ratification_bytes: bytes
     implementation_hashes: tuple[tuple[str, str], ...]
+    publication_repair_manifest_bytes: bytes
+    publication_repair_ratification_bytes: bytes
+    publication_implementation_hashes: tuple[tuple[str, str], ...]
     evidence_paths: tuple[tuple[str, str], ...]
     repository_root: Path | None
 
@@ -105,6 +122,9 @@ class ValidationProfile:
 
     def evidence_path_map(self) -> dict[str, str]:
         return dict(self.evidence_paths)
+
+    def publication_implementation_hash_map(self) -> dict[str, str]:
+        return dict(self.publication_implementation_hashes)
 
 
 REPAIR_DIFF_STATUS = {
@@ -121,6 +141,40 @@ REPAIR_DIFF_STATUS = {
     "experiments/run6/tests/test_pnnl_snapshot_runner.py": "M",
     "experiments/run6/tests/test_run6_repair.py": "A",
     "references/run6_post_detector_schema_incident.md": "M",
+}
+PUBLICATION_REPAIR_DIFF_STATUS = {
+    "publication/run6/README.md": "M",
+    "publication/run6/analysis/README.md": "M",
+    "publication/run6/analysis/extract_results.py": "M",
+    "publication/run6/analysis/test_extract_results.py": "M",
+    "publication/run6/main.pdf": "M",
+    "publication/run6/main.tex": "M",
+    "publication/run6/manuscript_plan.md": "M",
+}
+PUBLICATION_REPAIR_ACCESS_RECORD = {
+    "automated_detector_derived_access_before_repair": True,
+    "automated_randomization_derived_access_before_repair": True,
+    "human_performance_values_inspected_to_select_repair": False,
+    "outcome_blind_claim": False,
+    "outcome_manifest_reached_by_failed_extractor": False,
+    "outcome_production_complete_before_repair": True,
+    "pnnl_performance_artifacts_reached_by_failed_extractor": False,
+    "pnnl_results_manifest_loaded_by_failed_extractor": True,
+    "preregistered_repair_claim": False,
+    "repair_selected_from_producer_source_and_schema_only": True,
+}
+PUBLICATION_REPAIR_SCIENTIFIC_IMMUTABILITY = {
+    "claim_boundary_changed": False,
+    "empirical_gate_changed": False,
+    "endpoint_changed": False,
+    "outcome_changed": False,
+    "outcome_producer_rerun": False,
+    "recorded_runtime_changed": False,
+    "scientific_producer_modified": False,
+    "scientific_producer_rerun": False,
+    "seed_changed": False,
+    "threshold_changed": False,
+    "upstream_evidence_mutated": False,
 }
 REPAIR_ACCESS_RECORD = {
     "detector_values_accessed_before_repair": True,
@@ -690,6 +744,9 @@ def _make_internal_validation_profile(
     repair_manifest_bytes: bytes,
     repair_ratification_bytes: bytes,
     implementation_hashes: Mapping[str, str],
+    publication_repair_manifest_bytes: bytes,
+    publication_repair_ratification_bytes: bytes,
+    publication_implementation_hashes: Mapping[str, str],
     evidence_paths: Mapping[str, str],
 ) -> ValidationProfile:
     """Construct a hermetic test profile; production CLI never calls this."""
@@ -699,6 +756,13 @@ def _make_internal_validation_profile(
         repair_manifest_bytes=bytes(repair_manifest_bytes),
         repair_ratification_bytes=bytes(repair_ratification_bytes),
         implementation_hashes=tuple(sorted(implementation_hashes.items())),
+        publication_repair_manifest_bytes=bytes(publication_repair_manifest_bytes),
+        publication_repair_ratification_bytes=bytes(
+            publication_repair_ratification_bytes
+        ),
+        publication_implementation_hashes=tuple(
+            sorted(publication_implementation_hashes.items())
+        ),
         evidence_paths=tuple(sorted(evidence_paths.items())),
         repository_root=None,
     )
@@ -723,6 +787,16 @@ def load_production_validation_profile() -> ValidationProfile:
         REPAIR_RATIFICATION_COMMIT,
         REPAIR_RATIFICATION_PATH,
     )
+    publication_repair_manifest_bytes = git_blob(
+        repository_root,
+        PUBLICATION_REPAIR_MANIFEST_COMMIT,
+        PUBLICATION_REPAIR_MANIFEST_PATH,
+    )
+    publication_repair_ratification_bytes = git_blob(
+        repository_root,
+        PUBLICATION_REPAIR_RATIFICATION_COMMIT,
+        PUBLICATION_REPAIR_RATIFICATION_PATH,
+    )
     implementation_hashes = {
         path: sha256_bytes(
             git_blob(repository_root, REPAIR_IMPLEMENTATION_COMMIT, path)
@@ -737,11 +811,41 @@ def load_production_validation_profile() -> ValidationProfile:
         raise PublicationDataError(
             "Git repair manifest hashes do not match implementation-commit blobs."
         )
+    publication_implementation_hashes = {
+        path: sha256_bytes(
+            git_blob(
+                repository_root,
+                PUBLICATION_REPAIR_IMPLEMENTATION_COMMIT,
+                path,
+            )
+        )
+        for path in PUBLICATION_REPAIR_DIFF_STATUS
+    }
+    canonical_publication_manifest = require_mapping(
+        load_json_bytes(
+            publication_repair_manifest_bytes,
+            context="Git publication-repair manifest",
+        ),
+        context="Git publication-repair manifest",
+    )
+    if (
+        canonical_publication_manifest.get("implementation", {}).get("hashes")
+        != publication_implementation_hashes
+    ):
+        raise PublicationDataError(
+            "Git publication-repair manifest hashes do not match "
+            "implementation-commit blobs."
+        )
     return ValidationProfile(
         original_ratification_bytes=original_bytes,
         repair_manifest_bytes=repair_manifest_bytes,
         repair_ratification_bytes=repair_ratification_bytes,
         implementation_hashes=tuple(sorted(implementation_hashes.items())),
+        publication_repair_manifest_bytes=publication_repair_manifest_bytes,
+        publication_repair_ratification_bytes=publication_repair_ratification_bytes,
+        publication_implementation_hashes=tuple(
+            sorted(publication_implementation_hashes.items())
+        ),
         evidence_paths=tuple(sorted(PRODUCTION_EVIDENCE_PATHS.items())),
         repository_root=repository_root,
     )
@@ -1228,6 +1332,408 @@ def validate_repair_ratification(
             "Repair ratification does not recursively bind the repair evidence."
         )
     return ratification
+
+
+def validate_publication_repair_provenance(
+    *,
+    profile: ValidationProfile,
+    evidence_records: Mapping[str, Mapping[str, str]],
+) -> tuple[
+    Mapping[str, Any],
+    Mapping[str, Any],
+    dict[str, dict[str, str]],
+]:
+    """Validate the separately anchored post-outcome publication repair."""
+
+    manifest = require_mapping(
+        load_json_bytes(
+            profile.publication_repair_manifest_bytes,
+            context="anchored publication-repair manifest",
+        ),
+        context="anchored publication-repair manifest",
+    )
+    ratification = require_mapping(
+        load_json_bytes(
+            profile.publication_repair_ratification_bytes,
+            context="anchored publication-repair ratification",
+        ),
+        context="anchored publication-repair ratification",
+    )
+    require_exact_keys(
+        manifest,
+        {
+            "schema_version",
+            "status",
+            "created_utc",
+            "incident",
+            "chronology",
+            "implementation",
+            "upstream_evidence",
+            "access_record",
+            "scientific_immutability",
+            "environment",
+            "validation",
+        },
+        context="publication-repair manifest",
+    )
+    require_exact_keys(
+        ratification,
+        {
+            "schema_version",
+            "status",
+            "ratified_utc",
+            "repair_manifest",
+            "incident",
+            "implementation",
+            "upstream_evidence",
+            "access_record",
+            "scientific_immutability",
+            "ratification_checks",
+            "validation",
+        },
+        context="publication-repair ratification",
+    )
+    incident = require_mapping(
+        manifest["incident"], context="publication-repair incident"
+    )
+    require_exact_keys(
+        incident,
+        {"record_path", "record_commit", "record_sha256"},
+        context="publication-repair incident",
+    )
+    require_canonical_repository_path(
+        incident["record_path"], context="publication-repair incident path"
+    )
+    require_commit(
+        incident["record_commit"], context="publication-repair incident commit"
+    )
+    require_sha256(
+        incident["record_sha256"], context="publication-repair incident hash"
+    )
+    chronology = require_mapping(
+        manifest["chronology"], context="publication-repair chronology"
+    )
+    require_exact_keys(
+        chronology,
+        {
+            "pre_outcome_publication_commit",
+            "incident_commit",
+            "implementation_commit",
+            "implementation_parent_commit",
+            "outcome_manifest_sha256",
+            "failed_extraction_after_outcome",
+            "failed_extraction_exception",
+            "failed_extraction_output_path",
+            "failed_extraction_output_absent_at_freeze",
+        },
+        context="publication-repair chronology",
+    )
+    for key in (
+        "pre_outcome_publication_commit",
+        "incident_commit",
+        "implementation_commit",
+        "implementation_parent_commit",
+    ):
+        require_commit(chronology[key], context=f"publication-repair {key}")
+    if (
+        require_bool(
+            chronology["failed_extraction_after_outcome"],
+            context="publication-repair failure chronology",
+        )
+        is not True
+        or require_bool(
+            chronology["failed_extraction_output_absent_at_freeze"],
+            context="publication-repair failed-output absence",
+        )
+        is not True
+        or chronology["failed_extraction_exception"]
+        != "PublicationDataError: PNNL adaptive-state ledger must be an object."
+        or chronology["failed_extraction_output_path"] != "publication/run6/generated"
+        or chronology["incident_commit"] != incident["record_commit"]
+        or chronology["implementation_parent_commit"] != incident["record_commit"]
+        or chronology["outcome_manifest_sha256"]
+        != evidence_records["outcome_manifest"]["sha256"]
+    ):
+        raise PublicationDataError("Publication-repair chronology changed.")
+    implementation = require_mapping(
+        manifest["implementation"], context="publication-repair implementation"
+    )
+    require_exact_keys(
+        implementation,
+        {"allowlisted_diff_status", "hashes"},
+        context="publication-repair implementation",
+    )
+    diff_status = require_mapping(
+        implementation["allowlisted_diff_status"],
+        context="publication-repair allowlisted diff",
+    )
+    hashes = validate_hash_registry(
+        implementation["hashes"],
+        context="publication-repair implementation hashes",
+    )
+    if (
+        dict(diff_status) != PUBLICATION_REPAIR_DIFF_STATUS
+        or hashes != profile.publication_implementation_hash_map()
+    ):
+        raise PublicationDataError(
+            "Publication-repair implementation scope or hashes changed."
+        )
+    upstream = require_mapping(
+        manifest["upstream_evidence"], context="publication-repair upstream evidence"
+    )
+    if dict(upstream) != {
+        role: dict(record) for role, record in sorted(evidence_records.items())
+    }:
+        raise PublicationDataError(
+            "Publication-repair upstream evidence paths or hashes changed."
+        )
+    if (
+        manifest["schema_version"]
+        != "run6-post-outcome-publication-consumer-repair-manifest-v1"
+        or manifest["status"]
+        != "post_outcome_publication_consumer_repair_implementation_frozen"
+        or manifest["access_record"] != PUBLICATION_REPAIR_ACCESS_RECORD
+        or manifest["scientific_immutability"]
+        != PUBLICATION_REPAIR_SCIENTIFIC_IMMUTABILITY
+    ):
+        raise PublicationDataError("Publication-repair manifest contract changed.")
+    require_nonempty_text(
+        manifest["created_utc"], context="publication-repair creation time"
+    )
+    environment = require_mapping(
+        manifest["environment"], context="publication-repair environment"
+    )
+    require_exact_keys(
+        environment,
+        {
+            "implementation",
+            "machine",
+            "matplotlib",
+            "numpy",
+            "platform",
+            "python",
+            "python_environment_lock_sha256",
+            "scikit_learn",
+            "scipy",
+        },
+        context="publication-repair environment",
+    )
+    for key, value in environment.items():
+        if key == "python_environment_lock_sha256":
+            require_sha256(value, context="publication-repair Python lock")
+        else:
+            require_nonempty_text(
+                value, context=f"publication-repair environment {key}"
+            )
+    validation = require_mapping(
+        manifest["validation"], context="publication-repair validation"
+    )
+    require_exact_keys(
+        validation,
+        {
+            "extractor_sha256",
+            "tests_sha256",
+            "test_command",
+            "publication_tests_passed",
+            "publication_tests_status",
+            "ruff_and_format_status",
+            "metadata_only_real_manifest_validation",
+            "generated_output_absent_at_freeze",
+        },
+        context="publication-repair validation",
+    )
+    if (
+        require_sha256(
+            validation["extractor_sha256"],
+            context="publication-repair extractor hash",
+        )
+        != hashes["publication/run6/analysis/extract_results.py"]
+        or require_sha256(
+            validation["tests_sha256"],
+            context="publication-repair tests hash",
+        )
+        != hashes["publication/run6/analysis/test_extract_results.py"]
+        or require_int(
+            validation["publication_tests_passed"],
+            context="publication-repair passing test count",
+            minimum=1,
+        )
+        != 93
+        or validation["publication_tests_status"] != "pass"
+        or validation["ruff_and_format_status"] != "pass"
+        or validation["metadata_only_real_manifest_validation"] != "pass"
+        or require_bool(
+            validation["generated_output_absent_at_freeze"],
+            context="publication-repair generated-output absence",
+        )
+        is not True
+    ):
+        raise PublicationDataError("Publication-repair validation record changed.")
+    require_nonempty_text(
+        validation["test_command"], context="publication-repair test command"
+    )
+
+    ratified_manifest = require_mapping(
+        ratification["repair_manifest"],
+        context="publication-repair ratified manifest",
+    )
+    require_exact_keys(
+        ratified_manifest,
+        {"path", "commit", "sha256"},
+        context="publication-repair ratified manifest",
+    )
+    require_canonical_repository_path(
+        ratified_manifest["path"],
+        context="publication-repair ratified manifest path",
+    )
+    require_commit(
+        ratified_manifest["commit"],
+        context="publication-repair manifest commit",
+    )
+    require_sha256(
+        ratified_manifest["sha256"],
+        context="publication-repair manifest hash",
+    )
+    ratified_implementation = require_mapping(
+        ratification["implementation"],
+        context="ratified publication-repair implementation",
+    )
+    require_exact_keys(
+        ratified_implementation,
+        {"commit", "hashes"},
+        context="ratified publication-repair implementation",
+    )
+    require_commit(
+        ratified_implementation["commit"],
+        context="ratified publication-repair implementation commit",
+    )
+    ratified_hashes = validate_hash_registry(
+        ratified_implementation["hashes"],
+        context="ratified publication-repair hashes",
+    )
+    checks = require_mapping(
+        ratification["ratification_checks"],
+        context="publication-repair ratification checks",
+    )
+    require_exact_keys(
+        checks,
+        {
+            "all_eight_upstream_hashes_reverified",
+            "allowlisted_implementation_diff_reverified",
+            "canonical_outcome_not_rerun",
+            "failed_output_absence_reverified",
+            "incident_record_reverified",
+            "production_extraction_authorized_after_ratification",
+            "schema_and_recursive_bindings_reverified",
+            "synthetic_and_metadata_only_validation_reverified",
+        },
+        context="publication-repair ratification checks",
+    )
+    if any(
+        require_bool(value, context=f"publication-repair check {key}") is not True
+        for key, value in checks.items()
+    ):
+        raise PublicationDataError("Publication-repair ratification check failed.")
+    ratified_validation = require_mapping(
+        ratification["validation"],
+        context="publication-repair ratified validation",
+    )
+    require_exact_keys(
+        ratified_validation,
+        {
+            "generated_output_absent_at_ratification",
+            "metadata_only_real_manifest_validation",
+            "publication_tests_passed",
+            "publication_tests_status",
+            "ruff_and_format_status",
+        },
+        context="publication-repair ratified validation",
+    )
+    manifest_sha256 = sha256_bytes(profile.publication_repair_manifest_bytes)
+    if (
+        ratification["schema_version"]
+        != "run6-post-outcome-publication-consumer-repair-ratification-v1"
+        or ratification["status"] != "post_outcome_publication_consumer_repair_ratified"
+        or ratified_manifest["sha256"] != manifest_sha256
+        or ratified_manifest["path"] != PUBLICATION_REPAIR_MANIFEST_PATH
+        or ratification["incident"] != incident
+        or ratification["access_record"] != manifest["access_record"]
+        or ratification["scientific_immutability"]
+        != manifest["scientific_immutability"]
+        or ratification["upstream_evidence"] != upstream
+        or ratified_implementation["commit"] != chronology["implementation_commit"]
+        or ratified_hashes != hashes
+        or require_bool(
+            ratified_validation["generated_output_absent_at_ratification"],
+            context="publication-repair ratified output absence",
+        )
+        is not True
+        or ratified_validation["metadata_only_real_manifest_validation"] != "pass"
+        or ratified_validation["publication_tests_status"] != "pass"
+        or ratified_validation["ruff_and_format_status"] != "pass"
+        or ratified_validation["publication_tests_passed"]
+        != validation["publication_tests_passed"]
+    ):
+        raise PublicationDataError(
+            "Publication-repair ratification does not recursively bind the repair."
+        )
+    require_nonempty_text(
+        ratification["ratified_utc"], context="publication-repair ratification time"
+    )
+
+    if profile.repository_root is not None:
+        if (
+            chronology["pre_outcome_publication_commit"]
+            != PRE_OUTCOME_PUBLICATION_COMMIT
+            or chronology["incident_commit"] != PUBLICATION_INCIDENT_COMMIT
+            or chronology["implementation_commit"]
+            != PUBLICATION_REPAIR_IMPLEMENTATION_COMMIT
+            or incident["record_path"] != PUBLICATION_INCIDENT_PATH
+            or ratified_manifest["commit"] != PUBLICATION_REPAIR_MANIFEST_COMMIT
+        ):
+            raise PublicationDataError(
+                "Publication-repair immutable Git chronology changed."
+            )
+        manifest_path = require_canonical_repository_file(
+            profile.repository_root / PUBLICATION_REPAIR_MANIFEST_PATH,
+            repository_root=profile.repository_root,
+            relative=PUBLICATION_REPAIR_MANIFEST_PATH,
+            context="publication-repair manifest",
+        )
+        ratification_path = require_canonical_repository_file(
+            profile.repository_root / PUBLICATION_REPAIR_RATIFICATION_PATH,
+            repository_root=profile.repository_root,
+            relative=PUBLICATION_REPAIR_RATIFICATION_PATH,
+            context="publication-repair ratification",
+        )
+        if (
+            manifest_path.read_bytes() != profile.publication_repair_manifest_bytes
+            or ratification_path.read_bytes()
+            != profile.publication_repair_ratification_bytes
+            or sha256_bytes(
+                git_blob(
+                    profile.repository_root,
+                    incident["record_commit"],
+                    incident["record_path"],
+                )
+            )
+            != incident["record_sha256"]
+        ):
+            raise PublicationDataError(
+                "Publication-repair working records or incident anchor changed."
+            )
+
+    records = {
+        "publication_repair_manifest": {
+            "path": PUBLICATION_REPAIR_MANIFEST_PATH,
+            "sha256": manifest_sha256,
+        },
+        "publication_repair_ratification": {
+            "path": PUBLICATION_REPAIR_RATIFICATION_PATH,
+            "sha256": sha256_bytes(profile.publication_repair_ratification_bytes),
+        },
+    }
+    return manifest, ratification, records
 
 
 def close(left: float, right: float) -> bool:
@@ -5555,9 +6061,17 @@ def write_manuscript_contract(
             "outcomes_or_pnnl_accessed_before_repair": False,
             "completed_randomization_before_repair": False,
             "detector_rerun": False,
+            "post_outcome_publication_consumer_repair": {
+                "outcome_production_complete_before_repair": True,
+                "outcome_manifest_reached_by_failed_extractor": False,
+                "human_performance_values_inspected_to_select_repair": False,
+                "scientific_producer_or_result_changed": False,
+                "outcome_blind_or_preregistered_claim": False,
+            },
             "claim": (
-                "This is a disclosed validator amendment, not detector-blind "
-                "repair or fully preregistered end-to-end execution."
+                "The execution repair and later publication-consumer amendment "
+                "are disclosed; neither supports detector-blind, outcome-blind, "
+                "or fully preregistered end-to-end language."
             ),
         },
         "unsupported_manuscript_fields": {
@@ -5701,6 +6215,9 @@ def write_bundle(
     original_ratification: Mapping[str, Any],
     repair_manifest: Mapping[str, Any],
     repair_ratification: Mapping[str, Any],
+    publication_repair_manifest: Mapping[str, Any],
+    publication_repair_ratification: Mapping[str, Any],
+    publication_provenance_records: Mapping[str, Mapping[str, str]],
 ) -> None:
     if output.exists() and any(output.iterdir()):
         raise PublicationDataError("Publication output directory must be empty.")
@@ -5753,11 +6270,15 @@ def write_bundle(
                 }
             )
         bundle_manifest = {
-            "schema_version": "run6-publication-bundle-v5",
+            "schema_version": "run6-publication-bundle-v6",
             "evidence_inputs": {
                 role: dict(record) for role, record in sorted(evidence_records.items())
             },
-            "dual_provenance": {
+            "publication_provenance_inputs": {
+                role: dict(record)
+                for role, record in sorted(publication_provenance_records.items())
+            },
+            "provenance": {
                 "original_detector_chain": {
                     "ratification_status": original_ratification["status"],
                     "ratification_path": evidence_records["freeze_ratification"][
@@ -5790,10 +6311,41 @@ def write_bundle(
                     ]["sha256"],
                     "access_record": dict(repair_ratification["access_record"]),
                 },
+                "post_outcome_publication_consumer_repair": {
+                    "status": publication_repair_ratification["status"],
+                    "incident": dict(publication_repair_ratification["incident"]),
+                    "implementation_commit": publication_repair_ratification[
+                        "implementation"
+                    ]["commit"],
+                    "repair_manifest_commit": publication_repair_ratification[
+                        "repair_manifest"
+                    ]["commit"],
+                    "repair_manifest_path": publication_provenance_records[
+                        "publication_repair_manifest"
+                    ]["path"],
+                    "repair_manifest_sha256": publication_provenance_records[
+                        "publication_repair_manifest"
+                    ]["sha256"],
+                    "repair_ratification_path": publication_provenance_records[
+                        "publication_repair_ratification"
+                    ]["path"],
+                    "repair_ratification_sha256": publication_provenance_records[
+                        "publication_repair_ratification"
+                    ]["sha256"],
+                    "access_record": dict(
+                        publication_repair_ratification["access_record"]
+                    ),
+                    "scientific_immutability": dict(
+                        publication_repair_manifest["scientific_immutability"]
+                    ),
+                },
                 "interpretation": (
                     "The detector was produced under the original pre-access "
                     "freeze. Consumer validation and all downstream arms use a "
-                    "separate post-detector, pre-outcome repair ratification."
+                    "separate post-detector, pre-outcome repair ratification. "
+                    "A later publication-consumer-only repair was ratified "
+                    "after outcome completion and changes no scientific evidence "
+                    "or gate."
                 ),
             },
             "decision": {
@@ -5936,6 +6488,14 @@ def _run_with_validation_profile(
         pnnl_manifest=pnnl,
         repair_ratification_path=paths["repair_ratification"],
     )
+    (
+        publication_repair_manifest,
+        publication_repair_ratification,
+        publication_provenance_records,
+    ) = validate_publication_repair_provenance(
+        profile=profile,
+        evidence_records=evidence_records,
+    )
     write_bundle(
         args.output_dir.resolve(),
         evidence_records=evidence_records,
@@ -5954,6 +6514,9 @@ def _run_with_validation_profile(
         original_ratification=original_ratification,
         repair_manifest=repair_manifest,
         repair_ratification=repair_ratification,
+        publication_repair_manifest=publication_repair_manifest,
+        publication_repair_ratification=publication_repair_ratification,
+        publication_provenance_records=publication_provenance_records,
     )
     print(conclusion_sentence(decision["overall_run6_advantage"]))
     print(f"Publication bundle: {args.output_dir.resolve()}")
