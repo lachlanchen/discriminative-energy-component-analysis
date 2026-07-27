@@ -1,0 +1,360 @@
+{
+  "protocol_id": "run6-google2022-v2",
+  "status": "frozen_before_held_value_access",
+  "data_status": "real_hardware_author_identified_approximate_event",
+  "normative_method_spec": {
+    "path": "references/run6_method_lock_recommendations.md",
+    "sha256": "c87e37376334e39fb337bd073d028b6390fe583af4ba95a91d0349a2a91c0a6e"
+  },
+  "source": {
+    "record_url": "https://zenodo.org/records/6804040",
+    "doi": "10.5281/zenodo.6804040",
+    "license": "CC BY 4.0",
+    "archive": "google_qec3v5_experiment_data.zip",
+    "archive_bytes": 315490804,
+    "md5": "a7fd8b481c3087090093106382dc217d",
+    "sha256": "ef569742126b305e163cc7fccbf6275e03bdd54d090dffb1aef12a78af0a74c4",
+    "experiment": "repetition_code_bZ_d25_r50_center_5_5",
+    "shots": 500000,
+    "distance": 25,
+    "measurement_rounds": 50,
+    "detector_round_roles": 51,
+    "checks_per_round_role": 24,
+    "detectors_per_shot": 1224,
+    "detection_event_file": "detection_events.b8",
+    "detection_event_file_bytes": 76500000
+  },
+  "shot_splits": {
+    "validation_a": [0, 10000],
+    "validation_b": [10000, 20000],
+    "held_reference": [20000, 40000],
+    "held_monitor": [40000, 60000],
+    "untouched_future": [60000, 500000]
+  },
+  "validation_pair_phases": {
+    "fit_warmup_pair_indices": [0, 5000],
+    "threshold_pair_indices": [5000, 10000],
+    "threshold_and_held_clone_same_post_warmup_checkpoint": true,
+    "threshold_state_never_carried_into_held": true
+  },
+  "event_windows": {
+    "primary": [57750, 57800],
+    "narrow": [57770, 57780],
+    "wide": [57725, 57825],
+    "readme_prose_anchor_approximate": 57775,
+    "readme_grep_line_one_based": 57775,
+    "grep_line_stored_index_zero_based": 57774
+  },
+  "detector_parser": {
+    "coordinate_source": "every DETECTOR(x,y,t) declaration in circuit_ideal.stim",
+    "packed_bit_source_order": "global Stim DETECTOR declaration order",
+    "canonical_key": ["detector_x", "detector_y"],
+    "canonical_order": "lexicographic increasing (detector_x, detector_y)",
+    "roles": "integer detector time coordinate t=0..50",
+    "boundary_declaration_order_differs": [0, 50],
+    "bit_order_within_byte": "little",
+    "bytes_per_shot": 153,
+    "shot_byte_aligned": true,
+    "padding_bits_per_shot": 0,
+    "expected_file_bytes": 76500000,
+    "logical_flatten_order": ["shot", "role", "canonical_check"],
+    "empirical_cycle_index": "51*local_pair_index+role",
+    "one_based_formal_time": "local_pair_index+1 at the complete-paired-shot unit",
+    "naive_reshape_forbidden": true,
+    "require_24_unique_checks_per_role": true,
+    "require_identical_canonical_check_set_across_roles": true
+  },
+  "pairing": {
+    "validation": "validation_a[i] with validation_b[i]",
+    "held": "held_reference[i] with held_monitor[i]",
+    "match_round_role": true,
+    "preserve_shot_order": true,
+    "role_processing_order": "0..50",
+    "adaptive_state_sharing": "separate_state_for_each_of_51_roles",
+    "updates_per_held_episode": 1020000,
+    "formal_accumulator_unit": "complete_paired_shot",
+    "formal_accumulator_updates_per_held_episode": 20000,
+    "formal_role_experts": 51,
+    "formal_role_prior": "uniform_1_over_51",
+    "within_shot_factor_compounding": false
+  },
+  "features": {
+    "global_detector_rate": true,
+    "raw_check_bits": 24,
+    "all_pair_equalities": 276,
+    "sparse_feature_dimension": 300,
+    "feature_order": "24 raw canonical checks then lexicographic pairs (0,1),(0,2),...,(22,23)",
+    "spectral_state": "z z^T / 24 where z=1-2e",
+    "geometry_selected_after_data": false
+  },
+  "methods": {
+    "dfr": {
+      "score": "mean(e_monitor)-mean(e_reference)",
+      "two_sided_bet_magnitudes": [0.1, 0.3, 0.6, 0.9],
+      "signed_component_order": [0.1, -0.1, 0.3, -0.3, 0.6, -0.6, 0.9, -0.9],
+      "component_prior": "uniform_1_over_8",
+      "empirical_cycle_score": "absolute_score"
+    },
+    "within_shot_page_cusum": {
+      "status": "mandatory_empirical_contextual_control",
+      "channels": "global_dfr_plus_24_raw_paired_check_differences",
+      "two_sided": true,
+      "drift_allowances": [0.01, 0.05, 0.1],
+      "reset": "start_of_every_paired_shot",
+      "empirical_cycle_score": "maximum_positive_or_negative_cusum_over_channels_and_allowances",
+      "exact_e_factor_claim": false,
+      "advantage_gate_comparator": false
+    },
+    "diagonal_likelihood": {
+      "fit_validation_pair_indices": [0, 5000],
+      "pool_reference_and_monitor_sides": true,
+      "fit_separately_for_each_role_and_check": true,
+      "jeffreys_pseudocount": 0.5,
+      "probability_clip": [0.0001, 0.9999],
+      "nll_reduction": "mean_over_24_checks",
+      "normalizer": "log((1-0.0001)/0.0001)",
+      "two_sided_bet_magnitudes": [0.1, 0.3, 0.6, 0.9],
+      "component_prior": "uniform_1_over_8",
+      "update_after_fit": false,
+      "empirical_cycle_score": "absolute_bounded_nll_difference"
+    },
+    "hotelling": {
+      "estimator": "LedoitWolf",
+      "assume_centered": true,
+      "feature_bank": "paired_300_dimensional_phi_difference",
+      "fit_validation_pair_indices": [0, 5000],
+      "fit_cycle_pairs": 20000,
+      "selection_rng": "numpy.random.Generator(PCG64(610601))",
+      "selection_per_role": "393 pairs for roles 0..7 and 392 pairs for roles 8..50, sampled without replacement and sorted",
+      "centering": "separate selected-sample mean for every role then pooled residual covariance",
+      "precision_symmetrization": "(precision+precision.T)/2",
+      "negative_roundoff_tolerance": 1e-12,
+      "online_update": false,
+      "exact_e_factor_claim": false
+    },
+    "online_logistic": {
+      "learning_rates": [0.001, 0.01, 0.1],
+      "l2": 0.0001,
+      "orientation": "monitor_is_positive",
+      "loss": "log(1+exp(-w_dot_difference))+0.5*l2*norm2(w)^2",
+      "optimizer": "one_overflow_safe_pairwise_SGD_step",
+      "intercept": false,
+      "initial_weights": "all_zero_per_role_and_learning_rate",
+      "score": "tanh(w_dot_difference/max(1,l1_norm(w)))",
+      "update_after_score": true,
+      "bet_fractions": [0.1, 0.3, 0.6, 0.9],
+      "expert_component_prior": "uniform_1_over_12",
+      "empirical_cycle_score": "maximum_score_over_learning_rates"
+    },
+    "space_sparse": {
+      "half_lives_role_updates": [4, 16, 64, 256],
+      "decay": "2^(-1/half_life)",
+      "initial_ewma": "all_zero_per_role_and_half_life",
+      "ewma_bias_correction": false,
+      "top_k": [1, 4, 16, 64],
+      "tie_rule": "descending_absolute_ewma_then_ascending_feature_index",
+      "zero_state_witness": "all_zero",
+      "selected_zero_sign": "positive",
+      "bet_fractions": [0.1, 0.3, 0.6, 0.9],
+      "component_prior": "uniform_1_over_64",
+      "update_after_score": true,
+      "empirical_cycle_score": "maximum_score_over_half_life_and_top_k"
+    },
+    "space_spectral": {
+      "half_lives_role_updates": [4, 16, 64],
+      "decay": "2^(-1/half_life)",
+      "initial_ewma_and_effect": "all_zero_per_role_half_life_and_rank",
+      "ewma_bias_correction": false,
+      "ranks": [1, "positive"],
+      "effect_update_stride_role_updates": 8,
+      "stride_phase": "recompute_after_updates_8_16_24_and_use_on_following_observation",
+      "bet_fractions": [0.1, 0.3, 0.6, 0.9],
+      "eigenvalue_tolerance": 1e-10,
+      "rank_one_degeneracy": "choose_largest_top_eigenspace_projector_diagonal_then_smallest_tied_coordinate",
+      "no_positive_eigenvalue_effect": "zero",
+      "component_prior": "uniform_1_over_24",
+      "update_after_score": true,
+      "empirical_cycle_score": "maximum_score_over_half_life_and_rank"
+    },
+    "space_composite": {
+      "fixed_branch_prior": {
+        "space_sparse": 0.5,
+        "space_spectral": 0.5
+      },
+      "empirical_cycle_score": "max(space_sparse,space_spectral)",
+      "branch_selection_from_held": false,
+      "primary_proposed_method": true
+    }
+  },
+  "accumulators": {
+    "primary": {
+      "kind": "proper_prior_e_process",
+      "start_prior": "uniform_over_declared_horizon",
+      "horizon_unit": "complete_paired_shot",
+      "horizon_shots": 20000,
+      "randomization_horizon_shots": 5000,
+      "role_component_experts": true,
+      "role_prior": "uniform_1_over_51",
+      "alpha": 0.01,
+      "threshold": 100.0,
+      "reset_in_episode": false,
+      "numeric_domain": "float64_log_domain"
+    },
+    "secondary": {
+      "kind": "mixture_shiryaev_roberts_e_detector",
+      "gamma_shots": 1000000,
+      "formal_summary": "first_crossing_only",
+      "reset_in_episode": false,
+      "numeric_domain": "float64_log_domain"
+    }
+  },
+  "empirical_operating_points": {
+    "threshold_validation_pair_indices": [5000, 10000],
+    "primary": {
+      "unit": "paired_cycle_role",
+      "alerts_per_opportunity": 0.00001,
+      "validation_opportunities": 255000,
+      "maximum_validation_alerts": 2
+    },
+    "secondary": {
+      "unit": "paired_shot",
+      "alerts_per_opportunity": 0.0001,
+      "validation_opportunities": 5000,
+      "maximum_validation_alerts": 0
+    },
+    "shot_aggregation": "maximum_cycle_score_over_roles_0_to_50",
+    "notification_rule": "strict_score_greater_than_threshold",
+    "threshold_rule": "smallest_observed_or_infinite_threshold_with_state_machine_alert_count_at_most_budget",
+    "tie_rule": "strict_greater_than_is_conservative",
+    "notifications_per_shot": 1,
+    "after_notification": "suppress_remaining_notifications_in_shot_but_continue_all_updates",
+    "next_shot_cooldown": false,
+    "witness_reset_on_alert": false,
+    "complete_frontier_required": true
+  },
+  "randomization_audit": {
+    "replicates": 256,
+    "replicate_seeds": "610700+b for b=0..255",
+    "rng": "numpy.random.Generator(PCG64)",
+    "pair_indices": [5000, 10000],
+    "swap_draw": "one integers(0,2,size=5000,dtype=uint8) call per replicate",
+    "swap_unit": "complete_paired_shot",
+    "same_orientation_for_all_51_roles": true,
+    "restore_same_post_warmup_checkpoint_each_replicate": true,
+    "primary_process": "fixed_space_composite",
+    "primary_statistic": "ever_eprocess_crosses_100",
+    "horizon_unit": "complete_paired_shot",
+    "horizon_shots": 5000,
+    "alpha": 0.01,
+    "interval": "two_sided_95_percent_Clopper_Pearson",
+    "familywide_optional_threshold": 600.0
+  },
+  "risk_audit": {
+    "open_labels_only_after_detector_freeze": true,
+    "labels": [
+      "obs_flips_actual.01",
+      "obs_flips_predicted_by_correlated_matching.01",
+      "obs_flips_predicted_by_pymatching.01"
+    ],
+    "primary_label": "actual_xor_correlated_matching_prediction",
+    "secondary_label": "actual_xor_pymatching_prediction",
+    "alert_rates_per_shot": [0.0001, 0.001, 0.01],
+    "alert_budgets_shots": [2, 20, 200],
+    "primary_alert_budget_shots": 20,
+    "ranking": "descending_frozen_shot_score_then_ascending_archive_shot",
+    "bootstrap": {
+      "kind": "paired_circular_moving_complete_shot_blocks",
+      "block_length_shots": 128,
+      "replicates": 2000,
+      "seeds": "611000+b for b=0..1999",
+      "rng": "numpy.random.Generator(PCG64)",
+      "interval": "percentile_95"
+    }
+  },
+  "decision": {
+    "predesignated_comparators": ["dfr", "online_logistic"],
+    "mandatory_contextual_controls": [
+      "within_shot_page_cusum",
+      "diagonal_likelihood",
+      "hotelling"
+    ],
+    "google_primary_pass_all": [
+      "fixed_space_composite_alerts_inside_primary_event_window_at_locked_primary_threshold",
+      "fixed_space_composite_has_at_most_9_pre_event_alerts",
+      "detector_scores_thresholds_and_resource_ledger_frozen_before_outcome_access",
+      "space_top20_primary_mismatch_capture_at_least_dfr_plus_1",
+      "space_top20_primary_mismatch_capture_at_least_online_logistic_plus_1",
+      "all_window_sensitivity_and_uncertainty_results_reported",
+      "no_method_received_extra_detector_records_or_outcome_labels"
+    ],
+    "pnnl_auxiliary_required": true,
+    "untouched_google_alternative_for_retention": false,
+    "overall_run6_advantage": "google_primary_pass AND pnnl_retention_pass",
+    "default_if_any_predicate_fails": "no_demonstrated_space_algorithmic_advantage",
+    "score_comparison_tolerance": "abs(a-b)<=1e-12+1e-12*max(abs(a),abs(b))"
+  },
+  "uncertainty": {
+    "natural_event_miss_probability_forbidden": true,
+    "threshold_bootstrap": {
+      "status": "descriptive_only",
+      "block_length_shots": 128,
+      "replicates": 2000,
+      "seeds": "613000+b for b=0..1999",
+      "rng": "numpy.random.Generator(PCG64)"
+    }
+  },
+  "numeric_policy": {
+    "floating_dtype": "float64",
+    "score_bound_tolerance": 1e-12,
+    "eigenvalue_tolerance": 1e-10,
+    "eprocess_threshold_comparison": ">=",
+    "empirical_threshold_comparison": ">",
+    "implicit_global_rng_forbidden": true,
+    "component_pruning_forbidden": true,
+    "thread_environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "resource_ledger": {
+    "fit_warmup": {
+      "paired_shots": 5000,
+      "physical_archived_shots": 10000,
+      "paired_role_updates": 255000,
+      "detector_bits_exposed": 12240000
+    },
+    "threshold": {
+      "paired_shots": 5000,
+      "physical_archived_shots": 10000,
+      "paired_role_updates": 255000,
+      "detector_bits_exposed": 12240000
+    },
+    "held": {
+      "paired_shots": 20000,
+      "physical_archived_shots": 40000,
+      "paired_role_updates": 1020000,
+      "detector_bits_exposed": 48960000
+    },
+    "timing_repetitions": 3,
+    "timing_summary": "median_and_all_three",
+    "unreported_warmup_replay": 1,
+    "timing_scope": "joint_detector_pipeline_from_identical_warm_checkpoint",
+    "relative_method_speed_claim_authorized": false,
+    "all_replay_digests_must_match": true,
+    "threads": 1,
+    "outcome_join_excluded_from_detector_timing": true
+  },
+  "output_contract": {
+    "cycle_arrays": "non_object_npy_per_phase_and_method_with_canonical_json_sidecars",
+    "shot_table": "threshold_and_held_canonical_csv_with_rank_cumulative_alert_and_window_metadata",
+    "component_summary": "canonical_json",
+    "detector_freeze_manifest": "canonical_json_with_sha256_for_every_artifact",
+    "outcome_table": "physically_separate_and_requires_matching_detector_manifest_hash",
+    "decision_summary": "canonical_json_with_every_atomic_predicate",
+    "pickle_forbidden": true,
+    "unknown_or_missing_schema_fields": "error"
+  },
+  "deviation_ledger": "experiments/run6/deviations.json"
+}

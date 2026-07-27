@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "deca-experiments"
-version = "5.0.0"
+version = "6.0.0"
 description = "Reproducible accessible-observable contrast and change-detection research"
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -47,4 +47,5 @@ testpaths = [
   "run3/tests",
   "run4/tests",
   "run5/tests",
+  "run6/tests",
 ]

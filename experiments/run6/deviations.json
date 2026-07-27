@@ -1,0 +1,9 @@
+{
+  "schema_version": "run6-deviation-ledger-v1",
+  "protocol_ids": [
+    "run6-google2022-v2",
+    "run6-pnnl-snapshot-v2",
+    "run6-pnnl-pittsburgh-metadata-lock-v2"
+  ],
+  "entries": []
+}

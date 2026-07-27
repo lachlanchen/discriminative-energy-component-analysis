@@ -1,0 +1,64 @@
+{
+  "protocol_id": "run6-pnnl-snapshot-v2",
+  "status": "frozen_before_held_value_access",
+  "data_status": "constructed_boundary_between_real_hardware_snapshot_cohorts",
+  "source": {
+    "record_url": "https://zenodo.org/records/20768087",
+    "doi": "10.5281/zenodo.20768087",
+    "license": "CC BY 4.0",
+    "release_version": "0.1",
+    "backends": ["ibm_kingston", "ibm_pittsburgh", "ibm_fez"]
+  },
+  "roles": {
+    "pilot_backend": "ibm_kingston",
+    "held_backend": "ibm_pittsburgh",
+    "no_exact_repeat_backend": "ibm_fez"
+  },
+  "normative_pittsburgh_manifest": {
+    "path": "experiments/run6/configs/pnnl_pittsburgh_locked.json",
+    "sha256": "14435b7b09fe3b103889260645aa014cb7ff22b84686f13fa21ae9a11e9e0702"
+  },
+  "normative_auxiliary_spec": {
+    "path": "references/run6_pnnl_locked_manifest_recommendations.md",
+    "sha256": "5b743a791162bacf68e1916f07cf47fc62b9be722585db222932a43569b6daa9"
+  },
+  "cohort_filter": {
+    "same_backend": true,
+    "same_distance_rounds_basis": true,
+    "same_oriented_qasm_derived_path": true,
+    "state0_state1_path_must_agree": true,
+    "distinct_full_calibration_hash": true,
+    "minimum_shots_per_state_per_cohort": 2048,
+    "choose_dates": "earliest_and_latest_backend_property_date",
+    "choose_duplicate_date_job": "largest_shot_count_then_lexicographic_path",
+    "do_not_infer_path_from_register_suffix": true
+  },
+  "stream_construction": {
+    "logical_states_are_separate_replicates": true,
+    "baseline_partition": [
+      "reference_pre",
+      "monitor_pre",
+      "reference_post"
+    ],
+    "partition_sizes": "floor(earlier_cohort_shots/3) each",
+    "post_monitor": "first partition_size shots of later cohort",
+    "pre_pairs": "reference_pre[i] with monitor_pre[i]",
+    "post_pairs": "reference_post[i] with post_monitor[i]",
+    "boundary": "after all pre pairs",
+    "primary_detection_events": "r by (d-1), no terminal detector",
+    "terminal_detector_ablation": false
+  },
+  "features_and_methods": "dimension-adapted definitions and fixed space_composite from the hash-pinned Google v2 config and Pittsburgh manifest",
+  "claim_labels": {
+    "byte_identical_complete_qasm": "circuit_controlled_cross_property_snapshot",
+    "different_complete_qasm": "circuit_and_hardware_domain_shift",
+    "temporal_drift": "forbidden"
+  },
+  "uncertainty_unit": "qasm_derived_physical_path_by_snapshot_pair",
+  "advantage_retention_rule": {
+    "comparison_methods": ["dfr", "online_logistic", "space_sparse", "space_spectral", "space_composite"],
+    "target_method": "space_composite",
+    "required_direction": "fixed space_composite no-worse pre-false-alarm count and strictly lower macro restricted delay versus both dfr and online_logistic",
+    "post_selection": "forbidden"
+  }
+}

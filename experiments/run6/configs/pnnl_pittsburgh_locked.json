@@ -1,0 +1,606 @@
+{
+  "manifest_id": "run6-pnnl-pittsburgh-metadata-lock-v2",
+  "status": "frozen_before_held_value_access",
+  "created_from": {
+    "allowed_inputs": [
+      "info.json",
+      "calibration.json",
+      "circuit_state0.qasm",
+      "circuit_state1.qasm",
+      "filesystem metadata for bitstrings.json"
+    ],
+    "held_bitstring_content_read": false,
+    "held_bitstring_hash_computed": false,
+    "selection_used_syndrome_or_data_values": false
+  },
+  "parent_artifacts": {
+    "experiments/run6/configs/google2022_locked.json": "07d330ae337dabbdfcbcb1b77b3bbf15c0b4832848ad64635fa3934f01b29d43",
+    "references/run6_real_qec_preregistered_plan.md": "fb34f0f68f5b701dc1445da5a29803ff8243806362929eba2625632275c59bb0",
+    "references/run6_pnnl_snapshot_audit.md": "a25616b656f1cc93e23d41c3a5740240a3dccdb53b0b49bb5b26858abc6dd2b2",
+    "references/run6_real_qec_data_and_comparator_audit.md": "bb7ba7131699b205168e322f10a3cce75c9535f34af5e04019847ffdbd914156",
+    "references/run6_preregistration_adversarial_audit.md": "28d431c9ac95b3f396ccb091c95c14051d1f1a685fd9272f465ea59b42b35aee"
+  },
+  "source": {
+    "record_url": "https://zenodo.org/records/20768087",
+    "doi": "10.5281/zenodo.20768087",
+    "release_version": "0.1",
+    "license": "CC BY 4.0",
+    "backend": "ibm_pittsburgh",
+    "artifact_root": "experiments/data/run6/pnnl_ibm/ibm_pittsburgh",
+    "logical_states": [
+      0,
+      1
+    ]
+  },
+  "held_payload_policy": {
+    "before_ratification": "never open, parse, stream, grep, hash, summarize, or statistically inspect any selected bitstrings.json",
+    "metadata_only_exception": "path existence and st_size from stat are allowed",
+    "after_ratification": "the runner may open only the exact snapshot/register/state rows listed in this manifest",
+    "first_unblinding_record": "record UTC time, git commit, manifest SHA256, package lock, and raw SHA256 of each opened bitstrings.json before computing scores",
+    "data_register_use": "after ratification, parse c_data integers only for strict structural, shape, and binary-domain validation; never supply c_data values to detector features, alarm calibration, retention metrics, or logical-risk claims"
+  },
+  "hash_profiles": {
+    "raw_sha256_v1": {
+      "input": "exact file bytes",
+      "algorithm": "SHA-256"
+    },
+    "python_json_canonical_v1": {
+      "decode": "UTF-8 with an optional leading BOM removed",
+      "parse": "reject duplicate object keys and reject NaN, Infinity, and -Infinity",
+      "serialize": "CPython json.dumps(obj, sort_keys=True, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf-8')",
+      "trailing_newline": false,
+      "algorithm": "SHA-256",
+      "scope": "semantic audit and calibration cohort identity",
+      "not_claimed": "RFC 8785/JCS"
+    },
+    "qasm_text_normalized_v1": {
+      "decode": "UTF-8 with an optional leading BOM removed",
+      "newline_normalization": "replace CRLF and CR with LF",
+      "line_normalization": "strip trailing ASCII space and tab from every line",
+      "file_end": "remove all final blank lines and append exactly one LF",
+      "algorithm": "SHA-256",
+      "scope": "audit only; never upgrades changed raw QASM to byte-identical QASM"
+    },
+    "state_pair_sha256_v1": {
+      "input": "python_json_canonical_v1 bytes of {'state0_sha256': H0, 'state1_sha256': H1}",
+      "algorithm": "SHA-256",
+      "state_order": [
+        0,
+        1
+      ]
+    },
+    "snapshot_identity": [
+      "backend",
+      "calibration.python_canonical_sha256"
+    ],
+    "selection_requires": [
+      "distinct calibration.python_canonical_sha256",
+      "distinct backend-property UTC instants"
+    ],
+    "circuit_control_label_requires": "equality of both raw state QASM SHA256 values, equivalently raw state-pair SHA256 equality"
+  },
+  "directory_and_qasm_parser": {
+    "relative_job_regex": "^d(?P<distance>[0-9]+)_r(?P<rounds>[0-9]+)/job_(?P<job>[0-9]+)$",
+    "cross_checks": [
+      "directory distance equals info.json d",
+      "directory rounds equals info.json rounds",
+      "info.json backend equals ibm_pittsburgh",
+      "info.json logical_states equals [0,1]",
+      "info.json shots is at least 2048",
+      "info.json n_chains is positive"
+    ],
+    "declaration_regex": "^\\s*bit\\[([0-9]+)\\]\\s+(c_(data|syndrome)_([A-Za-z0-9_]+))\\s*;\\s*(?://.*)?$",
+    "measurement_regex": "^\\s*(c_(data|syndrome)_([A-Za-z0-9_]+))\\[([0-9]+)\\]\\s*=\\s*measure\\s+\\$([0-9]+)\\s*;\\s*(?://.*)?$",
+    "required_data_length": "distance",
+    "required_syndrome_length": "rounds*(distance-1)",
+    "index_coverage": "each declared data and syndrome index must be measured exactly once",
+    "syndrome_flat_index": "t*(distance-1)+i",
+    "stable_ancilla_rule": "the physical qubit measured at syndrome index t*(distance-1)+i must be identical for every t at fixed i",
+    "oriented_path": "(D[0],A[0],D[1],A[1],...,D[d-2],A[d-2],D[d-1])",
+    "state_agreement": "state0 and state1 must have identical D, A, and oriented path for the selected register suffix",
+    "duplicate_path_rule": "fail if two register suffixes in one state QASM resolve to the same oriented path",
+    "reversal_rule": "never merge a path with its reversal",
+    "register_suffix_rule": "use only to locate JSON/QASM register names; never infer physical qubits from the suffix",
+    "manifest_check": "parsed D, A, and oriented path must exactly equal the cohort row"
+  },
+  "bitstring_parser_after_unblinding": {
+    "top_level": "JSON array",
+    "state_selection": "select by entry.metadata.logical_state, never array position",
+    "required_states": "exactly one entry each for logical_state 0 and 1",
+    "metadata_checks": [
+      "metadata.logical_state is 0 or 1",
+      "metadata.n_syndrome_rounds equals snapshot rounds",
+      "metadata.basis equals snapshot basis"
+    ],
+    "register_container": "per_shot_cregs",
+    "data_key": "c_data_<register_suffix>",
+    "syndrome_key": "c_syndrome_<register_suffix>",
+    "required_rows": "info.json shots",
+    "data_shape": "[shots,distance]",
+    "syndrome_shape": "[shots,rounds*(distance-1)]",
+    "value_domain": "JSON integer 0 or 1 only; reject booleans, floats, strings, nulls, ragged rows, and missing rows",
+    "syndrome_tensor": "S[n,t,i]=syndrome[n,t*(distance-1)+i]",
+    "detection_events": {
+      "first_round": "chi[n,0,i]=S[n,0,i]",
+      "later_rounds": "chi[n,t,i]=S[n,t,i] XOR S[n,t-1,i] for t>=1",
+      "shape": "[shots,rounds,distance-1]",
+      "terminal_detector": false,
+      "flattening_for_storage_only": "C order over (t,i)"
+    }
+  },
+  "cohort_selection": {
+    "group_key": [
+      "backend",
+      "distance",
+      "rounds",
+      "basis",
+      "QASM-derived oriented path"
+    ],
+    "eligibility": [
+      "state0 and state1 path maps agree",
+      "shots per state is at least 2048",
+      "at least two distinct backend-property UTC instants",
+      "at least two distinct full python-canonical calibration hashes"
+    ],
+    "date_order": "parse calibration.last_update_date as an offset-aware ISO datetime and compare UTC instants",
+    "selected_dates": "earliest and latest eligible property-date UTC instants",
+    "duplicate_date_tie_break": "largest info.json shots, then lexicographically smallest POSIX relative job path",
+    "no_value_dependent_filtering": true,
+    "audit_counts": {
+      "state0_state1_path_agree_chain_instances": 852,
+      "unique_configuration_path_groups": 837,
+      "eligible_selected_groups": 11,
+      "basis_counts": {
+        "X": 7,
+        "Z": 4
+      },
+      "raw_qasm_identical_selected_pairs": 0,
+      "normalized_qasm_identical_selected_pairs": 0
+    }
+  },
+  "stream_construction": {
+    "states_are_separate_replicates": true,
+    "row_pairing": "equal zero-based row index only within the same logical state and same round role",
+    "cross_state_pairing": false,
+    "path_pooling_before_scoring": false,
+    "m": "min(floor(early shots/3), late shots)",
+    "early_reference_pre": "[0,m)",
+    "early_monitor_pre": "[m,2m)",
+    "early_reference_post": "[2m,3m)",
+    "late_post_monitor": "[0,m)",
+    "pre_pair": "early_reference_pre[i] as A with early_monitor_pre[i] as B",
+    "post_pair": "early_reference_post[i] as A with late_post_monitor[i] as B",
+    "boundary": "after all pre pairs",
+    "update_order": "shot-major then round-major",
+    "paired_cycle_contrast": "B minus A at the same shot-pair index and round role",
+    "fit_prefix_shots": "floor(m/2) first pre pairs",
+    "pre_surveillance_shots": "m-floor(m/2) remaining pre pairs",
+    "post_surveillance_shots": "m post pairs",
+    "state_at_boundary": "no detector, witness, or accumulator reset at the constructed cohort boundary",
+    "resource_accounting": "each pair consumes two physical circuit shots; report shots, cycles, bits, fit updates, surveillance updates, runtime, peak memory, and eigendecompositions"
+  },
+  "features_and_methods": {
+    "inherited_from": "experiments/run6/configs/google2022_locked.json",
+    "method_order": [
+      "dfr",
+      "online_logistic",
+      "space_sparse",
+      "space_spectral",
+      "space_composite"
+    ],
+    "q": "distance-1",
+    "global_detector_rate": "g(e)=sum(e)/q",
+    "sparse_feature": "phi(e)=(e_1,...,e_q,{(1+z_i*z_j)/2}_{i<j}), z=1-2e",
+    "sparse_dimension": "q*(q+1)/2",
+    "sparse_top_k_adaptation": "retain only k in [1,4,16,64] with k<=sparse_dimension; never clamp or duplicate k",
+    "spectral_state": "R(e)=z*z^T/q",
+    "spectral_rank_positive": "number of eigenvalues strictly greater than 1e-10",
+    "all_hyperparameter_components": "fixed uniform mixtures; no PNNL-dependent tuning or component selection",
+    "update_after_score": true,
+    "online_state_fit": "process the fit prefix causally using original A/B orientation; preserve learned witness/EWMA state but reset only the alarm accumulator before surveillance",
+    "space_composite": "fixed prior mass 1/2 on sparse and 1/2 on spectral, with each branch internally renormalized after dimension-ineligible sparse k values are removed",
+    "target_method": "space_composite",
+    "sibling_ablations_not_eligible_for_target_selection": [
+      "space_sparse",
+      "space_spectral"
+    ]
+  },
+  "alarm_calibration": {
+    "primary": "path-state-method-specific matched empirical episode threshold",
+    "alarm_trace": "natural-log proper-prior e-process value using a uniform start prior over the path-state surveillance horizon",
+    "surveillance_horizon_shots": "(m-floor(m/2))+m",
+    "surveillance_horizon_updates": "surveillance_horizon_shots; one formal update mixes all round-role experts from a complete paired shot",
+    "bootstrap_input": "complete paired shots from the fit prefix, retaining all rounds and original A/B orientation",
+    "bootstrap_kind": "circular moving-block bootstrap at the complete paired-shot unit",
+    "block_length_shots": 32,
+    "replicates": 4096,
+    "alpha_per_path_state_episode": 0.01,
+    "rng": "NumPy Generator(PCG64(seed))",
+    "seed_formula": "611000 + 100*cohort_index + 10*logical_state + method_index",
+    "cohort_index": "zero-based position in cohort_order",
+    "method_index": "zero-based position in features_and_methods.method_order",
+    "draw": "for each replicate draw ceil(horizon_shots/32) starts with rng.integers(0,fit_prefix_shots,endpoint=False,dtype=int64), expand each start by offsets 0..31 modulo fit_prefix_shots, concatenate, and truncate to horizon_shots",
+    "replicate_initialization": "clone the learned method state at the end of the real fit prefix; reset its proper-prior alarm accumulator; then process the bootstrap continuation causally",
+    "replicate_statistic": "maximum finite alarm_trace over the complete surrogate surveillance horizon",
+    "threshold_order_statistic": "sort B maxima ascending and take zero-based index ceil((B+1)*(1-alpha))-1; cap at B-1",
+    "actual_replay": "clone the same learned fit state, reset the alarm accumulator, process real pre-surveillance then real post-surveillance without a boundary reset",
+    "alarm_rule": "first complete paired shot with alarm_trace >= threshold; equality is an alarm",
+    "nonfinite_policy": "any NaN fails the run; positive infinity is retained as the largest value; all calculations use float64 and log-domain mixture updates",
+    "secondary_fixed_e_threshold": {
+      "alpha": 0.01,
+      "e_threshold": 100.0,
+      "claim_scope": "exact randomized paired design only, not natural IBM hardware false-alarm control"
+    },
+    "forbidden_empirical_claim": "even all 49,110 pre-phase cycle pairs, including the fit prefix, are insufficient to validate one alert per 100,000 cycles; do not relabel the per-episode 0.01 threshold as that operating point"
+  },
+  "metrics_and_retention": {
+    "alarm_time_unit": "complete paired physical shot only; the formal role mixture has no crossing-role coordinate",
+    "pre_false_alarm": "1 if the first surveillance alarm is before the constructed boundary, else 0",
+    "restricted_post_delay_fraction": "1.0 for a pre false alarm or no post alarm; otherwise (zero_based_post_alarm_shot+1)/m",
+    "within_cohort_pooling": "average the two logical-state metric values with weights 1/2 and 1/2",
+    "across_cohort_pooling": "macro-average the 11 physical-path cohort values with equal weight 1/11; never weight by shots, rounds, distance, basis, feature count, or syndrome bits",
+    "required_strata": [
+      "basis",
+      "distance",
+      "rounds",
+      "calibration-hash pair"
+    ],
+    "target_method": "space_composite",
+    "retention_comparators": [
+      "dfr",
+      "online_logistic"
+    ],
+    "pairwise_delay_difference": "cohort mean restricted delay of the fixed space_composite minus cohort mean restricted delay of comparator",
+    "retention_for_each_comparator": [
+      "space_composite total pre-false-alarm count over 22 state streams is no larger",
+      "equal-weight mean of the 11 pairwise cohort delay differences is strictly negative"
+    ],
+    "retention_pass": "both conditions must hold against both comparators; ties fail the strict delay condition",
+    "all_method_outputs_required": true,
+    "post_selection": "forbidden",
+    "interpretation": "auxiliary robustness direction only; not a natural temporal-drift, ARL, or acquisition-time delay result"
+  },
+  "uncertainty": {
+    "independent_summary_unit": "QASM-derived physical path and snapshot pair after averaging logical states",
+    "primary_interval": "95% percentile cluster bootstrap of the equal-weight mean pairwise cohort delay difference",
+    "primary_replicates": 10000,
+    "primary_rng": "NumPy Generator(PCG64(612500))",
+    "primary_resampling": "sample 11 cohort indices with replacement and recompute their equal-weight mean",
+    "calibration_pair_sensitivity": {
+      "cluster": "ordered pair of early and late canonical calibration hashes",
+      "replicates": 10000,
+      "rng": "NumPy Generator(PCG64(612501))",
+      "resampling": "sample the five observed calibration-pair clusters with replacement; include every cohort in each sampled cluster and average cohorts with their original equal weights",
+      "interpretation": "descriptive sensitivity only because there are five clusters"
+    },
+    "percentile_rule": "NumPy quantile method='linear' at 0.025 and 0.975",
+    "exact_sign_flip_sensitivity": "enumerate all 2^11 sign vectors for the 11 cohort delay differences and report the two-sided absolute-mean tail fraction; no seed",
+    "required_reporting": [
+      "all 22 path-state rows",
+      "all 11 state-averaged cohort rows",
+      "macro effect and interval",
+      "pre-false-alarm counts",
+      "miss counts",
+      "calibration-pair sensitivity",
+      "no shot-level iid confidence interval"
+    ]
+  },
+  "randomization_audit": {
+    "dataset": "all m pre pairs in every listed path-state stream",
+    "replicates": 256,
+    "replicate_seeds": "integers 610700 through 610955 inclusive",
+    "rng": "one fresh NumPy Generator(PCG64(seed)) per replicate",
+    "iteration_order": "cohort_order, then logical_state [0,1]",
+    "swap_draw": "rng.integers(0,2,size=m,dtype=int8), one bit per complete paired shot",
+    "swap_scope": "if bit is 1 swap A/B for every round in that paired shot",
+    "method_reset": "reset witness, learner, and accumulator at the start of every path-state stream and replicate",
+    "shared_masks": "all methods receive the same replicate/path/state swap mask",
+    "score_order": "score before update",
+    "audit_alarm": "proper-prior e-process crosses 100 at any complete-paired-shot update",
+    "reported_statistics": [
+      "alarm fraction over replicate by path-state episodes for every method",
+      "distribution of the number of alarmed path-state episodes per replicate",
+      "maximum alarm_trace per replicate and method"
+    ],
+    "claim_scope": "implementation and exact randomized-design audit only; not a hardware-null claim"
+  },
+  "artifact_tuple_schemas": {
+    "metadata": [
+      "distance",
+      "rounds",
+      "basis",
+      "shots_per_state",
+      "n_chains",
+      "backend_property_date_source",
+      "backend_property_date_utc"
+    ],
+    "info": [
+      "bytes",
+      "raw_sha256",
+      "python_canonical_sha256"
+    ],
+    "calibration": [
+      "bytes",
+      "raw_sha256",
+      "python_canonical_sha256"
+    ],
+    "qasm_state": [
+      "bytes",
+      "raw_sha256",
+      "normalized_sha256"
+    ],
+    "qasm_pair": [
+      "raw_pair_sha256",
+      "normalized_pair_sha256"
+    ],
+    "held_bitstrings": [
+      "bytes_from_stat_only",
+      "content_read_for_manifest",
+      "sha256_before_unblinding"
+    ]
+  },
+  "snapshots": {
+    "pgh_d3_r1_job_1": {
+      "relative_job_dir": "d3_r1/job_1",
+      "metadata": [3, 1, "X", 2048, 10, "2025-10-02 10:16:59-05:00", "2025-10-02T15:16:59Z"],
+      "info": [149, "f116c6259e1681b4a25f4d4a8a6b05badae2afa5e21103a714604a4e5c6171b2", "9dc59416ac6863ff30c6d0267a890fafe2fe4570c798d514bdfbe4974465f011"],
+      "calibration": [1032346, "f5fdd0addef15140cb1f4bf411f870587577738446acca2bc36e79150dbfd6bf", "edb355d8815d422dad137dca3e9c0a2b1034a64d1c58123b057c9cad8c667bc1"],
+      "qasm_state0": [9422, "d9000b2cf6fa05226824f4abdf365d18e9230c19da46b3c6707a6333b51651dc", "d9000b2cf6fa05226824f4abdf365d18e9230c19da46b3c6707a6333b51651dc"],
+      "qasm_state1": [9452, "2450cd927df921900ab5e87e3c018879ef82972f4d9af88babd1cdc8df667058", "2450cd927df921900ab5e87e3c018879ef82972f4d9af88babd1cdc8df667058"],
+      "qasm_pair": ["5694cc34f0cfce00bd5ba5625fa1683e84efa2e89b09c2b7d5d97044e99ea060", "5694cc34f0cfce00bd5ba5625fa1683e84efa2e89b09c2b7d5d97044e99ea060"],
+      "held_bitstrings": [4302976, false, null]
+    },
+    "pgh_d3_r1_job_2": {
+      "relative_job_dir": "d3_r1/job_2",
+      "metadata": [3, 1, "X", 2048, 10, "2025-10-03 11:43:51-05:00", "2025-10-03T16:43:51Z"],
+      "info": [149, "f116c6259e1681b4a25f4d4a8a6b05badae2afa5e21103a714604a4e5c6171b2", "9dc59416ac6863ff30c6d0267a890fafe2fe4570c798d514bdfbe4974465f011"],
+      "calibration": [1032301, "315c721c23e95f0f0cd62b3494f15b7598745547448c12c6b9ede960995d1944", "c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a"],
+      "qasm_state0": [9118, "6ec09a6d85972626ddee332b8e3ed77015923d810f218d062a21f73c27f4ad10", "6ec09a6d85972626ddee332b8e3ed77015923d810f218d062a21f73c27f4ad10"],
+      "qasm_state1": [9148, "9a2e8f58861d15ebb4ef6cfd849749e22d08cac38c806b8cc4b63496d22e3700", "9a2e8f58861d15ebb4ef6cfd849749e22d08cac38c806b8cc4b63496d22e3700"],
+      "qasm_pair": ["6846382e14b7eaba8ea6f49d41eaba5312e5336232a7046f6886c1ab335cf9eb", "6846382e14b7eaba8ea6f49d41eaba5312e5336232a7046f6886c1ab335cf9eb"],
+      "held_bitstrings": [4302910, false, null]
+    },
+    "pgh_d3_r1_job_3": {
+      "relative_job_dir": "d3_r1/job_3",
+      "metadata": [3, 1, "X", 8192, 10, "2025-10-08 09:28:09-05:00", "2025-10-08T14:28:09Z"],
+      "info": [149, "26e2bd26342d54c59840f200f59250e4aeaea7fffe6cdf36e08df266801d7b30", "eb8f26d61433e2b4362ca187bda917bbf140c0691f99262ab65a75cb50ababf3"],
+      "calibration": [1032124, "0ffe38f4325283a49809a29118a2ca85779d3d082f4f682facb631e7ae7453c5", "a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+      "qasm_state0": [9364, "04bbc15411533937fca05baa46c3bfc52565fc922f6b8270565b0153797de398", "04bbc15411533937fca05baa46c3bfc52565fc922f6b8270565b0153797de398"],
+      "qasm_state1": [9394, "b4e3169ccca0c49ab2df49087aaa0acdcc4cb6491b09aaa16066825f23c28c24", "b4e3169ccca0c49ab2df49087aaa0acdcc4cb6491b09aaa16066825f23c28c24"],
+      "qasm_pair": ["3da4813146077aba44e4505c815404e2f4d539a66033f9c55230fcbfb9130792", "3da4813146077aba44e4505c815404e2f4d539a66033f9c55230fcbfb9130792"],
+      "held_bitstrings": [17205366, false, null]
+    },
+    "pgh_d3_r3_job_1": {
+      "relative_job_dir": "d3_r3/job_1",
+      "metadata": [3, 3, "X", 2048, 10, "2025-10-02 10:16:59-05:00", "2025-10-02T15:16:59Z"],
+      "info": [149, "bb64711fa61e5002d77a68c6eef57d46255015e44111af66ed884f9bda178a84", "67c7391ce3edaf4f7686dacd9470658881a15fd26006737e204922005cf43902"],
+      "calibration": [1032346, "f5fdd0addef15140cb1f4bf411f870587577738446acca2bc36e79150dbfd6bf", "edb355d8815d422dad137dca3e9c0a2b1034a64d1c58123b057c9cad8c667bc1"],
+      "qasm_state0": [20238, "bdef8273d595e97852d7c7c6acd0db9d7913404cece7a8b830cacb86828ec3e7", "bdef8273d595e97852d7c7c6acd0db9d7913404cece7a8b830cacb86828ec3e7"],
+      "qasm_state1": [20268, "cff662c38b70c0769e5a554ccceb6db9ea7996843aee678de66be7c3a428c060", "cff662c38b70c0769e5a554ccceb6db9ea7996843aee678de66be7c3a428c060"],
+      "qasm_pair": ["ef11de3dab38e4cc38e8740da613e7646a1ff3d1be448d8ec5676911df7a5ae5", "ef11de3dab38e4cc38e8740da613e7646a1ff3d1be448d8ec5676911df7a5ae5"],
+      "held_bitstrings": [6432890, false, null]
+    },
+    "pgh_d3_r3_job_2": {
+      "relative_job_dir": "d3_r3/job_2",
+      "metadata": [3, 3, "X", 2048, 10, "2025-10-03 11:43:51-05:00", "2025-10-03T16:43:51Z"],
+      "info": [149, "bb64711fa61e5002d77a68c6eef57d46255015e44111af66ed884f9bda178a84", "67c7391ce3edaf4f7686dacd9470658881a15fd26006737e204922005cf43902"],
+      "calibration": [1032301, "315c721c23e95f0f0cd62b3494f15b7598745547448c12c6b9ede960995d1944", "c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a"],
+      "qasm_state0": [19756, "5fb08cbb557f1476345868dedb9704fc4dc29f45faf444ddbd641881b32b7706", "5fb08cbb557f1476345868dedb9704fc4dc29f45faf444ddbd641881b32b7706"],
+      "qasm_state1": [19786, "8d17579c397b8e2fe82e3ebe60351bb810adad20c1acf6b7fc2a8c1ba02efc04", "8d17579c397b8e2fe82e3ebe60351bb810adad20c1acf6b7fc2a8c1ba02efc04"],
+      "qasm_pair": ["f6820aa50ee7309abfd1e1780c6dde12bd78dd7a9d140d4c3e3fdd00e1bcc229", "f6820aa50ee7309abfd1e1780c6dde12bd78dd7a9d140d4c3e3fdd00e1bcc229"],
+      "held_bitstrings": [6432844, false, null]
+    },
+    "pgh_d3_r3_job_3": {
+      "relative_job_dir": "d3_r3/job_3",
+      "metadata": [3, 3, "X", 8192, 10, "2025-10-08 09:28:09-05:00", "2025-10-08T14:28:09Z"],
+      "info": [149, "cc08f8479b4462a09f74242281ebb46dce66bec408f71351e28df11d0e7d79b2", "4015dc5eb4b72d7b63b01ba8b3ffc324657cfcc916bbfe4ce7aa9a184ef4ee1c"],
+      "calibration": [1032124, "0ffe38f4325283a49809a29118a2ca85779d3d082f4f682facb631e7ae7453c5", "a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+      "qasm_state0": [20278, "d3856aa6f9fc1e572d754aae7ef9ddefbde42469facc240153a0006ad3b275b6", "d3856aa6f9fc1e572d754aae7ef9ddefbde42469facc240153a0006ad3b275b6"],
+      "qasm_state1": [20308, "ace7c5168ded8910f18942c6642724e42cfe3d94525579873f960e49bd4eadae", "ace7c5168ded8910f18942c6642724e42cfe3d94525579873f960e49bd4eadae"],
+      "qasm_pair": ["f114fbbac0b1870e7d877a7a3a50f20287f57e91486f2cd23af76968a2b4dc92", "f114fbbac0b1870e7d877a7a3a50f20287f57e91486f2cd23af76968a2b4dc92"],
+      "held_bitstrings": [25725056, false, null]
+    },
+    "pgh_d3_r3_job_4": {
+      "relative_job_dir": "d3_r3/job_4",
+      "metadata": [3, 3, "Z", 4096, 9, "2025-09-02 23:32:15-04:00", "2025-09-03T03:32:15Z"],
+      "info": [148, "afeae89f883f903d6c972be980f5eb9a66e90f1e8857895dad158c6fa33d7bf2", "7a88048f35086a4e9af8cb79aa0256a8dced351c420799afde21356599ce3e9b"],
+      "calibration": [962858, "657014d41c8ed98ab2f619c5c7087053f5b515dfdd31ad02a97bdc728f9bb9d1", "064bde2701d069ba9ccbe1c4b7d970796e901f09b32146d359fa02e2abe4e053"],
+      "qasm_state0": [10127, "626068ae44243e39e6a911a08cce867c8cc00837fa9ec4300de53b9ca54208a9", "626068ae44243e39e6a911a08cce867c8cc00837fa9ec4300de53b9ca54208a9"],
+      "qasm_state1": [10324, "ea7132e089c36f65e0ce7ed2a024a3e8e80261a31759b7a39be8ea7d675d82b2", "ea7132e089c36f65e0ce7ed2a024a3e8e80261a31759b7a39be8ea7d675d82b2"],
+      "qasm_pair": ["79090c31744d36e792c2555a872cd0a30bc2ca0fdf3a368d49d3f21625211df5", "79090c31744d36e792c2555a872cd0a30bc2ca0fdf3a368d49d3f21625211df5"],
+      "held_bitstrings": [11577276, false, null]
+    },
+    "pgh_d3_r3_job_6": {
+      "relative_job_dir": "d3_r3/job_6",
+      "metadata": [3, 3, "Z", 8192, 10, "2025-10-08 09:28:09-05:00", "2025-10-08T14:28:09Z"],
+      "info": [149, "e8647fcadf9d87521151ec1d1f2ae0f096b47f94a867974134978d8c07b6ee7e", "32a6c6cfcfa3f1e8bc4a1e490a827ff6cb122968f7a2ab18b90031e6b19de08c"],
+      "calibration": [1032124, "0ffe38f4325283a49809a29118a2ca85779d3d082f4f682facb631e7ae7453c5", "a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+      "qasm_state0": [11423, "bc75b5d3319f567473d44d2c9aaf03729c78a8b806478cac9d7c600056d37dc8", "bc75b5d3319f567473d44d2c9aaf03729c78a8b806478cac9d7c600056d37dc8"],
+      "qasm_state1": [11647, "9cce9d7c93b90b3cf3f1e0aa9358fdb03b02008c16cd324dc37247e68b0fd87e", "9cce9d7c93b90b3cf3f1e0aa9358fdb03b02008c16cd324dc37247e68b0fd87e"],
+      "qasm_pair": ["317973283ce7852fe9ba6ed65dd561d71544b2c1767fbc443a70123199cba9df", "317973283ce7852fe9ba6ed65dd561d71544b2c1767fbc443a70123199cba9df"],
+      "held_bitstrings": [25725070, false, null]
+    },
+    "pgh_d5_r1_job_1": {
+      "relative_job_dir": "d5_r1/job_1",
+      "metadata": [5, 1, "X", 2048, 10, "2025-10-02 10:16:59-05:00", "2025-10-02T15:16:59Z"],
+      "info": [149, "27fde7ce7807dae528fecc4e2280a361a5bb046f1e44a4bf8366a2ffa159fe2f", "9b13df723cb355a9bb50f398c936cdcd820aa7a8411d30350746108696bc112c"],
+      "calibration": [1032346, "f5fdd0addef15140cb1f4bf411f870587577738446acca2bc36e79150dbfd6bf", "edb355d8815d422dad137dca3e9c0a2b1034a64d1c58123b057c9cad8c667bc1"],
+      "qasm_state0": [17344, "e51f8b882f3906d6a855e7c2257fdeb8f22a058dd68ed300b77901b6afd80dce", "e51f8b882f3906d6a855e7c2257fdeb8f22a058dd68ed300b77901b6afd80dce"],
+      "qasm_state1": [17394, "362823045a370ae5f698b54499baea46325ff45bcdeb1e01c51eb962a9f57191", "362823045a370ae5f698b54499baea46325ff45bcdeb1e01c51eb962a9f57191"],
+      "qasm_pair": ["42c2c79d74ae380eccfd692baf690947d600edd2631184d116ef06d85fcf5eb5", "42c2c79d74ae380eccfd692baf690947d600edd2631184d116ef06d85fcf5eb5"],
+      "held_bitstrings": [6433376, false, null]
+    },
+    "pgh_d5_r1_job_3": {
+      "relative_job_dir": "d5_r1/job_3",
+      "metadata": [5, 1, "X", 8192, 10, "2025-10-08 09:28:09-05:00", "2025-10-08T14:28:09Z"],
+      "info": [149, "4b1e7b49dafe7f2bac2134afbcc686bf2257cda1ff5f56c1c54bbfd102397334", "df60250fcb0a90ca3bcd98459ec295d82352fd5b7fec295c37552b5bfd65fb48"],
+      "calibration": [1032124, "0ffe38f4325283a49809a29118a2ca85779d3d082f4f682facb631e7ae7453c5", "a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+      "qasm_state0": [17528, "144be5eab9f5e4072389c6e88228653f5982c83031ebbab9b7e0ad76d1b7a880", "144be5eab9f5e4072389c6e88228653f5982c83031ebbab9b7e0ad76d1b7a880"],
+      "qasm_state1": [17578, "720863d96e9faea4bcca156cd28256aeb172f30d2a3c662130f50fdb82711838", "720863d96e9faea4bcca156cd28256aeb172f30d2a3c662130f50fdb82711838"],
+      "qasm_pair": ["196af7b564868cd35b257c1391b017e97ed1bb543678f0e23228ebe3b14324a3", "196af7b564868cd35b257c1391b017e97ed1bb543678f0e23228ebe3b14324a3"],
+      "held_bitstrings": [25725568, false, null]
+    },
+    "pgh_d5_r1_job_5": {
+      "relative_job_dir": "d5_r1/job_5",
+      "metadata": [5, 1, "Z", 2048, 10, "2025-10-03 11:43:51-05:00", "2025-10-03T16:43:51Z"],
+      "info": [149, "ffc16b176e94951f4607b3da6f65cb88240183dd301f7453d893519b715c13f0", "7ebd98744832f382616832a75c57eaed1bdaf09d549e8ded0e4d5e5111ad3dcc"],
+      "calibration": [1032301, "315c721c23e95f0f0cd62b3494f15b7598745547448c12c6b9ede960995d1944", "c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a"],
+      "qasm_state0": [10008, "34bbba3b62b537415ec8e28a277cdd1f00606275ea8dd2668098522a894d1a9e", "34bbba3b62b537415ec8e28a277cdd1f00606275ea8dd2668098522a894d1a9e"],
+      "qasm_state1": [10369, "9f0eb98d1bd831759b135ea1f7267886d90befb6b61424f5136e4e5861a824ab", "9f0eb98d1bd831759b135ea1f7267886d90befb6b61424f5136e4e5861a824ab"],
+      "qasm_pair": ["a69e65b6effab13ec2ea7573e50823848fb143d1027952cfe8de35053d476b3e", "a69e65b6effab13ec2ea7573e50823848fb143d1027952cfe8de35053d476b3e"],
+      "held_bitstrings": [6433376, false, null]
+    },
+    "pgh_d5_r1_job_6": {
+      "relative_job_dir": "d5_r1/job_6",
+      "metadata": [5, 1, "Z", 8192, 10, "2025-10-08 09:28:09-05:00", "2025-10-08T14:28:09Z"],
+      "info": [149, "5023796792a051416017e017190031d393a526e28d571dfdaf69b20f360d57e6", "14f18d770043c00f9b632936babd22b9429cb8c88215b10b5e165ab3be7cfb88"],
+      "calibration": [1032124, "0ffe38f4325283a49809a29118a2ca85779d3d082f4f682facb631e7ae7453c5", "a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+      "qasm_state0": [10089, "119e1df13be59596bf5e6c6cda2a0d2fdea541fdef684e57f78a2b10403491a2", "119e1df13be59596bf5e6c6cda2a0d2fdea541fdef684e57f78a2b10403491a2"],
+      "qasm_state1": [10453, "7153df1e37ec754c041087aa64cabb6c7ac2ae5f973bced94a804711e616a996", "7153df1e37ec754c041087aa64cabb6c7ac2ae5f973bced94a804711e616a996"],
+      "qasm_pair": ["c9cc6e5d03fed9e8e16d925e43c88e53ede3bc4426d784112ea1272836fdf7c6", "c9cc6e5d03fed9e8e16d925e43c88e53ede3bc4426d784112ea1272836fdf7c6"],
+      "held_bitstrings": [25725558, false, null]
+    },
+    "pgh_d5_r5_job_1": {
+      "relative_job_dir": "d5_r5/job_1",
+      "metadata": [5, 5, "X", 2048, 10, "2025-10-02 10:16:59-05:00", "2025-10-02T15:16:59Z"],
+      "info": [149, "bd71f6eb925fe74d2a232836e0a3087648e1d99393930402407ae6c936828ac2", "18721132e981ae7ffa1a2c4acb59e79ab4c4f9e03b08d0835ba7b9a55b69f9d3"],
+      "calibration": [1032346, "f5fdd0addef15140cb1f4bf411f870587577738446acca2bc36e79150dbfd6bf", "edb355d8815d422dad137dca3e9c0a2b1034a64d1c58123b057c9cad8c667bc1"],
+      "qasm_state0": [59994, "100d62816588d86b79096368b5547ac124cb4c5b325e5d9d109b7c62af539891", "100d62816588d86b79096368b5547ac124cb4c5b325e5d9d109b7c62af539891"],
+      "qasm_state1": [60044, "1a48ff3588c13332a1dcd952a145bf312ea29f6789c5c6c0eb3fd3fa526c6764", "1a48ff3588c13332a1dcd952a145bf312ea29f6789c5c6c0eb3fd3fa526c6764"],
+      "qasm_pair": ["310c2b6dd6d88cb8433728d95cad68fa65b9757981d8aa4351afbff969a7328d", "310c2b6dd6d88cb8433728d95cad68fa65b9757981d8aa4351afbff969a7328d"],
+      "held_bitstrings": [14953096, false, null]
+    },
+    "pgh_d5_r5_job_3": {
+      "relative_job_dir": "d5_r5/job_3",
+      "metadata": [5, 5, "X", 8192, 10, "2025-10-08 09:28:09-05:00", "2025-10-08T14:28:09Z"],
+      "info": [149, "fd35ac0f62f4b5fb9586181cf7af14e61a6acbd31dbe3f3e94a37e6f8f51bd4e", "aafaecd6132698c2164f6376650e686d728fc1e5b3c08d58c671ecc78301ae23"],
+      "calibration": [1032124, "0ffe38f4325283a49809a29118a2ca85779d3d082f4f682facb631e7ae7453c5", "a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+      "qasm_state0": [60225, "93a69e3eb8c5f1ea19c9aa47835f2ba3fc10d4dff0713d338042e3ec60921b17", "93a69e3eb8c5f1ea19c9aa47835f2ba3fc10d4dff0713d338042e3ec60921b17"],
+      "qasm_state1": [60275, "35da500076014ecdd0cffec8d7b62dffc0c9eeaf3725ec681f7976bab8ce7bbd", "35da500076014ecdd0cffec8d7b62dffc0c9eeaf3725ec681f7976bab8ce7bbd"],
+      "qasm_pair": ["e8e6ea800802b94fc371f01d880d6de754bd5ec6cd7db6fbb205f066df19770c", "e8e6ea800802b94fc371f01d880d6de754bd5ec6cd7db6fbb205f066df19770c"],
+      "held_bitstrings": [59804310, false, null]
+    },
+    "pgh_d7_r3_job_6": {
+      "relative_job_dir": "d7_r3/job_6",
+      "metadata": [7, 3, "Z", 2048, 7, "2025-10-03 11:43:51-05:00", "2025-10-03T16:43:51Z"],
+      "info": [148, "a19f66dc56538aec35bb7048d9fc9a56b3fa174c7b636a1331e5dd4f9e61a5e2", "8c23bf9d7988f081a6b5c23a82950dada1e9f8e48aef34f1d66858e9c0dc4c72"],
+      "calibration": [1032301, "315c721c23e95f0f0cd62b3494f15b7598745547448c12c6b9ede960995d1944", "c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a"],
+      "qasm_state0": [26966, "824ff04400ddf746f16886c715513a8ec21be4ad47c51407bc3b49785d6c3256", "824ff04400ddf746f16886c715513a8ec21be4ad47c51407bc3b49785d6c3256"],
+      "qasm_state1": [27322, "48cb1dacd8fb89fdeee27ebb81872fbca37b00f2057d80439fd0a534ed741c14", "48cb1dacd8fb89fdeee27ebb81872fbca37b00f2057d80439fd0a534ed741c14"],
+      "qasm_pair": ["722d89128799685c3fa06fa154ae1a334fda00e02ab8c5e4969fd5dfc8cf2f54", "722d89128799685c3fa06fa154ae1a334fda00e02ab8c5e4969fd5dfc8cf2f54"],
+      "held_bitstrings": [10467630, false, null]
+    },
+    "pgh_d7_r3_job_7": {
+      "relative_job_dir": "d7_r3/job_7",
+      "metadata": [7, 3, "Z", 8192, 8, "2025-10-08 09:28:09-05:00", "2025-10-08T14:28:09Z"],
+      "info": [148, "cca8a5f1b1720797a9b21c012b904c55a87b88946361aff7b118b32879719a94", "e2a1fe35cc77f10df541f09929446117c28165b34b897d6ee4d842932c17066f"],
+      "calibration": [1032124, "0ffe38f4325283a49809a29118a2ca85779d3d082f4f682facb631e7ae7453c5", "a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+      "qasm_state0": [31043, "e1a1608518f4c8a714a4fe56d1c8879776111734ce59e72a53bf44d1da59baeb", "e1a1608518f4c8a714a4fe56d1c8879776111734ce59e72a53bf44d1da59baeb"],
+      "qasm_state1": [31453, "6b2d129bc1862d58cfa58b1c021a97586c568651a7b8288f73d363f87fe02561", "6b2d129bc1862d58cfa58b1c021a97586c568651a7b8288f73d363f87fe02561"],
+      "qasm_pair": ["aa4ae957dc622c0269a182b959d064335c94edefe7959558dd5abaa75ee447eb", "aa4ae957dc622c0269a182b959d064335c94edefe7959558dd5abaa75ee447eb"],
+      "held_bitstrings": [47843936, false, null]
+    },
+    "pgh_d7_r7_job_7": {
+      "relative_job_dir": "d7_r7/job_7",
+      "metadata": [7, 7, "Z", 2048, 8, "2025-10-03 11:43:51-05:00", "2025-10-03T16:43:51Z"],
+      "info": [148, "ba7c0b69f33a5f58c5bfdfe4f23fef2f36c54ad493dc11a0f40a21ca8830ef65", "48f13c41e18007a0eedb039e54993cb5e2d87def205f6a41b8bdd2c9533ad9c3"],
+      "calibration": [1032301, "315c721c23e95f0f0cd62b3494f15b7598745547448c12c6b9ede960995d1944", "c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a"],
+      "qasm_state0": [66738, "0c5e2dbe1c0db2d9f3a88dc4b21e6cde5bb98bfd998d09737e8d3f79731fd19c", "0c5e2dbe1c0db2d9f3a88dc4b21e6cde5bb98bfd998d09737e8d3f79731fd19c"],
+      "qasm_state1": [67149, "7a395b413fd236a95f3638fd4465dea2df71a74b60537268090064d824263e2b", "7a395b413fd236a95f3638fd4465dea2df71a74b60537268090064d824263e2b"],
+      "qasm_pair": ["be29e0fa4b501b0788035ac91ba11338c8fd889dd642eee3160bf25c58ec02ae", "be29e0fa4b501b0788035ac91ba11338c8fd889dd642eee3160bf25c58ec02ae"],
+      "held_bitstrings": [22186590, false, null]
+    },
+    "pgh_d7_r7_job_9": {
+      "relative_job_dir": "d7_r7/job_9",
+      "metadata": [7, 7, "Z", 8192, 9, "2025-10-08 09:28:09-05:00", "2025-10-08T14:28:09Z"],
+      "info": [148, "2a32b5a908cafa5668792e0ad25cb366244904b246b7260393894836ef1e7336", "82ae9671df2e7af47edc9e17f76413a07119ba84b6801928c94109595a186cdb"],
+      "calibration": [1032124, "0ffe38f4325283a49809a29118a2ca85779d3d082f4f682facb631e7ae7453c5", "a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+      "qasm_state0": [75377, "2328168a9cb8131644d74aeba0bff971aaf30ac7e1afd9e155065c758e5fc6c4", "2328168a9cb8131644d74aeba0bff971aaf30ac7e1afd9e155065c758e5fc6c4"],
+      "qasm_state1": [75840, "6d32bc950cfa2884636a16a7a37bfe472d5f0c1b61520ddd1f6906b160760c45", "6d32bc950cfa2884636a16a7a37bfe472d5f0c1b61520ddd1f6906b160760c45"],
+      "qasm_pair": ["48a6cf5b43de09899dd86e6bc2a9eea7b7d36f73cd17a30436c495639be32a4d", "48a6cf5b43de09899dd86e6bc2a9eea7b7d36f73cd17a30436c495639be32a4d"],
+      "held_bitstrings": [99830666, false, null]
+    },
+    "pgh_d9_r5_job_1": {
+      "relative_job_dir": "d9_r5/job_1",
+      "metadata": [9, 5, "X", 2048, 5, "2025-10-02 10:57:52-05:00", "2025-10-02T15:57:52Z"],
+      "info": [148, "e304ca8edc68a94c556eff6cd815c0238ba032ab35b7961c9a06d23956b8f503", "ce864602d07d10109732a084651245cf825f2abde3fc331dc81491bd95767e05"],
+      "calibration": [1032336, "7aa101d551f71f86893e579559cf5391aedbbc3aa477e8fab7fefbd38fe93efe", "b239f741f884c94069006f3043e2553bb70f45da4ecdb6623e41ffbbebcde5a7"],
+      "qasm_state0": [63364, "9c1cd69ec19117cc6f49fa57dcdfff00c74d1ec04294192904446db147e119cb", "9c1cd69ec19117cc6f49fa57dcdfff00c74d1ec04294192904446db147e119cb"],
+      "qasm_state1": [63409, "adc02ae77f7f744c22961aad3478197c9165835a4649fda5cd08b2b1cf8f7963", "adc02ae77f7f744c22961aad3478197c9165835a4649fda5cd08b2b1cf8f7963"],
+      "qasm_pair": ["43dfff81ea859ff122353bc8c830bf176012d8ef99e177a3fce26d5780400417", "43dfff81ea859ff122353bc8c830bf176012d8ef99e177a3fce26d5780400417"],
+      "held_bitstrings": [13867008, false, null]
+    },
+    "pgh_d9_r5_job_2": {
+      "relative_job_dir": "d9_r5/job_2",
+      "metadata": [9, 5, "X", 2048, 5, "2025-10-03 11:43:51-05:00", "2025-10-03T16:43:51Z"],
+      "info": [148, "e304ca8edc68a94c556eff6cd815c0238ba032ab35b7961c9a06d23956b8f503", "ce864602d07d10109732a084651245cf825f2abde3fc331dc81491bd95767e05"],
+      "calibration": [1032301, "315c721c23e95f0f0cd62b3494f15b7598745547448c12c6b9ede960995d1944", "c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a"],
+      "qasm_state0": [63061, "d7dbef848b8dd9b00265b0a93a0c5396149edd3ac9fa7ae217ca2688298440e5", "d7dbef848b8dd9b00265b0a93a0c5396149edd3ac9fa7ae217ca2688298440e5"],
+      "qasm_state1": [63106, "c3ddddadc0bca6c2288dacb84c56348ff2990668039356a9d43e08008b54ad10", "c3ddddadc0bca6c2288dacb84c56348ff2990668039356a9d43e08008b54ad10"],
+      "qasm_pair": ["7a0f888ea91985d8083b84262140c4501038c782149d6018eb8b7948b43e6695", "7a0f888ea91985d8083b84262140c4501038c782149d6018eb8b7948b43e6695"],
+      "held_bitstrings": [13866994, false, null]
+    }
+  },
+  "cohort_row_schema": [
+    "cohort_id",
+    "distance",
+    "rounds",
+    "basis",
+    "register_suffix",
+    "data_qubits",
+    "syndrome_qubits",
+    "oriented_path",
+    "early_snapshot_id",
+    "late_snapshot_id",
+    "m",
+    "raw_qasm_pair_identical",
+    "normalized_qasm_pair_identical_audit_only",
+    "claim_label",
+    "calibration_pair_id"
+  ],
+  "cohort_order": [
+    "pgh_d3_r1_x_18_11_12_13_14",
+    "pgh_d3_r1_x_111_98_91_92_93",
+    "pgh_d3_r3_x_14_13_12_11_18",
+    "pgh_d3_r3_x_115_114_113_119_133",
+    "pgh_d3_r3_z_151_152_153_154_155",
+    "pgh_d5_r1_x_18_11_12_13_14_15_19_35_34",
+    "pgh_d5_r1_z_18_11_12_13_14_15_19_35_34",
+    "pgh_d5_r5_x_34_35_19_15_14_13_12_11_18",
+    "pgh_d7_r3_z_80_81_82_83_84_85_77_65_66_67_57_47_46",
+    "pgh_d7_r7_z_138_151_150_149_148_147_146_145_144_143_142_141_140",
+    "pgh_d9_r5_x_153_154_155_139_135_134_133_119_113_114_115_99_95_94_93_92_91"
+  ],
+  "cohort_pairs": [
+    ["pgh_d3_r1_x_18_11_12_13_14", 3, 1, "X", "18_11_12_13_14", [18, 12, 14], [11, 13], [18, 11, 12, 13, 14], "pgh_d3_r1_job_1", "pgh_d3_r1_job_3", 682, false, false, "circuit_and_hardware_domain_shift", "edb355d8815d422dad137dca3e9c0a2b1034a64d1c58123b057c9cad8c667bc1--a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+    ["pgh_d3_r1_x_111_98_91_92_93", 3, 1, "X", "111_98_91_92_93", [111, 91, 93], [98, 92], [111, 98, 91, 92, 93], "pgh_d3_r1_job_1", "pgh_d3_r1_job_2", 682, false, false, "circuit_and_hardware_domain_shift", "edb355d8815d422dad137dca3e9c0a2b1034a64d1c58123b057c9cad8c667bc1--c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a"],
+    ["pgh_d3_r3_x_14_13_12_11_18", 3, 3, "X", "14_13_12_11_18", [14, 12, 18], [13, 11], [14, 13, 12, 11, 18], "pgh_d3_r3_job_2", "pgh_d3_r3_job_3", 682, false, false, "circuit_and_hardware_domain_shift", "c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a--a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+    ["pgh_d3_r3_x_115_114_113_119_133", 3, 3, "X", "115_114_113_119_133", [115, 113, 133], [114, 119], [115, 114, 113, 119, 133], "pgh_d3_r3_job_1", "pgh_d3_r3_job_2", 682, false, false, "circuit_and_hardware_domain_shift", "edb355d8815d422dad137dca3e9c0a2b1034a64d1c58123b057c9cad8c667bc1--c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a"],
+    ["pgh_d3_r3_z_151_152_153_154_155", 3, 3, "Z", "151_152_153_154_155", [151, 153, 155], [152, 154], [151, 152, 153, 154, 155], "pgh_d3_r3_job_4", "pgh_d3_r3_job_6", 1365, false, false, "circuit_and_hardware_domain_shift", "064bde2701d069ba9ccbe1c4b7d970796e901f09b32146d359fa02e2abe4e053--a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+    ["pgh_d5_r1_x_18_11_12_13_14_15_19_35_34", 5, 1, "X", "18_11_12_13_14_15_19_35_34", [18, 12, 14, 19, 34], [11, 13, 15, 35], [18, 11, 12, 13, 14, 15, 19, 35, 34], "pgh_d5_r1_job_1", "pgh_d5_r1_job_3", 682, false, false, "circuit_and_hardware_domain_shift", "edb355d8815d422dad137dca3e9c0a2b1034a64d1c58123b057c9cad8c667bc1--a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+    ["pgh_d5_r1_z_18_11_12_13_14_15_19_35_34", 5, 1, "Z", "18_11_12_13_14_15_19_35_34", [18, 12, 14, 19, 34], [11, 13, 15, 35], [18, 11, 12, 13, 14, 15, 19, 35, 34], "pgh_d5_r1_job_5", "pgh_d5_r1_job_6", 682, false, false, "circuit_and_hardware_domain_shift", "c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a--a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+    ["pgh_d5_r5_x_34_35_19_15_14_13_12_11_18", 5, 5, "X", "34_35_19_15_14_13_12_11_18", [34, 19, 14, 12, 18], [35, 15, 13, 11], [34, 35, 19, 15, 14, 13, 12, 11, 18], "pgh_d5_r5_job_1", "pgh_d5_r5_job_3", 682, false, false, "circuit_and_hardware_domain_shift", "edb355d8815d422dad137dca3e9c0a2b1034a64d1c58123b057c9cad8c667bc1--a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+    ["pgh_d7_r3_z_80_81_82_83_84_85_77_65_66_67_57_47_46", 7, 3, "Z", "80_81_82_83_84_85_77_65_66_67_57_47_46", [80, 82, 84, 77, 66, 57, 46], [81, 83, 85, 65, 67, 47], [80, 81, 82, 83, 84, 85, 77, 65, 66, 67, 57, 47, 46], "pgh_d7_r3_job_6", "pgh_d7_r3_job_7", 682, false, false, "circuit_and_hardware_domain_shift", "c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a--a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+    ["pgh_d7_r7_z_138_151_150_149_148_147_146_145_144_143_142_141_140", 7, 7, "Z", "138_151_150_149_148_147_146_145_144_143_142_141_140", [138, 150, 148, 146, 144, 142, 140], [151, 149, 147, 145, 143, 141], [138, 151, 150, 149, 148, 147, 146, 145, 144, 143, 142, 141, 140], "pgh_d7_r7_job_7", "pgh_d7_r7_job_9", 682, false, false, "circuit_and_hardware_domain_shift", "c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a--a5c3cd9a6a4a00f73eb0109e1690261ef335713605f06026b036f3758d29d694"],
+    ["pgh_d9_r5_x_153_154_155_139_135_134_133_119_113_114_115_99_95_94_93_92_91", 9, 5, "X", "153_154_155_139_135_134_133_119_113_114_115_99_95_94_93_92_91", [153, 155, 135, 133, 113, 115, 95, 93, 91], [154, 139, 134, 119, 114, 99, 94, 92], [153, 154, 155, 139, 135, 134, 133, 119, 113, 114, 115, 99, 95, 94, 93, 92, 91], "pgh_d9_r5_job_1", "pgh_d9_r5_job_2", 682, false, false, "circuit_and_hardware_domain_shift", "b239f741f884c94069006f3043e2553bb70f45da4ecdb6623e41ffbbebcde5a7--c20b55cb3b2ae3b5d1d16fbd540800fca9af9b2338f8c94035fff72db0e1081a"]
+  ],
+  "aggregate_resource_counts_per_pre_or_post_phase": {
+    "path_groups": 11,
+    "path_state_streams": 22,
+    "paired_shots": 16370,
+    "paired_cycle_updates": 49110
+  },
+  "claim_boundary": {
+    "all_selected_pairs": "constructed boundary between real-hardware snapshot cohorts with simultaneous circuit and hardware domain shift",
+    "forbidden": [
+      "natural temporal drift",
+      "verified acquisition chronology",
+      "physical drift onset",
+      "average run length on IBM hardware",
+      "circuit-controlled Pittsburgh comparison",
+      "causal attribution solely to calibration",
+      "one alert per 100000 cycles validation",
+      "post-hoc path, state, basis, distance, threshold, method, or cohort selection"
+    ]
+  }
+}
