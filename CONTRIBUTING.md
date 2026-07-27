@@ -8,8 +8,8 @@ falsifiable are welcome.
 - Corrections to a derivation, source citation, or implementation audit.
 - Counterexamples that identify the limits of squared energy features or the
   shared-eigenbasis assumption.
-- Reproducible implementations of the proposed low-rank Stiefel model,
-  class-energy contrast objective, or worst-class-pair margin.
+- Improvements to the tested PVM-DECA, Spectral-DECA, PGM, SDP, Jacobi, or
+  Qiskit implementations.
 - Fair benchmark scripts with fold-local preprocessing, fixed seeds, nested
   validation, and strong baselines.
 - Repairs to the exploratory Ising/Potts clustering formulation that include
@@ -35,8 +35,11 @@ estimates.
 2. Keep one pull request focused on one claim or implementation unit.
 3. Add tests or a reproducible command when code is introduced.
 4. Run `git diff --check` and verify all Markdown links you touched.
-5. Do not include confidential review correspondence, private datasets,
+5. Run `.venv/bin/python -m pytest experiments/tests -q`; for manuscript
+   changes, also run `make -C publication`.
+6. Do not include confidential review correspondence, private datasets,
    credentials, personal contact lists, or publisher-restricted artifacts.
 
 By contributing, you confirm that you have the right to submit the material.
+Code contributions under `experiments/` are accepted under its MIT license.
 No repository-wide license is implied; see [`LICENSE.md`](LICENSE.md).

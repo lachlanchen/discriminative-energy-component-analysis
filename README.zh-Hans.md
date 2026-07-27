@@ -1,118 +1,138 @@
 # 判别能量成分分析
 
-[![研究状态](https://img.shields.io/badge/状态-研究路线图-8a2be2)](#项目状态)
-[![ISCAS 2025](https://img.shields.io/badge/ISCAS%202025-10.1109%2FISCAS56072.2025.11044249-00629B)](https://doi.org/10.1109/ISCAS56072.2025.11044249)
-[![实现](https://img.shields.io/badge/代码-lachlanchen%2Feca-181717?logo=github)](https://github.com/lachlanchen/eca)
+[![研究状态](https://img.shields.io/badge/状态-理论与实验已验证-2b6cb0)](publication/main.pdf)
+[![测试](https://img.shields.io/badge/测试-17%20项通过-2ea44f)](experiments/tests)
+[![Qiskit](https://img.shields.io/badge/Qiskit-2.5.1-6929c4)](experiments/scripts/run_quantum_simulation.py)
+[![ISCAS 2025](https://img.shields.io/badge/ECA%20起点-ISCAS%202025-00629B)](https://doi.org/10.1109/ISCAS56072.2025.11044249)
 [![English](https://img.shields.io/badge/README-English-blue)](README.md)
 
-本仓库是 **Eigen-Component Analysis（ECA）** 的研究档案与下一阶段数学路线图。它连接了 2020 年的原始想法、ISCAS 2025 发表模型、实现审计，以及更严格的新表述：
+这个仓库把原来的 Eigen-Component Analysis（ECA）想法整理成了一个可证明、
+可运行、可复现的框架：
 
-> 学习一个低秩正交基，使不同类别的条件方向性能量具有尽可能强且稳定的差异。
+> 学习类别判别能量成分，并把它编译成问题结构允许的最简单测量。
 
-主要成果是
-[ECA 深度研究分析](references/eca_deep_research_analysis.md)。文档明确区分了已经发表的结果、本文提出的理论、代码审计发现，以及仍需实验验证的主张。
+新的核心算法是 **Discriminative Energy Component Analysis（DECA）**：
+把分类表述为“共享本征基/可交换测量”约束下的最小错误态判别。仓库现在包含：
 
-## 一个公式理解模型
+- journal-style [论文源码](publication/main.tex)和
+  [编译 PDF](publication/main.pdf)；
+- 二分类解析解、可交换多分类精确性和 POVM gap 上界；
+- 单调的多分类 Jacobi 算法；
+- SDP oracle 与 Pretty Good Measurement（PGM）；
+- 真正运行过的 Qiskit Aer PVM 和 Naimark dilation 电路；
+- 17 项测试与 1,100 次 repeated-CV 外层拟合；
+- 2020 原始预印本、ISCAS 2025 源文件和 Ising 聚类探索工作的研究谱系。
 
-对正交基 \(P=[p_1,\ldots,p_r]\)，ECA 使用平方投影特征
+## 三个公式理解 DECA
 
-\[
-z_P(x)=(P^\top x)\odot(P^\top x).
-\]
-
-类别得分
-
-\[
-s_c(x)=\sum_jL_{jc}(p_j^\top x)^2
-\]
-
-等价于
+把输入编码为单位态，并为每类估计一个算符：
 
 \[
-s_c(x)=x^\top Q_cx,\qquad
-Q_c=P\operatorname{diag}(L_{:c})P^\top.
+\rho_x=\phi(x)\phi(x)^\dagger,\qquad
+A_c=\pi_c\,\mathbb E[\rho_x\mid y=c].
 \]
 
-因此 ECA 在能量特征上是线性的，在原输入空间中则是共享本征基的结构化二次分类器。
-
-建议的判别目标不再最大化总体方差，而是最大化类条件能量对比：
+对共享基 \(P=[p_1,\ldots,p_d]\)，固定基下的最优 decoder 必然可取 hard：
 
 \[
-\max_{P^\top P=I}
-\sum_c\pi_c
-\left\|
-\operatorname{diag}\!\left(P^\top(R_c-\bar R)P\right)
-\right\|_2^2.
+S_{\mathrm{DECA}}(P)=
+\sum_{j=1}^d\max_c p_j^\dagger A_cp_j.
 \]
 
-它等价于对中心化类条件二阶矩做近似联合对角化。完整推导、适用边界和实验计划见深度分析。
+二分类令 \(\Delta=A_1-A_2\)，其本征基给出全局解析解：
 
-## 仓库内容
+\[
+S_{\mathrm{DECA}}^\star
+=\frac12(1+\|\Delta\|_1)
+=S_{\mathrm{Helstrom}}^\star.
+\]
 
-| 路径 | 内容 | 状态 |
-|---|---|---|
-| [`references/eca_deep_research_analysis.md`](references/eca_deep_research_analysis.md) | 数学、物理、机器学习、实现、评审和实验分析 | 核心研究文档 |
-| [`references/2003.10199v3.pdf`](references/2003.10199v3.pdf) | 原始 ECA 预印本文件 | 历史来源 |
-| [`references/_Rongzhou___ISCAS2025__Eigen_Component_Analysis__A_Quantum_Theory_Inspired_Linear_Model/`](references/_Rongzhou___ISCAS2025__Eigen_Component_Analysis__A_Quantum_Theory_Inspired_Linear_Model/) | ISCAS 时期 LaTeX、图，以及后续候选稿件材料 | 研究源文件档案 |
-| [`references/_Rongzhou___ICIP2025__Ising_Clustering__A_Democratic_Voting_Approach/`](references/_Rongzhou___ICIP2025__Ising_Clustering__A_Democratic_Voting_Approach/) | Ising/Potts 聚类探索稿 | 未发表探索性工作 |
-| [`references/1. 更 general 的数学：ECA 代表什么通用概念？.md`](references/1.%20更%20general%20的数学：ECA%20代表什么通用概念？.md) | 早期 ChatGPT 讨论，保留研究过程 | 探索笔记，不作为证据 |
-| [`references/README.md`](references/README.md) | 材料来源与公开边界 | 档案说明 |
+这里的二分类等式就是已知 Helstrom 结果，不把它冒充新的量子判别理论。
+DECA 的贡献在于约束测量表述、hard decoder 消元、多分类精确性与 gap bound、
+Jacobi solver，以及严格区分：
 
-维护中的 Python 实现位于
-[`lachlanchen/eca`](https://github.com/lachlanchen/eca)，本仓库不复制第二份代码。
+- **PVM-DECA：**只保留本征值正负号，对应二分类最优单次物理测量；
+- **Spectral-DECA：**保留本征值幅度，对应确定性二次分类或重复 shots 的
+  observable expectation。
 
-## 关键结论
+## 实验真正说明了什么
 
-- 可逆正交变换本身不能把线性不可分数据变成线性可分；额外表达能力来自投影后的平方。
-- 严格归一化且类别 effect 逐行归一的 ECA 对应可交换 POVM；硬分配对应投影测量。
-- 逐元素 sigmoid 类别权重本身不能构成 categorical probability。
-- 在反对称矩阵指数中加入可学习对角项通常会破坏正交性和能量守恒。
-- 最有防御力的新颖性不是笼统的“最大可分性”，而是类别能量谱、共享本征基二次算符和监督联合对角化的组合。
-- 当前 Ising 聚类的 pairwise-difference 目标需要明确最大化或最小化符号、加入防塌缩约束，并在多类时使用 Potts/max-\(K\)-cut 表述。
+| 证据 | 结果 |
+|---|---|
+| 30 个随机二分类 trial | 闭式解与 SDP gap \(\le 2.0\times10^{-8}\) |
+| 16 个可交换多分类 trial | DECA 与 SDP gap \(\le 1.45\times10^{-8}\) |
+| 72 个非对易 trial | 理论 residual bound 零违反 |
+| Qiskit Aer 电路 | 最大概率 total-variation error 为 \(0.0073\) |
+| trine-state 例子 | 一般 POVM 成功率提高 \(0.04466\) |
+| 经典基准 | 10 数据集、11 方法、1,100 次外层拟合 |
 
-## 项目状态
+受控 covariance-only 数据验证了原始直觉：Spectral-DECA 达到
+\(0.786\pm0.014\)，logistic regression 为 \(0.496\pm0.019\)。
+公开数据结果则没有刻意美化：PGM 通常能修复一部分 PVM 多分类损失，但
+RBF-SVM 和 random forest 在多数任务上仍更强。26 类 Letter Recognition
+只有 17 个编码维度，实验直接暴露了可证明的 \(K>d\) PVM 容量限制。
 
-1. **已发表：**ECA 论文发表于 IEEE ISCAS 2025
-   （[DOI](https://doi.org/10.1109/ISCAS56072.2025.11044249)，
-   [作者公开 PDF](https://www.eee.hku.hk/optima/pub/conference/2505_ISCASa.pdf)）。
-2. **已审计：**深度分析推导了真实的二次模型，并记录下一版需要修正的数学和实现不一致。
-3. **待验证：**DECA 类能量对比联合对角化目标、最坏类别对 margin、低秩 Stiefel 优化和修复后的 Ising/Potts 扩展，目前都是研究提案。
+因此本项目声称的是严格的**机制与资源—精度权衡**，不声称普遍准确率优势、
+量子加速、隐私保证或硬件优势。
 
-本仓库不宣称量子加速、隐私保证、硬件优势或跨任务的普遍准确率优势。
+## 快速开始
 
-## 下一步验证
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -e './experiments[quantum,test]'
 
-建议使用可控合成数据、OpenML/TabZilla 表格任务和强基线，进行 repeated nested cross-validation、置信区间、复杂度、校准和完整 ablation。详细清单见
-[分阶段研究路线](references/eca_deep_research_analysis.md#13-分阶段研究路线)。
-
-## 引用
-
-GitHub 会读取 [`CITATION.cff`](CITATION.cff) 并显示
-**Cite this repository**。引用已发表 ECA 论文：
-
-```bibtex
-@inproceedings{chen2025eca,
-  title     = {Eigen-Component Analysis: A Quantum Theory-Inspired Linear Model},
-  author    = {Chen, Rongzhou and Zhao, Yaping and Liu, Hanghang and
-               Xu, Haohan and Ma, Shaohua and Lam, Edmund Y.},
-  booktitle = {2025 IEEE International Symposium on Circuits and Systems (ISCAS)},
-  pages     = {1--5},
-  year      = {2025},
-  doi       = {10.1109/ISCAS56072.2025.11044249}
-}
+.venv/bin/python -m pytest experiments/tests -q
+.venv/bin/python experiments/scripts/run_theory_validation.py
+.venv/bin/python experiments/scripts/run_quantum_simulation.py
 ```
 
-引用本研究档案：
+运行完整经典实验：
 
-```bibtex
-@software{chen2026deca,
-  author = {Chen, Rongzhou},
-  title  = {Discriminative Energy Component Analysis: Research Archive and Roadmap},
-  year   = {2026},
-  url    = {https://github.com/lachlanchen/discriminative-energy-component-analysis}
-}
+```bash
+.venv/bin/python experiments/scripts/run_classical_benchmarks.py \
+  --folds 5 --repeats 2
+.venv/bin/python experiments/scripts/analyze_classical_results.py
 ```
 
-欢迎提交理论修正、反例、可复现实验和范围清楚的实现。参与前请阅读
-[`CONTRIBUTING.md`](CONTRIBUTING.md)。仓库包含不同来源和权利状态的论文材料，不存在覆盖全部文件的单一开源许可证；复用前请阅读
+UCI 数据下载使用固定 URL 和 SHA-256 校验。下载数据缓存在 Git 忽略的
+`experiments/data/`；所有 CSV、JSON、PDF 和 PNG 证据位于
+[`experiments/results/`](experiments/results/)。
+
+编译论文：
+
+```bash
+.venv/bin/python experiments/scripts/export_paper_tables.py
+make -C publication
+```
+
+本地 Aer 模拟不需要 IBM Quantum 账户。
+
+## 仓库地图
+
+| 路径 | 内容 |
+|---|---|
+| [`publication/main.pdf`](publication/main.pdf) | 当前 journal-style 论文 |
+| [`publication/main.tex`](publication/main.tex) | 主 LaTeX 源文件 |
+| [`experiments/deca/`](experiments/deca/) | 编码、算符、solver、分类器和量子电路 |
+| [`experiments/tests/`](experiments/tests/) | 理论、API 与 Qiskit 测试 |
+| [`experiments/scripts/`](experiments/scripts/) | 可复现实验入口 |
+| [`experiments/results/`](experiments/results/) | 原始记录、汇总和图 |
+| [`references/deca_theory_and_novelty_spec.md`](references/deca_theory_and_novelty_spec.md) | 中文理论与新颖性规格 |
+| [`references/eca_deep_research_analysis.md`](references/eca_deep_research_analysis.md) | 原 ECA 与 Ising 方向审计 |
+| [`references/README.md`](references/README.md) | 历史材料来源与公开边界 |
+
+## 研究谱系与作者边界
+
+原始 ECA 论文发表于 IEEE ISCAS 2025
+（[DOI](https://doi.org/10.1109/ISCAS56072.2025.11044249)）。本仓库保留
+2020 预印本和作者源文件，但不会改写历史文件来制造“新理论早已存在”的印象。
+
+新稿暂以 `Rongzhou (Lachlan) Chen` 作为作者占位。真正投稿前，作者名单、
+单位、致谢和目标期刊必须由所有人确认。
+
+## 引用与权利
+
+引用信息见 [`CITATION.cff`](CITATION.cff)。`experiments/` 下的原创代码使用
+MIT License；历史论文、图片、手稿和模板可能有不同权利状态。复用前请阅读
 [`LICENSE.md`](LICENSE.md)。

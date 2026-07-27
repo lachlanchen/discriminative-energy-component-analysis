@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deca-experiments"
+version = "1.0.0"
+description = "Reproducible classical and quantum experiments for Discriminative Energy Component Analysis"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+  {name = "Rongzhou (Lachlan) Chen"},
+]
+requires-python = ">=3.10"
+dependencies = [
+  "cvxpy>=1.6,<2",
+  "matplotlib>=3.8,<4",
+  "numpy>=2,<3",
+  "pandas>=2.2,<3",
+  "scikit-learn>=1.5,<2",
+  "scipy>=1.13,<2",
+  "seaborn>=0.13,<1",
+]
+
+[project.optional-dependencies]
+quantum = [
+  "qiskit~=2.5.0",
+  "qiskit-aer~=0.17",
+]
+test = [
+  "pytest>=8,<10",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["deca*"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]

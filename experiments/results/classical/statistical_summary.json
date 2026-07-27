@@ -1,0 +1,19 @@
+{
+  "public_datasets": [
+    "iris",
+    "wine",
+    "breast_cancer",
+    "digits",
+    "banknote",
+    "spambase",
+    "dry_bean",
+    "letter"
+  ],
+  "friedman": {
+    "methods": 11,
+    "datasets": 8,
+    "statistic": 57.444507683551535,
+    "p_value": 1.0997030600649682e-08
+  },
+  "interpretation": "Dataset means are the independent blocks. Outer folds are not treated as independent samples. Pairwise Wilcoxon tests are exploratory because only eight public datasets are available."
+}

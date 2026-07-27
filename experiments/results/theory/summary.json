@@ -1,0 +1,34 @@
+{
+  "binary_trials": 30,
+  "binary_max_closed_form_error": 8.881784197001252e-16,
+  "binary_max_sdp_gap": 1.9779560878063762e-08,
+  "commuting_trials": 16,
+  "commuting_max_sdp_gap": 1.447421937861293e-08,
+  "commuting_max_residual": 0.15436557665364795,
+  "noncommuting_trials": 72,
+  "noncommuting_bound_violations": 0,
+  "noncommuting_gap_commutator_pearson": -0.11060976727799715,
+  "trine": {
+    "family": "trine",
+    "dimension": 2,
+    "deca_success": 0.6220084679281463,
+    "pgm_success": 0.6666666666666663,
+    "oracle_success": 0.666666665763848,
+    "oracle_gap": 0.044658197835701685,
+    "deca_component_counts": [
+      0,
+      1,
+      1
+    ],
+    "deca_ancillas": 0,
+    "general_povm_minimum_outcome_qubits": 2
+  },
+  "runtime_seconds": 4.3247547569917515,
+  "versions": {
+    "python": "3.10.13",
+    "numpy": "2.2.6",
+    "scipy": "1.15.3",
+    "cvxpy": "1.7.5",
+    "qiskit": "2.5.1"
+  }
+}

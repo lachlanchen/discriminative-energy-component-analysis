@@ -1,28 +1,47 @@
 cff-version: 1.2.0
 message: >-
-  If this research archive or its proposed DECA formulation contributes to
-  your work, please cite this repository and the ISCAS 2025 ECA paper.
+  If the DECA theory, implementation, experiments, or research archive
+  contributes to your work, please cite this repository and the ISCAS 2025
+  ECA paper where appropriate.
 type: software
-title: "Discriminative Energy Component Analysis: Research Archive and Roadmap"
+title: >-
+  Discriminative Energy Component Analysis: Optimal Commuting Measurements
+  and Spectral Quadratic Classification
 authors:
   - family-names: Chen
     given-names: Rongzhou
     alias: Lachlan Chen
 repository-code: "https://github.com/lachlanchen/discriminative-energy-component-analysis"
 url: "https://github.com/lachlanchen/discriminative-energy-component-analysis"
-version: 0.1.0
+version: 1.0.0
 date-released: 2026-07-27
 abstract: >-
-  A research compendium for Eigen-Component Analysis, including its historical
-  sources, a mathematical and implementation audit, and a proposed
-  class-conditional energy-contrast formulation based on shared-eigenbasis
-  quadratic operators and supervised joint diagonalization.
+  A tested reformulation of Eigen-Component Analysis as constrained quantum
+  state discrimination and structured quadratic classification. The release
+  includes analytical results, a monotone Jacobi solver, SDP and PGM
+  comparisons, Qiskit circuit simulations, public-data benchmarks, historical
+  sources, and a compiled journal-style manuscript.
 keywords:
   - eigen-component analysis
   - discriminative feature extraction
   - quadratic classification
   - joint diagonalization
+  - quantum state discrimination
+  - positive operator-valued measure
+  - Qiskit
   - class-conditional second moments
   - commuting operators
   - quantum-inspired machine learning
   - subspace learning
+preferred-citation:
+  type: article
+  title: >-
+    Discriminative Energy Component Analysis: Optimal Commuting Measurements
+    and Spectral Quadratic Classification
+  authors:
+    - family-names: Chen
+      given-names: Rongzhou
+      alias: Lachlan Chen
+  year: 2026
+  url: >-
+    https://github.com/lachlanchen/discriminative-energy-component-analysis

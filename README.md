@@ -1,184 +1,165 @@
 # Discriminative Energy Component Analysis
 
-[![Research status](https://img.shields.io/badge/status-research%20roadmap-8a2be2)](#project-status)
-[![ISCAS 2025](https://img.shields.io/badge/ISCAS%202025-10.1109%2FISCAS56072.2025.11044249-00629B)](https://doi.org/10.1109/ISCAS56072.2025.11044249)
-[![Implementation](https://img.shields.io/badge/code-lachlanchen%2Feca-181717?logo=github)](https://github.com/lachlanchen/eca)
+[![Research](https://img.shields.io/badge/status-validated%20research-2b6cb0)](publication/main.pdf)
+[![Tests](https://img.shields.io/badge/tests-17%20passing-2ea44f)](experiments/tests)
+[![Qiskit](https://img.shields.io/badge/Qiskit-2.5.1-6929c4)](experiments/scripts/run_quantum_simulation.py)
+[![ISCAS 2025](https://img.shields.io/badge/ECA%20origin-ISCAS%202025-00629B)](https://doi.org/10.1109/ISCAS56072.2025.11044249)
 [![中文](https://img.shields.io/badge/README-简体中文-red)](README.zh-Hans.md)
 
-This repository is the research archive and forward-looking mathematical
-roadmap for **Eigen-Component Analysis (ECA)**. It connects the original
-2020 idea, the published ISCAS 2025 model, a critical implementation audit,
-and a more rigorous next-generation formulation:
+This repository turns the original Eigen-Component Analysis (ECA) idea into a
+tested mathematical and computational framework:
 
-> Learn a low-rank orthogonal basis whose class-conditional directional
-> energies differ as strongly and reliably as possible.
+> Learn class-discriminative energy components and compile them into the
+> simplest measurement that the problem structure permits.
 
-The main output is the
-[deep research analysis](references/eca_deep_research_analysis.md). It
-separates established results, proposed theory, implementation findings, and
-claims that still require experiments.
+The central result is **Discriminative Energy Component Analysis (DECA)**,
+formulated as minimum-error classification under a commuting/shared-basis
+measurement constraint. The repository includes:
 
-## The model in one equation
+- a journal-style [paper source](publication/main.tex) and
+  [compiled PDF](publication/main.pdf);
+- analytical binary and commuting-multiclass results;
+- a monotone multiclass Jacobi algorithm;
+- SDP and Pretty Good Measurement (PGM) oracles;
+- real Qiskit Aer PVM and Naimark-dilation simulations;
+- 17 passing tests and 1,100 repeated-CV benchmark fits;
+- the original 2020 preprint, ISCAS 2025 source archive, and exploratory Ising
+  clustering work for provenance.
 
-For an orthogonal basis \(P=[p_1,\ldots,p_r]\), ECA uses squared projection
-features
+## The idea in three equations
 
-\[
-z_P(x)=(P^\top x)\odot(P^\top x).
-\]
-
-A class score
-
-\[
-s_c(x)=\sum_j L_{jc}(p_j^\top x)^2
-\]
-
-is equivalently
+Encode an input as a unit state and estimate one class operator per class:
 
 \[
-s_c(x)=x^\top Q_cx,\qquad
-Q_c=P\operatorname{diag}(L_{:c})P^\top.
+\rho_x=\phi(x)\phi(x)^\dagger,\qquad
+A_c=\pi_c\,\mathbb E[\rho_x\mid y=c].
 \]
 
-ECA is therefore linear in the learned **energy features**, but a structured
-quadratic classifier in the original input. Its class operators share an
-eigenbasis and commute.
-
-The proposed discriminative objective replaces total variance with
-class-conditional energy contrast:
+For a shared basis \(P=[p_1,\ldots,p_d]\), the best commuting measurement has
+an analytical hard decoder:
 
 \[
-\max_{P^\top P=I}
-\sum_c\pi_c
-\left\|
-\operatorname{diag}\!\left(P^\top(R_c-\bar R)P\right)
-\right\|_2^2.
+S_{\mathrm{DECA}}(P)=
+\sum_{j=1}^d\max_c p_j^\dagger A_cp_j.
 \]
 
-This is equivalent to approximately jointly diagonalizing centered
-class-conditional second-moment matrices. The full derivation, limits, and
-experimental plan are in the analysis.
+For two classes, let \(\Delta=A_1-A_2\). Its eigenbasis is globally optimal:
 
-## Why this repository exists
+\[
+S_{\mathrm{DECA}}^\star
+=\frac12(1+\|\Delta\|_1)
+=S_{\mathrm{Helstrom}}^\star.
+\]
 
-The published work introduced an interpretable squared-component model, but
-several questions remained open:
+This binary equality is the known Helstrom result, not a new quantum
+discrimination theorem. The DECA contribution is the constrained-measurement
+reformulation, hard-decoder elimination, multiclass exactness and gap bound,
+Jacobi solver, and the distinction between:
 
-- What precisely is maximized when the goal is class difference rather than
-  total variance?
-- Is ECA a linear model, a quadratic model, a subspace classifier, or a
-  quantum measurement model?
-- Which quantum-mechanical statements are exact, and which are analogies?
-- When does a shared eigenbasis help, and when does noncommutativity make it
-  too restrictive?
-- How should parameter counts, orthogonality, probabilities, scaling, and
-  privacy claims be audited?
-- How can the exploratory Ising/Potts clustering branch be repaired?
+- **PVM-DECA:** keeps only eigenvalue signs for optimal single-shot binary
+  measurement;
+- **Spectral-DECA:** retains eigenvalue magnitudes for deterministic quadratic
+  classification or repeated-shot observable estimation.
 
-This repository turns those questions into definitions, falsifiable
-hypotheses, ablations, and a staged research plan.
+## What the experiments show
+
+| Evidence | Result |
+|---|---|
+| 30 random binary trials | closed form vs. SDP gap \(\le 2.0\times10^{-8}\) |
+| 16 commuting multiclass trials | DECA vs. SDP gap \(\le 1.45\times10^{-8}\) |
+| 72 noncommuting trials | zero violations of the proved residual bound |
+| Qiskit Aer circuits | max probability total-variation error \(0.0073\) |
+| Trine-state example | general POVM improves success by \(0.04466\) |
+| Classical benchmark | 10 datasets, 11 methods, 1,100 outer fits |
+
+The controlled covariance experiment validates the original intuition:
+Spectral-DECA reaches \(0.786\pm0.014\), versus \(0.496\pm0.019\) for logistic
+regression. The public-data results are deliberately less flattering. PGM
+usually improves over a projective DECA measurement, but RBF-SVM and random
+forest remain stronger on most tasks. On 26-class Letter Recognition with
+only 17 encoded dimensions, the experiment exposes the exact \(K>d\) PVM
+capacity limit.
+
+The project therefore claims a rigorous **mechanism and resource trade-off**,
+not universal accuracy, quantum speedup, privacy, or hardware advantage.
+
+## Quick start
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -e './experiments[quantum,test]'
+
+.venv/bin/python -m pytest experiments/tests -q
+.venv/bin/python experiments/scripts/run_theory_validation.py
+.venv/bin/python experiments/scripts/run_quantum_simulation.py
+```
+
+Run the complete classical study:
+
+```bash
+.venv/bin/python experiments/scripts/run_classical_benchmarks.py \
+  --folds 5 --repeats 2
+.venv/bin/python experiments/scripts/analyze_classical_results.py
+```
+
+The UCI downloader uses fixed URLs and SHA-256 verification. Downloaded data
+are cached under ignored `experiments/data/`; all CSV, JSON, PDF, and PNG
+evidence is under [`experiments/results/`](experiments/results/).
+
+Build the paper:
+
+```bash
+.venv/bin/python experiments/scripts/export_paper_tables.py
+make -C publication
+```
+
+No IBM Quantum account is required for the included local Aer simulations.
 
 ## Repository map
 
-| Path | Contents | Status |
-|---|---|---|
-| [`references/eca_deep_research_analysis.md`](references/eca_deep_research_analysis.md) | Mathematical, physical, ML, implementation, reviewer, and experiment analysis | Primary research document |
-| [`references/2003.10199v3.pdf`](references/2003.10199v3.pdf) | Original ECA preprint artifact | Historical source |
-| [`references/_Rongzhou___ISCAS2025__Eigen_Component_Analysis__A_Quantum_Theory_Inspired_Linear_Model/`](references/_Rongzhou___ISCAS2025__Eigen_Component_Analysis__A_Quantum_Theory_Inspired_Linear_Model/) | ISCAS-era LaTeX and figures, plus later candidate manuscript material | Research source archive |
-| [`references/_Rongzhou___ICIP2025__Ising_Clustering__A_Democratic_Voting_Approach/`](references/_Rongzhou___ICIP2025__Ising_Clustering__A_Democratic_Voting_Approach/) | Exploratory Ising/Potts clustering draft | Unpublished exploratory work |
-| [`references/1. 更 general 的数学：ECA 代表什么通用概念？.md`](references/1.%20更%20general%20的数学：ECA%20代表什么通用概念？.md) | Earlier ChatGPT discussion retained for provenance | Exploratory notes, not evidence |
-| [`references/README.md`](references/README.md) | Provenance and public/private boundary | Archive guide |
-| [`CITATION.cff`](CITATION.cff) | Repository citation metadata | Citable research record |
+| Path | Purpose |
+|---|---|
+| [`publication/main.pdf`](publication/main.pdf) | Current journal-style paper |
+| [`publication/main.tex`](publication/main.tex) | Canonical LaTeX source |
+| [`experiments/deca/`](experiments/deca/) | Encodings, operators, solvers, classifier, and circuits |
+| [`experiments/tests/`](experiments/tests/) | Analytical, API, and Qiskit tests |
+| [`experiments/scripts/`](experiments/scripts/) | Reproducible experiment and table entry points |
+| [`experiments/results/`](experiments/results/) | Frozen raw records, summaries, and figures |
+| [`references/deca_theory_and_novelty_spec.md`](references/deca_theory_and_novelty_spec.md) | Detailed Chinese theory/novelty specification |
+| [`references/eca_deep_research_analysis.md`](references/eca_deep_research_analysis.md) | Audit of the original ECA and Ising directions |
+| [`references/README.md`](references/README.md) | Historical provenance and public/private boundary |
 
-The maintained Python implementation remains in
-[`lachlanchen/eca`](https://github.com/lachlanchen/eca). This repository does
-not duplicate it.
+## Historical lineage
 
-## Key research conclusions
+The original ECA paper was published at IEEE ISCAS 2025
+([DOI](https://doi.org/10.1109/ISCAS56072.2025.11044249)). This repository
+preserves the 2020 preprint and author source materials but does not alter them
+to make the new theory appear historical.
 
-- An invertible orthogonal transform alone cannot make linearly inseparable
-  data linearly separable; the extra capacity comes from squaring the
-  projected coordinates.
-- Strictly normalized ECA with row-stochastic class effects is a commuting
-  POVM; hard component allocation is a projective measurement.
-- Elementwise sigmoid class weights do not by themselves form a categorical
-  probability model.
-- Adding a learned diagonal term inside the skew-matrix exponential generally
-  breaks orthogonality and energy conservation.
-- The strongest defensible novelty is not generic “maximum separability.”
-  It is discriminative class-energy spectra represented by shared-eigenbasis
-  quadratic operators and supervised joint diagonalization.
-- The current Ising-clustering pairwise-difference objective needs an explicit
-  sign choice, anti-collapse constraints, and a Potts/max-\(K\)-cut
-  formulation for more than two clusters.
-
-## Project status
-
-This repository intentionally distinguishes three levels of maturity:
-
-1. **Published:** the ECA paper appeared at IEEE ISCAS 2025
-   ([DOI](https://doi.org/10.1109/ISCAS56072.2025.11044249),
-   [author-hosted PDF](https://www.eee.hku.hk/optima/pub/conference/2505_ISCASa.pdf)).
-2. **Audited:** the analysis derives the actual quadratic model and documents
-   mathematical and implementation inconsistencies that should be corrected.
-3. **Proposed, not yet validated:** DECA's class-contrast joint-diagonalization
-   objective, worst-pair energy margin, low-rank Stiefel optimization, and the
-   repaired Ising/Potts extension require implementation and benchmark study.
-
-No quantum speedup, privacy guarantee, hardware advantage, or universal
-accuracy advantage is claimed here.
-
-## Suggested validation path
-
-The proposed work should be tested on:
-
-- controlled mean-only, covariance-only, commuting, noncommuting, and
-  higher-moment synthetic problems;
-- OpenML and TabZilla tabular benchmarks;
-- strong baselines including LDA/MMC, CSP, QDA, polynomial SVM,
-  nearest-subspace methods, NCA/LMNN, boosted trees, and MLPs;
-- repeated nested cross-validation with confidence intervals;
-- strict parameter, storage, FLOP, training-time, latency, and calibration
-  reporting;
-- ablations for orthogonality, class-effect normalization, rank, sparsity,
-  loss design, and initialization.
-
-See the [research roadmap](references/eca_deep_research_analysis.md#13-分阶段研究路线)
-for the full checklist.
+The new manuscript uses `Rongzhou (Lachlan) Chen` as a placeholder author.
+Final authorship, affiliations, acknowledgments, and target venue must be
+confirmed by the human contributors before submission.
 
 ## Citation
 
-GitHub reads [`CITATION.cff`](CITATION.cff) and exposes a
-**Cite this repository** action. To cite the published ECA paper:
-
-```bibtex
-@inproceedings{chen2025eca,
-  title     = {Eigen-Component Analysis: A Quantum Theory-Inspired Linear Model},
-  author    = {Chen, Rongzhou and Zhao, Yaping and Liu, Hanghang and
-               Xu, Haohan and Ma, Shaohua and Lam, Edmund Y.},
-  booktitle = {2025 IEEE International Symposium on Circuits and Systems (ISCAS)},
-  pages     = {1--5},
-  year      = {2025},
-  doi       = {10.1109/ISCAS56072.2025.11044249}
-}
-```
-
-To cite this research archive:
-
 ```bibtex
 @software{chen2026deca,
-  author = {Chen, Rongzhou},
-  title  = {Discriminative Energy Component Analysis: Research Archive and Roadmap},
-  year   = {2026},
-  url    = {https://github.com/lachlanchen/discriminative-energy-component-analysis}
+  author  = {Chen, Rongzhou},
+  title   = {Discriminative Energy Component Analysis:
+             Optimal Commuting Measurements and Spectral
+             Quadratic Classification},
+  year    = {2026},
+  version = {1.0.0},
+  url     = {https://github.com/lachlanchen/discriminative-energy-component-analysis}
 }
 ```
 
-## Contributing and reuse
+The original ISCAS paper has its own citation in [`CITATION.cff`](CITATION.cff)
+and the manuscript bibliography.
 
-Corrections, counterexamples, reproducible experiments, and carefully scoped
-implementations are welcome; see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+## Rights and reuse
 
-This archive contains mixed-origin research material, manuscript sources, and
-publisher/template assets. No single open-source license applies to every
-file. Read [`LICENSE.md`](LICENSE.md) before reuse.
+Original code under [`experiments/`](experiments/) is MIT-licensed. Historical
+papers, figures, manuscripts, templates, and other archive material can have
+different rights. See [`LICENSE.md`](LICENSE.md) before reuse.

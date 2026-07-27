@@ -1,0 +1,5 @@
+left,right,datasets,mean_accuracy_difference,median_accuracy_difference,wins_left,ties,wins_right,wilcoxon_statistic,p_value,holm_p_value
+PGM-affine,PVM-DECA-amplitude,8,0.20211786172409196,0.2303934351542557,7,0,1,1.0,0.015625,0.046875
+PGM-affine,Spectral-DECA-affine,8,0.17016587657510635,0.13213808930859527,8,0,0,0.0,0.0078125,0.03125
+PGM-affine,SVM-RBF,8,-0.08856587775250561,-0.058528644105286465,1,0,7,1.0,0.015625,0.046875
+PVM-DECA-amplitude,Spectral-DECA-amplitude,8,0.03673089350242197,0.02425790754257906,7,0,1,3.0,0.0390625,0.046875

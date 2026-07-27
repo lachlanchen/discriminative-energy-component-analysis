@@ -1,0 +1,40 @@
+{
+  "folds": 5,
+  "repeats": 2,
+  "datasets": [
+    "synthetic_covariance",
+    "synthetic_mean",
+    "iris",
+    "wine",
+    "breast_cancer",
+    "digits",
+    "banknote",
+    "spambase",
+    "dry_bean",
+    "letter"
+  ],
+  "methods": [
+    "Hist-gradient-boosting",
+    "LDA-shrinkage",
+    "Logistic",
+    "PGM-affine",
+    "PVM-DECA-amplitude",
+    "QDA",
+    "Random-forest",
+    "SVM-RBF",
+    "SVM-polynomial-2",
+    "Spectral-DECA-affine",
+    "Spectral-DECA-amplitude"
+  ],
+  "outer_fits": 1100,
+  "runtime_seconds": 711.2554810179863,
+  "best_mean_rank_method": "Random-forest",
+  "versions": {
+    "python": "3.10.13",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "scipy": "1.15.3",
+    "scikit_learn": "1.7.2",
+    "qiskit": "2.5.1"
+  }
+}

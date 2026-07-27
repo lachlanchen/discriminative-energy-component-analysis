@@ -12,11 +12,16 @@ Discriminative Energy Component Analysis (DECA).
 | [`_Rongzhou___ICIP2025__Ising_Clustering__A_Democratic_Voting_Approach/`](_Rongzhou___ICIP2025__Ising_Clustering__A_Democratic_Voting_Approach/) | Author research draft | Exploratory and unpublished; its objective is critically audited in the deep analysis |
 | [`1. 更 general 的数学：ECA 代表什么通用概念？.md`](1.%20更%20general%20的数学：ECA%20代表什么通用概念？.md) | Earlier ChatGPT conversation supplied by the author | Research-process provenance, not peer-reviewed evidence |
 | [`eca_deep_research_analysis.md`](eca_deep_research_analysis.md) | Evidence-backed synthesis produced from the local artifacts, public code, and primary literature | Main analysis and future research roadmap |
+| [`deca_theory_and_novelty_spec.md`](deca_theory_and_novelty_spec.md) | Formal DECA/POVM/Spectral-DECA derivation plus frozen experiment findings | Current mathematical specification |
+| [`publication_plan.md`](publication_plan.md) | Claim, evidence, file, and verification plan for the new manuscript | Traceability record |
+
+The executable implementation and paper generated from this analysis now live
+in [`../experiments/`](../experiments/) and [`../publication/`](../publication/).
 
 ## Deliberately excluded from the public repository
 
 - The full TCAS-II decision email and recipient addresses.
-- Internal work plans.
+- Private editorial correspondence and earlier internal scratch plans.
 - A duplicate TCAS candidate-source directory whose main files are
   byte-identical to material already preserved in the ISCAS-era archive and
   which cannot be verified as the exact submitted artifact.
@@ -51,8 +56,10 @@ The documents use the following distinctions:
 - **Source observation:** directly verified from a local artifact or public
   implementation.
 - **Derivation:** follows mathematically from an explicitly stated model.
-- **Proposal:** a new algorithm, interpretation, or experiment that remains to
-  be validated.
+- **Proposal:** a new algorithm, interpretation, or experiment not yet
+  validated.
+- **Validated experiment:** a result backed by a committed entry point, raw
+  records, pinned versions, and tests.
 - **Exploratory note:** useful research context, but not independent evidence.
 
 ## Rights
