@@ -410,10 +410,11 @@ string-theory problem.
 ### Legitimate bridge
 
 Quantum field theory, lattice gauge theory, tensor networks, and holography use
-states restricted to subregions or observable algebras. Symmetry and gauge
-constraints decompose reduced states into charge sectors. Given two computed
-states \(\rho_A(\theta)\) and \(\rho_A(\theta+\delta)\), accessible-observable
-contrast asks:
+states restricted to subregions or observable algebras. Global-symmetry charge
+sectors, gauge-boundary flux sectors, and torus topological holonomies are
+related block structures but are not interchangeable. Given two computed
+states \(\rho_A(\theta)\) and \(\rho_A(\theta+\delta)\),
+accessible-observable contrast asks:
 
 \[
 \text{Which bounded, gauge-invariant operator in region \(A\) best
@@ -449,10 +450,15 @@ operationally distinguishable response, but equality should not be assumed.
   duality, or phase unless tied to a concrete accepted model and independent
   checks.
 
-A credible first project would use a small lattice gauge theory or a published
-matrix-product-state dataset, predeclare two couplings/phases, compute
-gauge-invariant reduced states, and test whether the learned sector witness
-agrees with known Wilson-loop, flux, or order diagnostics.
+Run 4 completes the finite fixed-point version of that first project. On an
+\(L=3\) toric-code / \(D(\mathbb Z_2)\) torus it certifies exact blindness of
+all sub-distance observables and recovers a Wilson-loop-equivalent flux
+witness. The calculation uses the extended-link/electric-center partial-trace
+prescription and does not establish a continuum gauge, confinement, string,
+or holographic result. The next credible theoretical project is a published
+tensor-network or holographic-code state with an explicit boundary observable
+algebra; the next credible practical project is equal-budget surface-code
+syndrome-drift detection.
 
 ## 10. New research program and falsifiable milestones
 

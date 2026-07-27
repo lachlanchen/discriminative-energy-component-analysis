@@ -1,0 +1,8 @@
+method,success_probability,interpretation
+Best fixed <=2-link / weight<=2 observer,0.5,certified local blindness
+"Untwirled AOC, one representative per class",0.75,unknown nuisance logical sector at test time
+Stabilizer-only twirl + AOC,0.75,ground representatives are already stabilizer invariant
+Correct label-preserving nuisance twirl + AOC,1.0,learned Wilson-equivalent sector projector
+Wrong label-flipping twirl + AOC,0.5,negative control: the twirl erases the label
+Supplied Wilson-loop parity threshold,1.0,physics oracle / equally informed scalar baseline
+Full Helstrom oracle,1.0,unrestricted equal-prior upper bound

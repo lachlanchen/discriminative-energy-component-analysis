@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "deca-experiments"
-version = "3.0.0"
+version = "4.0.0"
 description = "Reproducible additive and symmetry-resolved observable-contrast research"
 readme = "README.md"
 license = {file = "LICENSE"}
@@ -37,4 +37,4 @@ include = ["aoc*", "deca*"]
 
 [tool.pytest.ini_options]
 addopts = "-ra"
-testpaths = ["run1/tests", "run2/tests", "run3/tests"]
+testpaths = ["run1/tests", "run2/tests", "run3/tests", "run4/tests"]

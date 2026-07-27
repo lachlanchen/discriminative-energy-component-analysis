@@ -13,7 +13,7 @@ authors:
     alias: Lachlan Chen
 repository-code: "https://github.com/lachlanchen/discriminative-energy-component-analysis"
 url: "https://github.com/lachlanchen/discriminative-energy-component-analysis"
-version: 3.0.0
+version: 4.0.0
 date-released: 2026-07-27
 abstract: >-
   A reproducible research repository developing Eigen-Component Analysis into
@@ -21,7 +21,8 @@ abstract: >-
   contrast. It includes exact binary and multiclass measurement formulations,
   mergeable streaming states, sequential evidence, symmetry-sector
   diagnostics, physical and chemical controlled experiments, Qiskit
-  simulations, historical sources, and three compiled working papers.
+  simulations, an exact gauge-sector benchmark, historical sources, and three
+  compiled working papers.
 keywords:
   - eigen-component analysis
   - additive observable contrast
@@ -35,6 +36,9 @@ keywords:
   - optical coherence
   - difference density
   - robotics
+  - lattice gauge theory
+  - topological order
+  - Wilson loop
 preferred-citation:
   type: software
   title: >-
@@ -45,6 +49,6 @@ preferred-citation:
       given-names: Rongzhou
       alias: Lachlan Chen
   year: 2026
-  version: 3.0.0
+  version: 4.0.0
   url: >-
     https://github.com/lachlanchen/discriminative-energy-component-analysis

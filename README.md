@@ -1,8 +1,8 @@
 # Observable Contrast Research
 
 [![Research](https://img.shields.io/badge/status-reproducible%20working%20papers-2b6cb0)](publication/)
-[![Tests](https://img.shields.io/badge/tests-36%20passing-2ea44f)](experiments/)
-[![Papers](https://img.shields.io/badge/research%20runs-3-6f42c1)](publication/)
+[![Tests](https://img.shields.io/badge/tests-41%20passing-2ea44f)](experiments/)
+[![Runs](https://img.shields.io/badge/research%20runs-4-6f42c1)](experiments/)
 [![ISCAS 2025](https://img.shields.io/badge/ECA%20origin-ISCAS%202025-00629B)](https://doi.org/10.1109/ISCAS56072.2025.11044249)
 [![中文](https://img.shields.io/badge/README-简体中文-red)](README.zh-Hans.md)
 
@@ -53,13 +53,14 @@ Group symmetry is the special case where
 say which parity, frequency, charge, or other physical sector carries the
 change.
 
-## Three immutable research runs
+## Four immutable research runs
 
 | Run | Question | Paper |
 |---|---|---|
 | [run 1](experiments/run1/) | When is ECA an optimal commuting measurement, and what is lost relative to a general POVM? | [DECA PDF](publication/run1/main.pdf) |
 | [run 2](experiments/run2/) | Can maximum-difference witnesses be accumulated, merged, capacity-limited, and used online? | [AOC PDF](publication/run2/main.pdf) |
 | [run 3](experiments/run3/) | What is the exact optimum under symmetry or a physical readout algebra, and which sector changed? | [SAOC PDF](publication/run3/main.pdf) |
+| [run 4](experiments/run4/) | Can a local observable algebra be certified blind before the first noncontractible gauge-sector witness is recovered? | [results and advantage audit](references/run4_gauge_sector_results_and_advantage_audit.md) |
 
 Run 1 is the frozen DECA baseline. Later runs do not overwrite its code,
 results, or manuscript. Shared maintained code lives in
@@ -82,6 +83,8 @@ The repository's contribution is the tested synthesis:
 - symmetry-/subalgebra-restricted optimal effects;
 - additive sector diagnostics and an exact \(O(d\log d)\) cyclic-translation
   implementation;
+- an exact toric-code local no-information certificate and recovery of the
+  first Wilson-loop-equivalent flux witness;
 - cross-domain experiments that report ties, failures, and claim boundaries.
 
 The detailed derivation and application map are in
@@ -99,6 +102,7 @@ The detailed derivation and application map are in
 | 10-qubit TFIM reduced state | response peak \(g/J=0.9625\) | known thermodynamic critical field is 1 |
 | Hückel difference density | attachment/detachment balance error \(5.55\times10^{-17}\) | controlled tight-binding model only |
 | Simulated 6-axis robot contact | learned screw overlap \(0.99925\) | structured simulation, not deployed hardware |
+| \(3\times3\) toric-code flux sectors | all 1,431 sub-distance Pauli gaps are 0; Wilson-loop trace distance is 1 | AOC ties the Wilson and Helstrom oracles when given the correct symmetry/access model |
 
 The strong differences occur in deliberately matched mean-blind,
 low-rank, or symmetry-nuisance regimes. The project makes no claim of
@@ -124,12 +128,14 @@ Promising uses requiring real domain validation include:
 - rotational molecular features built on established SOAP/ACE
   representations.
 
-String theory and quantum field theory are a theoretical frontier only. A
-credible next calculation would compare gauge-invariant reduced states from a
-small lattice-gauge or published tensor-network model and test the learned
-sector witness against known flux or Wilson-loop diagnostics. Nothing here
-claims to solve string theory, identify a vacuum, or prove a holographic
-duality.
+Run 4 now completes the finite fixed-point version of the proposed
+lattice-gauge calculation: it compares toric-code flux sectors, proves local
+blindness below code distance, and recovers a Wilson-loop-equivalent effect.
+This is a \(\mathbb Z_2\) lattice-gauge/QEC testbed, not a string-theory or
+holography result. A credible next theoretical step would use a published
+tensor-network or holographic-code state with an explicitly declared boundary
+observable algebra; a credible practical step is equal-budget surface-code
+syndrome-drift detection.
 
 ## Quick start
 
@@ -159,6 +165,12 @@ Run 3 experiments:
 .venv/bin/python experiments/run3/scripts/run_robot_contact.py
 ```
 
+Run 4 exact gauge-sector experiment:
+
+```bash
+.venv/bin/python experiments/run4/scripts/run_topological_flux.py
+```
+
 Build all manuscripts:
 
 ```bash
@@ -177,7 +189,8 @@ the command, dependencies, Git state, runtime, and output hashes.
 | [`experiments/run1/`](experiments/run1/) | Frozen DECA code, tests, scripts, and evidence |
 | [`experiments/run2/`](experiments/run2/) | Additive/streaming observable-contrast validation |
 | [`experiments/run3/`](experiments/run3/) | Symmetry-resolved and cross-domain validation |
-| [`publication/`](publication/) | Three independent paper sources and compiled PDFs |
+| [`experiments/run4/`](experiments/run4/) | Exact local-blindness and topological-flux validation |
+| [`publication/`](publication/) | Three independent paper sources and compiled PDFs for runs 1–3 |
 | [`references/`](references/) | Original ECA/Ising materials, reviews, research plans, and deep theory analysis |
 | [`CITATION.cff`](CITATION.cff) | GitHub citation metadata |
 | [`LICENSE.md`](LICENSE.md) | Public/private and mixed-rights boundary |
@@ -205,7 +218,7 @@ GitHub renders “Cite this repository” from [`CITATION.cff`](CITATION.cff).
              From Eigen-Components to Additive and
              Symmetry-Resolved Physical Witnesses},
   year    = {2026},
-  version = {3.0.0},
+  version = {4.0.0},
   url     = {https://github.com/lachlanchen/discriminative-energy-component-analysis}
 }
 ```

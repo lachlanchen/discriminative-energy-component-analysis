@@ -1,0 +1,4 @@
+weight,pauli,positive_expectation,negative_expectation,absolute_gap
+3,Z0 Z1 Z2,1.0,-1.0,2.0
+3,Z3 Z4 Z5,1.0,-1.0,2.0
+3,Z6 Z7 Z8,1.0,-1.0,2.0

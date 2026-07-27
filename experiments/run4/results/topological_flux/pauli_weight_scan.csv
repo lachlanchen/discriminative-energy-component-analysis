@@ -1,0 +1,4 @@
+weight,pauli_count,stabilizer_centralizer_count,nonzero_class_gap_count,max_absolute_expectation_gap,first_maximizer
+1,54,0,0,0.0,
+2,1377,0,0,0.0,
+3,22032,12,3,2.0,Z0 Z1 Z2

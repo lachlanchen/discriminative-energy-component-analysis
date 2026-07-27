@@ -1,8 +1,8 @@
 # 可访问观测差异研究
 
 [![研究状态](https://img.shields.io/badge/状态-可复现工作论文-2b6cb0)](publication/)
-[![测试](https://img.shields.io/badge/测试-36%20项通过-2ea44f)](experiments/)
-[![研究轮次](https://img.shields.io/badge/研究轮次-3-6f42c1)](publication/)
+[![测试](https://img.shields.io/badge/测试-41%20项通过-2ea44f)](experiments/)
+[![研究轮次](https://img.shields.io/badge/研究轮次-4-6f42c1)](experiments/)
 [![ISCAS 2025](https://img.shields.io/badge/ECA%20起点-ISCAS%202025-00629B)](https://doi.org/10.1109/ISCAS56072.2025.11044249)
 [![English](https://img.shields.io/badge/README-English-blue)](README.md)
 
@@ -42,13 +42,14 @@ run 3 进一步加入物理约束。若 \(\mathcal A\) 是可访问观测代数�
 群对称性是其中一个特例：先做 twirling，再取正谱部分。表示论分块还能指出
 变化由哪个 parity、frequency、charge 或其它物理扇区承载。
 
-## 三个不可覆盖的研究轮次
+## 四个不可覆盖的研究轮次
 
 | 轮次 | 问题 | 论文 |
 |---|---|---|
 | [run 1](experiments/run1/) | ECA 何时等价于最优可交换测量？相对一般 POVM 损失什么？ | [DECA PDF](publication/run1/main.pdf) |
 | [run 2](experiments/run2/) | 最大差异观测能否逐样本累积、合并、限制秩并用于在线检测？ | [AOC PDF](publication/run2/main.pdf) |
 | [run 3](experiments/run3/) | 在对称性或物理读出代数下，精确最优解是什么？哪个扇区发生变化？ | [SAOC PDF](publication/run3/main.pdf) |
+| [run 4](experiments/run4/) | 能否先证明局域观测代数看不见拓扑扇区，再恢复第一个非收缩 witness？ | [结果与优势审计](references/run4_gauge_sector_results_and_advantage_audit.md) |
 
 run 1 是冻结的 DECA 基线。后续轮次不会覆盖其代码、结果或论文。持续维护的
 公共实现位于 [`experiments/aoc/`](experiments/aoc/)。
@@ -67,6 +68,7 @@ CSP/广义特征值、kernel MMD 和 symmetry-resolved entanglement 都明确作
 - 已知独立参考状态下，可预测 witness 与 betting e-process；
 - 对称性/子代数约束下的精确最优 effect；
 - 可加的扇区诊断，以及 \(O(d\log d)\) 的循环平移特例；
+- toric-code 局域无信息证书，以及第一个 Wilson-loop-equivalent flux witness；
 - 同时报告打平、失败和适用边界的跨领域实验。
 
 完整推导见
@@ -84,6 +86,7 @@ CSP/广义特征值、kernel MMD 和 symmetry-resolved entanglement 都明确作
 | 10-qubit TFIM 约化态 | 响应峰 \(g/J=0.9625\) | 已知热力学极限临界点为 1 |
 | Hückel 差分密度 | attachment/detachment 守恒误差 \(5.55\times10^{-17}\) | 仅为受控 tight-binding 模型 |
 | 模拟六轴机器人接触 | 学习 screw 重叠 \(0.99925\) | 不是硬件部署证据 |
+| \(3\times3\) toric-code 通量扇区 | 1,431 个低于码距的 Pauli gap 全为 0；Wilson-loop trace distance 为 1 | 在相同 symmetry/access model 下与 Wilson、Helstrom oracle 打平 |
 
 显著优势发生在预先设计的均值盲、低秩或对称干扰场景中。本项目不声称普适
 准确率、量子加速、隐私保证、ASIC/FPGA 优势，也不声称已经完成真实机器人或
@@ -98,10 +101,12 @@ CSP/广义特征值、kernel MMD 和 symmetry-resolved entanglement 都明确作
 电子差分密度和 spectroscopy、EEG/CSP 空间功率变化，以及建立在 SOAP/ACE
 之上的旋转不变分子特征。
 
-弦论和量子场论目前只是理论前沿。一个可信的下一步是在小型格点规范场或已
-发表的 tensor-network 模型上，比较两个耦合的 gauge-invariant 约化态，并
-检查学习到的扇区 witness 是否复现已知的 flux/Wilson-loop 诊断。当前工作
-不声称解决弦论、找到新 vacuum 或证明 holographic duality。
+run 4 已完成这个设想的有限 fixed-point 版本：比较 toric-code flux sectors，
+证明码距以下的局域不可区分性，并恢复 Wilson-loop-equivalent effect。这是
+\(\mathbb Z_2\) lattice-gauge/QEC testbed，不是弦论或 holography 结果。可信
+的下一步理论问题是带明确 boundary observable algebra 的已发表
+tensor-network/holographic-code state；可信的实际问题是同预算
+surface-code syndrome drift detection。
 
 ## 快速开始
 
@@ -130,6 +135,12 @@ python3 -m venv .venv
 .venv/bin/python experiments/run3/scripts/run_robot_contact.py
 ```
 
+运行 run 4 的精确规范扇区实验：
+
+```bash
+.venv/bin/python experiments/run4/scripts/run_topological_flux.py
+```
+
 构建全部论文：
 
 ```bash
@@ -147,7 +158,8 @@ manifest，其中记录命令、依赖、Git 状态、运行时间和输出哈�
 | [`experiments/run1/`](experiments/run1/) | 冻结的 DECA 代码、测试、脚本和证据 |
 | [`experiments/run2/`](experiments/run2/) | 加性/流式观测差异验证 |
 | [`experiments/run3/`](experiments/run3/) | 对称分辨与跨领域验证 |
-| [`publication/`](publication/) | 三份独立论文源码与编译 PDF |
+| [`experiments/run4/`](experiments/run4/) | 精确局域不可区分性与拓扑通量验证 |
+| [`publication/`](publication/) | run 1–3 的三份独立论文源码与编译 PDF |
 | [`references/`](references/) | ECA/Ising 原始材料、审稿意见、研究计划和理论分析 |
 
 ## 研究谱系、引用与权利
@@ -169,7 +181,7 @@ GitHub 使用 [`CITATION.cff`](CITATION.cff) 生成引用界面：
              From Eigen-Components to Additive and
              Symmetry-Resolved Physical Witnesses},
   year    = {2026},
-  version = {3.0.0},
+  version = {4.0.0},
   url     = {https://github.com/lachlanchen/discriminative-energy-component-analysis}
 }
 ```

@@ -1,0 +1,56 @@
+{
+  "command": [
+    "/home/lachlan/miniconda3/bin/python3.10",
+    "experiments/run4/scripts/run_topological_flux.py"
+  ],
+  "config": {
+    "compared_logical_z_x": [
+      1,
+      -1
+    ],
+    "lattice_size": 3,
+    "logical_mixing_grid": [
+      0.0,
+      0.5,
+      11
+    ],
+    "logical_z_y": 1,
+    "maximum_pauli_weight": 3,
+    "maximum_subset_size": 3,
+    "num_link_qubits": 18,
+    "readout_error_grid": [
+      0.0,
+      0.2,
+      21
+    ],
+    "tolerance": 1e-10
+  },
+  "experiment": "run4-toric-code-topological-flux",
+  "finished_unix": 1785147219.1537216,
+  "git_commit": "269392d1ea53731fefea9cada4e8e73f3e5aa75a",
+  "git_dirty": true,
+  "outputs": {
+    "experiments/run4/results/topological_flux/logical_sector_mixing.csv": "24b1171afd793c31efa482e9872f8f6142370ee62f3ffc3be0cda9b5416eb6da",
+    "experiments/run4/results/topological_flux/measurement_benchmarks.csv": "081a8a3bf140c9aac1400e0d031eec9eba40cec4e3e5e3f0431cae6f9d0f2bea",
+    "experiments/run4/results/topological_flux/nonzero_pauli_witnesses.csv": "604dca973e151c6d760300655317eba082085971f2847d92639f47cd6d408579",
+    "experiments/run4/results/topological_flux/pauli_weight_scan.csv": "d64629b3e02574f4f6724a9e05a4a14c11bc83ee5e4a153f36fcfb7e75446c0d",
+    "experiments/run4/results/topological_flux/readout_robustness.csv": "e1185d15b691d242d8cbf834916b5811b9863545e7e96ab3caec94a507a41539",
+    "experiments/run4/results/topological_flux/robustness.pdf": "5984d215c171dfb6280702ee3eb037061f5e490f4759eb9dc12e83f931b89976",
+    "experiments/run4/results/topological_flux/robustness.png": "60414ed1e904ad77b59185b6c38d9aa50613d76ea5eb1b6ed1fbcd7ea8af1294",
+    "experiments/run4/results/topological_flux/subset_trace_distances.csv": "11fdf6ce13c59f4577ce19e8b13e5629bcaf646f57e6081eccfb6fb1849cad05",
+    "experiments/run4/results/topological_flux/summary.json": "ee3755694557fb3e13efd4c8eabb02b15bf185da3fe184186a3b5c62eb62e5a3"
+  },
+  "packages": {
+    "matplotlib": "3.10.9",
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "qiskit": "2.5.1",
+    "qiskit-aer": "0.17.2",
+    "scikit-learn": "1.7.2",
+    "scipy": "1.15.3"
+  },
+  "platform": "Linux-6.8.0-107-generic-x86_64-with-glibc2.39",
+  "python": "3.10.13",
+  "started_unix": 1785147207.0093892,
+  "wall_seconds": 12.144332647323608
+}

@@ -1,0 +1,60 @@
+{
+  "advantage_conclusion": "The run proves an observable-access and symmetry-prior advantage over every fixed sub-distance observer and over untwirled one-representative learning. It does not show superiority over Helstrom, a supplied Wilson-loop threshold, or another method given the same topological feature; all correctly informed methods attain success 1 at the fixed point.",
+  "distinguishable_weight3_subsets": 3,
+  "factorization_convention": "Reduced states use the tensor product of link qubits (extended-link/electric-center prescription).",
+  "ground_sector_orthogonality_error": 0.0,
+  "ground_state_support": 256,
+  "hilbert_dimension": 262144,
+  "logical_mixing_max_analytic_error": 0.0,
+  "loop_effect_vs_parity_projector_error": 0.0,
+  "loop_trace_distance": 1.0,
+  "max_trace_distance_below_distance": 0.0,
+  "maximum_stabilizer_expectation_error": 0.0,
+  "measurement_success": {
+    "Best fixed <=2-link / weight<=2 observer": 0.5,
+    "Correct label-preserving nuisance twirl + AOC": 1.0,
+    "Full Helstrom oracle": 1.0,
+    "Stabilizer-only twirl + AOC": 0.75,
+    "Supplied Wilson-loop parity threshold": 1.0,
+    "Untwirled AOC, one representative per class": 0.75,
+    "Wrong label-flipping twirl + AOC": 0.5
+  },
+  "model": "L=3 toric-code / D(Z2) fixed point on a torus",
+  "nonzero_pauli_gaps_below_distance": 0,
+  "num_link_qubits": 18,
+  "pauli_features_below_distance": 1431,
+  "readout_example_r_0_05": {
+    "single_length3_loop_success": 0.8645,
+    "three_homologous_loops_majority_success": 0.9498948777500003
+  },
+  "sector_trace_norms": {
+    "W=+1": 1.0,
+    "W=-1": 1.0
+  },
+  "subset_trace_distance_by_size": [
+    {
+      "count": 18,
+      "max": 0.0,
+      "support_size": 1
+    },
+    {
+      "count": 153,
+      "max": 0.0,
+      "support_size": 2
+    },
+    {
+      "count": 816,
+      "max": 1.0,
+      "support_size": 3
+    }
+  ],
+  "weight3_centralizer_count": 12,
+  "weight3_nonzero_class_gap_count": 3,
+  "weight3_pauli_count": 22032,
+  "witness_diagnostics": {
+    "correct_twirl_invariance_error": 0.0,
+    "learned_effect_vs_wilson_projector_frobenius_error": 0.0,
+    "learned_sign_vs_logical_z_frobenius_error": 0.0,
+    "wrong_twirl_trace_norm": 0.0
+  }
+}
