@@ -1,0 +1,19 @@
+\noindent\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrp{0.3\linewidth}}
+\toprule
+Stage & Paired-shot updates & Physical shots & Role updates & Detector bits & Timing/memory scope \\
+\midrule
+Google fit/warmup & 5,000 & 10,000 & 255,000 & 12,240,000 & Input accounting \\
+Google threshold clone & 5,000 & 10,000 & 255,000 & 12,240,000 & Input accounting \\
+Google held detector replay & 20,000 & 40,000 & 1,020,000 & 48,960,000 & Joint-pipeline runs 1312.527/1327.993/1339.677 s; median 1327.993 s; process-wide peak 1194.4 MiB \\
+Google randomization surrogates & 1,280,000 & Resampled; no new exposure & 65,280,000 & No new exposure & 256 replicates; canonical merge only 8.956 s, 1 worker, process-wide peak 232.0 MiB; external shard concurrency not inferred \\
+PNNL fit across 22 state streams & 8,184 & 16,368 & 24,552 & 212,784 & Whole-arm accounting; eigendecompositions 9,090 \\
+PNNL surveillance & 24,556 & 49,112 & 73,668 & 638,400 & Whole-run 6900.189 s; held processing 6898.060 s; process-wide peak 1445.7 MiB; eigendecompositions 27,648 \\
+PNNL threshold-bootstrap surrogates & 502,906,880 & Resampled; no new exposure & 1,508,720,640 & No new exposure & 4,096 replicates per path/state/method; eigendecompositions 226,492,416 \\
+PNNL paired-swap surrogates & 20,953,600 & Resampled; no new exposure & 62,860,800 & No new exposure & 256 replicates; eigendecompositions 9,400,320 \\
+\bottomrule
+\end{tabular}
+}
+\par
+
+\par\smallskip\noindent All three Google replay timings are for the canonical joint detector pipeline. The Google-randomization timing is for canonical merge only, not shard computation; external shard concurrency is not inferred. PNNL reports both whole-run and held-value processing wall time. Peak RSS is process-wide; surrogate rows are resampling work, not new physical-shot or detector-bit exposure. No per-method timing, memory, or relative-speed claim is reported.

@@ -1,6 +1,23 @@
 # Run 6 manuscript-skeleton plan
 
-**Stage:** pre-results manuscript construction
+**Stage:** final verified result integration
+
+The original pre-results construction plan is retained below as provenance.
+Its baseline is Git commit
+`0b4f9d3f9eadcfa2545daa608c1674009e1761d8`.
+
+## Final status
+
+- Locked conclusion: **No demonstrated S-PACE algorithmic advantage.**
+- Both the Google primary gate and PNNL retention gate failed.
+- The final 26-page PDF contains hash-generated outcome prose and tables,
+  no pending marker, no undefined citation/reference, and no overfull box.
+- `make final-audit` reproduced the complete bundle byte-for-byte from eight
+  experimental inputs and two publication-provenance records.
+- The full repository test suite passed: **350 tests**.
+- The post-detector execution repair and post-outcome
+  publication-consumer repair remain explicitly separated from the original
+  pre-access detector freeze.
 
 **Scientific goal:** prepare a rigorous, results-contingent paper for a
 high-quality quantum-information or quantum-engineering venue without

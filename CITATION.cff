@@ -13,8 +13,8 @@ authors:
     alias: Lachlan Chen
 repository-code: "https://github.com/lachlanchen/discriminative-energy-component-analysis"
 url: "https://github.com/lachlanchen/discriminative-energy-component-analysis"
-version: 5.0.0
-date-released: 2026-07-27
+version: 6.0.0
+date-released: 2026-07-28
 abstract: >-
   A reproducible research repository developing Eigen-Component Analysis into
   discriminative, additive, and symmetry-/subalgebra-accessible observable
@@ -23,7 +23,9 @@ abstract: >-
   diagnostics, physical and chemical controlled experiments, Qiskit
   simulations, exact gauge-sector and accessible-process no-go benchmarks,
   cycle-fair syndrome-drift experiments, controlled surface-code decoder
-  validation, historical sources, and five compiled working papers.
+  validation, a predeclared real-QEC syndrome benchmark with separated access
+  phases and artifact provenance, historical sources, and six compiled
+  working papers.
 keywords:
   - eigen-component analysis
   - additive observable contrast
@@ -41,8 +43,12 @@ keywords:
   - topological order
   - Wilson loop
   - surface code
+  - quantum error correction
+  - real-device syndrome data
   - syndrome drift
   - sequential change detection
+  - randomization inference
+  - reproducible research
 preferred-citation:
   type: software
   title: >-
@@ -53,6 +59,6 @@ preferred-citation:
       given-names: Rongzhou
       alias: Lachlan Chen
   year: 2026
-  version: 5.0.0
+  version: 6.0.0
   url: >-
     https://github.com/lachlanchen/discriminative-energy-component-analysis

@@ -1,8 +1,8 @@
 # Observable Contrast Research
 
 [![Research](https://img.shields.io/badge/status-reproducible%20working%20papers-2b6cb0)](publication/)
-[![Tests](https://img.shields.io/badge/tests-93%20passing-2ea44f)](experiments/)
-[![Runs](https://img.shields.io/badge/research%20runs-5-6f42c1)](experiments/)
+[![Tests](https://img.shields.io/badge/tests-350%20passing-2ea44f)](experiments/)
+[![Runs](https://img.shields.io/badge/research%20runs-6-6f42c1)](experiments/)
 [![ISCAS 2025](https://img.shields.io/badge/ECA%20origin-ISCAS%202025-00629B)](https://doi.org/10.1109/ISCAS56072.2025.11044249)
 [![中文](https://img.shields.io/badge/README-简体中文-red)](README.zh-Hans.md)
 
@@ -53,7 +53,7 @@ Group symmetry is the special case where
 say which parity, frequency, charge, or other physical sector carries the
 change.
 
-## Five immutable research runs
+## Six immutable research runs
 
 | Run | Question | Paper |
 |---|---|---|
@@ -62,10 +62,31 @@ change.
 | [run 3](experiments/run3/) | What is the exact optimum under symmetry or a physical readout algebra, and which sector changed? | [SAOC PDF](publication/run3/main.pdf) |
 | [run 4](experiments/run4/) | Can a local observable algebra be certified blind before the first noncontractible gauge-sector witness is recovered? | [integrated Run 3+4 PDF](publication/run4/main.pdf); [advantage audit](references/run4_gauge_sector_results_and_advantage_audit.md) |
 | [run 5](experiments/run5/) | When syndrome marginals are unchanged, can correlation-aware sequential evidence detect drift and improve decoding under equal physical-cycle budgets? | [Run 5 PDF](publication/run5/main.pdf); [result and advantage audit](references/run5_surface_code_drift_results_and_advantage_audit.md) |
+| [run 6](experiments/run6/) | What does a predeclared, calibration-aware comparison show on public real-device QEC syndrome data under fixed shot budgets, separated detector/randomization/outcome access, and exact provenance? | [Run 6 PDF](publication/run6/main.pdf); [result and claim audit](references/run6_real_qec_results_and_advantage_audit.md); [v6.0.0 derived artifacts](https://github.com/lachlanchen/discriminative-energy-component-analysis/releases/tag/v6.0.0) |
 
 Run 1 is the frozen DECA baseline. Later runs do not overwrite its code,
 results, or manuscript. Shared maintained code lives in
 [`experiments/aoc/`](experiments/aoc/).
+
+Run 6 is a fixed empirical benchmark, not a theorem or a general advantage
+claim. Its provenance records separate detector construction, blinded
+randomization, external-snapshot processing, delayed outcome access, and a
+disclosed post-detector execution repair. Any final gate must be read only for
+the named implementations, datasets, budgets, and endpoints. It cannot
+establish superiority to Helstrom or Wilson oracles, the same parity feature
+with logistic/threshold rules, quantum speedup, universal sample efficiency,
+or scalable computational advantage.
+
+The locked Run 6 result is:
+
+> **No demonstrated S-PACE algorithmic advantage.**
+
+The composite missed the Google primary event and captured `0/31` primary
+decoder mismatches at top 20, versus `9/31` for DFR.  Its PNNL delay was
+lower than the named online-logistic implementation but higher than DFR, so
+the required two-comparator retention conjunction also failed.  The spectral
+component's event detection is exploratory and cannot replace the frozen
+composite after outcome access.
 
 ## What is new—and what is prior art
 
@@ -88,6 +109,8 @@ The repository's contribution is the tested synthesis:
   first Wilson-loop-equivalent flux witness;
 - accessible-process no-go certificates, cycle-fair e-detectors, and a
   controlled Stim/PyMatching decoder-utility audit;
+- a predeclared real-QEC benchmark with separated access phases, a disclosed
+  post-detector execution repair, and artifact-level provenance;
 - cross-domain experiments that report ties, failures, and claim boundaries.
 
 The detailed derivation and application map are in
@@ -144,6 +167,10 @@ comparator, but it does verify that correlation access restores information
 lost by marginals and that a correctly selected post-change decoder can help
 in controlled simulation. The next practical step requires end-to-end
 hardware syndrome streams, online model selection, and decoder switching.
+Run 6 evaluates a frozen comparison protocol on public real-device QEC
+syndrome data. Its paper and claim audit, rather than this overview, are the
+canonical record of the locked empirical outcome. Neither outcome would be a
+new Wilson-loop, toric-code, string-theory, or holographic-duality result.
 
 ## Quick start
 
@@ -191,6 +218,15 @@ Run 5 locked syndrome-drift suite:
 .venv/bin/python experiments/run5/scripts/run_circuit_level_validation.py
 ```
 
+Run 6 uses staged detector, randomization, external-snapshot, and outcome
+runners. The exact locked sequence and artifact hashes are documented in the
+[Run 6 paper](publication/run6/main.pdf) and
+[result and claim audit](references/run6_real_qec_results_and_advantage_audit.md).
+Large derived outputs are intentionally excluded from Git and distributed
+with the
+[v6.0.0 release](https://github.com/lachlanchen/discriminative-energy-component-analysis/releases/tag/v6.0.0);
+verify its release checksums and embedded manifests before reanalysis.
+
 Build all manuscripts:
 
 ```bash
@@ -211,8 +247,10 @@ the command, dependencies, Git state, runtime, and output hashes.
 | [`experiments/run3/`](experiments/run3/) | Symmetry-resolved and cross-domain validation |
 | [`experiments/run4/`](experiments/run4/) | Exact local-blindness and topological-flux validation |
 | [`experiments/run5/`](experiments/run5/) | Cycle-fair syndrome-drift, measurement, and decoder validation |
-| [`publication/`](publication/) | Five independent paper sources and compiled PDFs for runs 1–5 |
+| [`experiments/run6/`](experiments/run6/) | Predeclared real-QEC evaluation, access separation, randomization, and provenance |
+| [`publication/`](publication/) | Six independent paper sources and compiled PDFs for runs 1–6 |
 | [`references/`](references/) | Original ECA/Ising materials, reviews, research plans, and deep theory analysis |
+| [v6.0.0 release](https://github.com/lachlanchen/discriminative-energy-component-analysis/releases/tag/v6.0.0) | Hashed Run 6 derived artifacts kept outside Git history |
 | [`CITATION.cff`](CITATION.cff) | GitHub citation metadata |
 | [`LICENSE.md`](LICENSE.md) | Public/private and mixed-rights boundary |
 
@@ -239,7 +277,7 @@ GitHub renders “Cite this repository” from [`CITATION.cff`](CITATION.cff).
              From Eigen-Components to Additive and
              Symmetry-Resolved Physical Witnesses},
   year    = {2026},
-  version = {5.0.0},
+  version = {6.0.0},
   url     = {https://github.com/lachlanchen/discriminative-energy-component-analysis}
 }
 ```

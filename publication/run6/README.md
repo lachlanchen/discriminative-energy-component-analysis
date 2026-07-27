@@ -1,6 +1,6 @@
 # Run 6 manuscript
 
-This directory contains the pre-results manuscript for:
+This directory contains the final verified Run 6 working paper:
 
 > *Predictable Sparse and Spectral Contrast Monitoring of Real QEC
 > Syndromes: A Predeclared Benchmark with a Disclosed Post-Detector Repair*
@@ -41,8 +41,9 @@ cohort/state order and reconstructs every row's path dimension, role count,
 five accumulator sizes, adaptive-bank bytes, and formal-accumulator bytes.
 Separate publication-provenance records bind the failed attempt, the
 allowlisted repair, and unchanged hashes of all eight experimental inputs.
-Before a verified bundle exists, every unresolved value appears visibly as
-`TBD(KEY)`.
+Without a verified bundle, every unresolved value appears visibly as
+`TBD(KEY)`.  The checked-in final bundle resolves those markers only through
+the fail-closed extractor.
 
 The locked interpretation is:
 
@@ -57,16 +58,22 @@ conditions and is not a class-wide or oracle superiority claim.
 
 If either Boolean is false, the paper must state:
 
-> no demonstrated S-PACE algorithmic advantage.
+> No demonstrated S-PACE algorithmic advantage.
 
 A successful exact randomization audit, sparsity, or interpretability cannot
 override that rule.
+
+Both empirical gates failed.  On Google, the composite missed the primary
+event and captured `0/31` primary decoder mismatches at top 20, versus `9/31`
+for DFR and `0/31` for online logistic.  On PNNL, its macro delay was
+`0.8046`, compared with `0.7899` for DFR and `0.8480` for online logistic;
+retention required strict improvement over both controls.
 
 ## Build and audit
 
 ```bash
 make
-make audit
+make final-audit
 make test
 ```
 
@@ -153,6 +160,6 @@ same-parity logistic/threshold classes, Helstrom/a correct same-information
 likelihood ratio/oracle features, a new Wilson-loop or toric-code theorem, or
 a result in string theory or holography.
 
-No original/redlined baseline exists because this directory starts a new
-manuscript. Once empirical values are inserted, preserve this version as the
-pre-results baseline before producing a redline.
+The pre-results manuscript is preserved in Git at commit
+`0b4f9d3f9eadcfa2545daa608c1674009e1761d8`; the final result PDF and bundle
+do not rewrite that baseline.

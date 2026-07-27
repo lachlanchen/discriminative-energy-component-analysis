@@ -62,6 +62,26 @@ def write_pnnl_manifest_with_self_size(path: Path, manifest: dict[str, Any]) -> 
     path.write_bytes(encoded)
 
 
+def write_randomization_manifest_with_self_size(
+    path: Path, manifest: dict[str, Any]
+) -> None:
+    artifact_bytes = sum(row["bytes"] for row in manifest["artifacts"])
+    resources = manifest["resources"]
+    resources["output_bytes_excluding_manifest"] = artifact_bytes
+    resources["output_bytes_including_manifest"] = 0
+    for _ in range(16):
+        encoded = target.canonical_json_bytes(manifest) + b"\n"
+        including = artifact_bytes + len(encoded)
+        if resources["output_bytes_including_manifest"] == including:
+            break
+        resources["output_bytes_including_manifest"] = including
+    else:
+        raise AssertionError(
+            "fixture randomization manifest self-size did not converge"
+        )
+    path.write_bytes(encoded)
+
+
 def make_event_summary() -> dict[str, Any]:
     return {
         method: {
@@ -522,10 +542,20 @@ def make_randomization(
         "environment": {},
         "command": ["fixture"],
         "artifacts": [record(result_path, root), record(threshold_path, root)],
-        "resources": {},
+        "resources": {
+            "replicate_count": 256,
+            "formal_eprocess_shot_updates": 256 * 5_000,
+            "role_score_updates": 256 * 5_000 * 51,
+            "wall_seconds": 8.0,
+            "peak_rss_kib_linux_ru_maxrss": 256_000,
+            "worker_process_count": 1,
+            "external_concurrency_not_inferred": True,
+            "output_bytes_excluding_manifest": 0,
+            "output_bytes_including_manifest": 0,
+        },
     }
     path = root / "randomization_manifest.json"
-    write_json(path, manifest)
+    write_randomization_manifest_with_self_size(path, manifest)
     return path
 
 
@@ -1289,7 +1319,7 @@ def refresh_randomization_artifact(
             break
     else:
         raise AssertionError(f"missing randomization fixture artifact {artifact_name}")
-    write_json(paths["randomization"], manifest)
+    write_randomization_manifest_with_self_size(paths["randomization"], manifest)
 
 
 def refresh_pnnl_artifact(
@@ -1557,6 +1587,11 @@ def test_completed_positive_bundle_is_cross_checked_and_generated(
     assert "Whole-run 30.000 s; held processing 25.000 s" in resource_table
     assert "PNNL threshold-bootstrap surrogates" in resource_table
     assert "PNNL paired-swap surrogates" in resource_table
+    assert "Google randomization surrogates" in resource_table
+    assert "1,280,000" in resource_table
+    assert "65,280,000" in resource_table
+    assert "canonical merge only 8.000 s" in resource_table
+    assert "external shard concurrency not inferred" in resource_table
     pittsburgh = target.validate_pittsburgh_manifest(paths["pittsburgh"])
     expected_resources = target.pnnl_expected_resource_counts(pittsburgh["cohorts"])
     for key in (
@@ -1566,6 +1601,40 @@ def test_completed_positive_bundle_is_cross_checked_and_generated(
         "randomization_eigendecompositions",
     ):
         assert f"eigendecompositions {expected_resources[key]:,}" in resource_table
+
+
+@pytest.mark.parametrize(
+    "key",
+    (
+        "replicate_count",
+        "formal_eprocess_shot_updates",
+        "role_score_updates",
+        "wall_seconds",
+        "peak_rss_kib_linux_ru_maxrss",
+        "worker_process_count",
+        "external_concurrency_not_inferred",
+        "output_bytes_excluding_manifest",
+        "output_bytes_including_manifest",
+    ),
+)
+def test_google_randomization_resource_tamper_is_refused(
+    tmp_path: Path,
+    key: str,
+) -> None:
+    paths = make_fixture(tmp_path / "input")
+    manifest = target.load_json(paths["randomization"])
+    if key == "external_concurrency_not_inferred":
+        manifest["resources"][key] = False
+    elif key in {"wall_seconds", "peak_rss_kib_linux_ru_maxrss"}:
+        manifest["resources"][key] = -1.0
+    else:
+        manifest["resources"][key] += 1
+    write_json(paths["randomization"], manifest)
+    with pytest.raises(
+        target.PublicationDataError,
+        match="Google randomization resource",
+    ):
+        run_fixture(paths, tmp_path / "generated")
 
 
 def test_negative_retention_emits_exact_no_advantage_sentence(tmp_path: Path) -> None:

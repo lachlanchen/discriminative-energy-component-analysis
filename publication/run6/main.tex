@@ -10,6 +10,7 @@
 \usepackage{array}
 \usepackage{tabularx}
 \usepackage{graphicx}
+\usepackage{placeins}
 \usepackage{xcolor}
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
@@ -48,6 +49,20 @@
     \RunSixPending{CLAIM_SENTENCE}%
   \fi
 }
+\newcommand{\RunSixAbstractFinding}{%
+  \ifrunresultbundle
+    \RunSixVerifiedAbstractFinding%
+  \else
+    \RunSixPending{ABSTRACT_FINDING}%
+  \fi
+}
+\newcommand{\RunSixOutcomeNarrative}{%
+  \ifrunresultbundle
+    \RunSixVerifiedOutcomeNarrative%
+  \else
+    \RunSixPending{OUTCOME_NARRATIVE}%
+  \fi
+}
 
 \newcommand{\E}{\mathbb E}
 \newcommand{\Prb}{\mathbb P}
@@ -82,7 +97,7 @@ Syndromes: A Predeclared Benchmark with a Disclosed Post-Detector Repair}
   \affiliation{Independent research}
   \email{lachen@connect.hku.hk}
 \else
-  \date{Independent research\\Pre-results working paper, 28 July 2026}
+  \date{Independent research\\Working paper, 28 July 2026}
 \fi
 
 \newcommand{\RunSixAbstractBody}{%
@@ -110,7 +125,7 @@ separate schema mismatch stopped the first strict publication extraction.
 Its publication-consumer-only repair changed no upstream evidence, gate, or
 recorded runtime and is not described as outcome-blind.  A conjunctive
 two-arm rule prevents a favorable auxiliary analysis from rescuing a failed
-primary test.  \RunSixClaimSentence
+primary test.  \RunSixAbstractFinding\ \RunSixClaimSentence
 }
 
 \ifrunrevtex
@@ -977,6 +992,7 @@ gate-relevant.}
 \fi
 \end{table}
 
+\FloatBarrier
 \subsection{Google natural-event replay}
 
 \begin{table}[ht]
@@ -1005,6 +1021,7 @@ location is approximate; the plot does not define an exact onset.}
 \label{fig:google}
 \end{figure}
 
+\FloatBarrier
 \subsection{Frozen decoder-outcome join}
 
 \begin{table}[ht]
@@ -1035,6 +1052,7 @@ enters the primary gate.}
 \label{fig:risk}
 \end{figure}
 
+\FloatBarrier
 \subsection{Randomization-design calibration}
 
 \begin{table}[ht]
@@ -1062,6 +1080,7 @@ inferred or reported.}
 \label{fig:randomization}
 \end{figure}
 
+\FloatBarrier
 \subsection{\PNNL{}/IBM constructed-boundary arm}
 
 \begin{table}[ht]
@@ -1164,6 +1183,7 @@ manifest.  These constructed snapshot comparisons are not natural drift.}
 \label{fig:pnnl}
 \end{figure}
 
+\FloatBarrier
 \subsection{Resource ledger}
 
 \begin{table}[ht]
@@ -1183,6 +1203,7 @@ exposure.}
 \fi
 \end{table}
 
+\FloatBarrier
 \subsection{Locked decision}
 
 \begin{table}[ht]
@@ -1197,24 +1218,27 @@ exposure.}
 \fi
 \end{table}
 
-The result-contingent sentence emitted from that recomputation is:
+\FloatBarrier
+\RunSixOutcomeNarrative
+
+The result-contingent sentence emitted from the hash-bound recomputation is:
 \RunSixClaimSentence
 
 \section{Discussion}
 \label{sec:discussion}
 
-\subsection{What a satisfied conjunctive gate would and would not mean}
+\subsection{Interpretation of the failed conjunctive gate}
 
-If and only if both gates in Eq.~(14) pass, the supported statement is an
-empirical fact: both fixed conditions were satisfied for these datasets,
-implementations, endpoints, and budgets.  Because the tests compare specific
-implementations at fixed endpoints, passing does not establish superiority
-over same-feature or same-parity logistic or threshold classes, a correct
-likelihood or oracle rule, or a general algorithmic advantage.  It also does
-not establish universal sample efficiency, scaling advantage, or quantum
-acceleration.  If either gate fails, the benchmark remains informative by
-identifying the simpler comparator that matched or exceeded the composite
-without changing the success criterion.
+Both empirical gates failed, so the fixed composite did not satisfy the
+predeclared benchmark.  The failure is informative: a simple rate statistic
+matched the physical event and decoder-mismatch endpoint better, while the
+spectral component alone detected the event but could not rescue the frozen
+composite post hoc.  Even if both gates had passed, these implementation- and
+endpoint-specific tests could not establish superiority over same-feature or
+same-parity logistic or threshold classes, a correct likelihood or oracle
+rule.  More generally, passing does not establish superiority outside the
+locked comparison, universal sample efficiency, scalable computation, or
+quantum acceleration.
 
 \subsection{Symmetry and physics language}
 
@@ -1278,9 +1302,10 @@ to be removed after inspection.
 The Google and \PNNL{} data are public deposits
 ~\cite{google2022data,stein2026dataset}.  The accompanying repository stores
 the initial preregistration, original freeze ratification, separately
-ratified post-detector repair, detector/outcome separation, truthful access
-record, environment lock, source hashes, and machine-readable resource
-ledgers.  Final manuscript values and figures are accepted only through the
+ratified post-detector repair, separately ratified post-outcome publication
+repair, detector/outcome separation, truthful access records, environment
+lock, source hashes, and machine-readable resource ledgers.  Final manuscript
+values, narrative findings, and figures are accepted only through the
 three-layer-provenance, hash-bound publication bundle.
 
 \section*{Acknowledgments}
@@ -1380,6 +1405,7 @@ Before a submission build, all of the following must hold:
   string-theory, or holographic claim appears.
 \end{enumerate}
 
+\clearpage
 \ifrunrevtex
   \bibliographystyle{apsrev4-2}
 \else

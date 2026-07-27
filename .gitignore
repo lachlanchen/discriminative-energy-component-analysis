@@ -22,6 +22,9 @@ venv/
 # Reproducibly downloaded benchmark data (URLs and SHA-256 hashes live in code)
 /experiments/data/
 
+# Large Run 6 derived artifacts are distributed as a hashed release asset.
+/experiments/run6/results/
+
 # LaTeX build products
 *.aux
 *.bbl

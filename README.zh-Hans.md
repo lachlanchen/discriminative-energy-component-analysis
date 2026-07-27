@@ -1,8 +1,8 @@
 # 可访问观测差异研究
 
 [![研究状态](https://img.shields.io/badge/状态-可复现工作论文-2b6cb0)](publication/)
-[![测试](https://img.shields.io/badge/测试-93%20项通过-2ea44f)](experiments/)
-[![研究轮次](https://img.shields.io/badge/研究轮次-5-6f42c1)](experiments/)
+[![测试](https://img.shields.io/badge/测试-350%20项通过-2ea44f)](experiments/)
+[![研究轮次](https://img.shields.io/badge/研究轮次-6-6f42c1)](experiments/)
 [![ISCAS 2025](https://img.shields.io/badge/ECA%20起点-ISCAS%202025-00629B)](https://doi.org/10.1109/ISCAS56072.2025.11044249)
 [![English](https://img.shields.io/badge/README-English-blue)](README.md)
 
@@ -42,7 +42,7 @@ run 3 进一步加入物理约束。若 \(\mathcal A\) 是可访问观测代数�
 群对称性是其中一个特例：先做 twirling，再取正谱部分。表示论分块还能指出
 变化由哪个 parity、frequency、charge 或其它物理扇区承载。
 
-## 五个不可覆盖的研究轮次
+## 六个不可覆盖的研究轮次
 
 | 轮次 | 问题 | 论文 |
 |---|---|---|
@@ -51,9 +51,27 @@ run 3 进一步加入物理约束。若 \(\mathcal A\) 是可访问观测代数�
 | [run 3](experiments/run3/) | 在对称性或物理读出代数下，精确最优解是什么？哪个扇区发生变化？ | [SAOC PDF](publication/run3/main.pdf) |
 | [run 4](experiments/run4/) | 能否先证明局域观测代数看不见拓扑扇区，再恢复第一个非收缩 witness？ | [Run 3+4 合并论文 PDF](publication/run4/main.pdf)；[结果与优势审计](references/run4_gauge_sector_results_and_advantage_audit.md) |
 | [run 5](experiments/run5/) | syndrome 边缘不变时，相关结构能否在相同物理 cycle 预算下检测 drift 并改善解码？ | [Run 5 PDF](publication/run5/main.pdf)；[结果与优势审计](references/run5_surface_code_drift_results_and_advantage_audit.md) |
+| [run 6](experiments/run6/) | 在固定 shots 预算、detector/randomization/outcome 分离和精确 provenance 下，预声明且带 calibration 的比较在公开真实 QEC syndrome 数据上得到什么结果？ | [Run 6 PDF](publication/run6/main.pdf)；[结果与主张审计](references/run6_real_qec_results_and_advantage_audit.md)；[v6.0.0 派生结果](https://github.com/lachlanchen/discriminative-energy-component-analysis/releases/tag/v6.0.0) |
 
 run 1 是冻结的 DECA 基线。后续轮次不会覆盖其代码、结果或论文。持续维护的
 公共实现位于 [`experiments/aoc/`](experiments/aoc/)。
+
+run 6 是固定的实证 benchmark，不是新定理或普遍优势声明。其 provenance
+把 detector 构建、盲化 randomization、外部 snapshot 处理、延迟 outcome
+访问和一次公开披露的 detector 运行后执行修复彼此分开。任何最终 gate 只适用于
+命名的实现、数据集、预算和 endpoint；不能据此声称优于 Helstrom 或 Wilson
+oracle、相同 parity 特征的 logistic/threshold，也不能声称量子加速、普遍
+sample efficiency 或可扩展计算优势。
+
+run 6 的锁定结论是：
+
+> **No demonstrated S-PACE algorithmic advantage.**
+
+composite 没有检测到 Google 主事件；在 top-20 预算下，它捕获 `0/31`
+个主 decoder mismatch，而 DFR 捕获 `9/31`。在 PNNL 上，其延迟点估计
+优于该 online-logistic 实现、但劣于 DFR，因此要求同时胜过两个对照的
+retention conjunction 也失败。spectral 单支检测到事件只能作为探索性结果，
+不能在 outcome 打开后替换冻结的 composite。
 
 ## 新贡献与已有理论的边界
 
@@ -72,6 +90,8 @@ CSP/广义特征值、kernel MMD 和 symmetry-resolved entanglement 都明确作
 - toric-code 局域无信息证书，以及第一个 Wilson-loop-equivalent flux witness；
 - 可访问过程 no-go 证书、cycle-fair e-detector，以及受控的
   Stim/PyMatching 解码效用审计；
+- 分离访问阶段、披露 detector 运行后执行修复并提供 artifact-level
+  provenance 的预声明真实 QEC benchmark；
 - 同时报告打平、失败和适用边界的跨领域实验。
 
 完整推导见
@@ -114,6 +134,10 @@ run 5 已执行同预算 surface-code syndrome drift 这一步：没有发现 vA
 优于命名学习对照，但验证了相关结构能恢复边缘统计丢失的信息，并且正确选择的
 post-change decoder 在受控仿真中有用。下一步需要真实硬件 syndrome stream、
 在线模型选择与 decoder switching 的端到端验证。
+run 6 在公开真实设备 QEC syndrome 数据上评估冻结的比较协议；锁定实证
+outcome 的权威记录是论文与主张审计，而不是这份概览。无论 outcome 如何，
+它都不是新的 Wilson loop、toric-code theorem、string theory 或
+holographic duality 结果。
 
 ## 快速开始
 
@@ -160,6 +184,14 @@ python3 -m venv .venv
 .venv/bin/python experiments/run5/scripts/run_circuit_level_validation.py
 ```
 
+run 6 使用分阶段的 detector、randomization、外部 snapshot 与 outcome
+runner。精确的冻结顺序和 artifact 哈希记录在
+[Run 6 论文](publication/run6/main.pdf)与
+[结果和主张审计](references/run6_real_qec_results_and_advantage_audit.md)中。
+大型派生结果刻意不进入 Git，而由
+[v6.0.0 release](https://github.com/lachlanchen/discriminative-energy-component-analysis/releases/tag/v6.0.0)
+发布；重新分析前应校验 release checksum 和内嵌 manifest。
+
 构建全部论文：
 
 ```bash
@@ -179,8 +211,10 @@ manifest，其中记录命令、依赖、Git 状态、运行时间和输出哈�
 | [`experiments/run3/`](experiments/run3/) | 对称分辨与跨领域验证 |
 | [`experiments/run4/`](experiments/run4/) | 精确局域不可区分性与拓扑通量验证 |
 | [`experiments/run5/`](experiments/run5/) | cycle-fair syndrome drift、测量与解码验证 |
-| [`publication/`](publication/) | run 1–5 的五份独立论文源码与编译 PDF |
+| [`experiments/run6/`](experiments/run6/) | 预声明真实 QEC 评估、访问分离、randomization 与 provenance |
+| [`publication/`](publication/) | run 1–6 的六份独立论文源码与编译 PDF |
 | [`references/`](references/) | ECA/Ising 原始材料、审稿意见、研究计划和理论分析 |
+| [v6.0.0 release](https://github.com/lachlanchen/discriminative-energy-component-analysis/releases/tag/v6.0.0) | 不进入 Git 历史的带哈希 Run 6 派生结果 |
 
 ## 研究谱系、引用与权利
 
@@ -189,7 +223,7 @@ manifest，其中记录命令、依赖、Git 状态、运行时间和输出哈�
 ISCAS 源文件、Ising 聚类探索稿和早期讨论保存在 [`references/`](references/)
 中作为 provenance，不会改写历史来制造“后来理论早已存在”的印象。
 
-五份工作稿暂以 `Rongzhou (Lachlan) Chen` 作为仓库作者占位。正式投稿前，
+六份工作稿暂以 `Rongzhou (Lachlan) Chen` 作为仓库作者占位。正式投稿前，
 作者、单位、致谢和期刊必须由人类合作者确认。
 
 GitHub 使用 [`CITATION.cff`](CITATION.cff) 生成引用界面：
@@ -201,7 +235,7 @@ GitHub 使用 [`CITATION.cff`](CITATION.cff) 生成引用界面：
              From Eigen-Components to Additive and
              Symmetry-Resolved Physical Witnesses},
   year    = {2026},
-  version = {5.0.0},
+  version = {6.0.0},
   url     = {https://github.com/lachlanchen/discriminative-energy-component-analysis}
 }
 ```

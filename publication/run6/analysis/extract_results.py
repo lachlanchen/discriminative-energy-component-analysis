@@ -333,6 +333,19 @@ RANDOMIZATION_MANIFEST_KEYS = frozenset(
         "resources",
     }
 )
+RANDOMIZATION_RESOURCE_KEYS = frozenset(
+    {
+        "replicate_count",
+        "formal_eprocess_shot_updates",
+        "role_score_updates",
+        "wall_seconds",
+        "peak_rss_kib_linux_ru_maxrss",
+        "worker_process_count",
+        "external_concurrency_not_inferred",
+        "output_bytes_excluding_manifest",
+        "output_bytes_including_manifest",
+    }
+)
 PNNL_MANIFEST_KEYS = frozenset(
     {
         "schema_version",
@@ -2665,6 +2678,47 @@ def validate_randomization_manifest(
         load_json(artifacts["threshold_bootstrap.json"]),
         detector_thresholds=detector_thresholds,
     )
+    resources = require_mapping(
+        manifest["resources"], context="Google randomization resources"
+    )
+    require_exact_keys(
+        resources,
+        RANDOMIZATION_RESOURCE_KEYS,
+        context="Google randomization resources",
+    )
+    for key in (
+        "replicate_count",
+        "formal_eprocess_shot_updates",
+        "role_score_updates",
+        "peak_rss_kib_linux_ru_maxrss",
+        "worker_process_count",
+        "output_bytes_excluding_manifest",
+        "output_bytes_including_manifest",
+    ):
+        require_int(
+            resources[key],
+            context=f"Google randomization resource {key}",
+            minimum=0,
+        )
+    if (
+        resources["replicate_count"] != 256
+        or resources["formal_eprocess_shot_updates"] != 256 * 5_000
+        or resources["role_score_updates"] != 256 * 5_000 * 51
+        or resources["worker_process_count"] != 1
+        or resources["external_concurrency_not_inferred"] is not True
+        or require_number(
+            resources["wall_seconds"],
+            context="Google randomization resource wall_seconds",
+        )
+        < 0
+        or resources["output_bytes_excluding_manifest"]
+        != sum(candidate.stat().st_size for candidate in artifacts.values())
+        or resources["output_bytes_including_manifest"]
+        != resources["output_bytes_excluding_manifest"] + path.stat().st_size
+    ):
+        raise PublicationDataError(
+            "Google randomization resource ledger is inconsistent."
+        )
     if result["warm_checkpoint_sha256"] != manifest["warm_checkpoint_sha256"]:
         raise PublicationDataError(
             "Randomization result/manifest warm checkpoint mismatch."
@@ -4851,6 +4905,7 @@ def write_tables(
     pnnl_state_rows: Sequence[Mapping[str, Any]],
     pnnl_randomization: Mapping[str, Any],
     detector_manifest: Mapping[str, Any],
+    randomization_manifest: Mapping[str, Any],
     pnnl_manifest: Mapping[str, Any],
     pittsburgh_cohorts: Sequence[Mapping[str, Any]],
 ) -> None:
@@ -5451,6 +5506,7 @@ def write_tables(
 
     google_exposure = detector_manifest["resources"]["record_exposure"]
     google_performance = detector_manifest["performance"]
+    google_randomization_resources = randomization_manifest["resources"]
     pnnl_resources = pnnl_manifest["resource_ledger"]
     resource_rows = []
     for stage, label in (
@@ -5481,6 +5537,24 @@ def write_tables(
                 scope,
             )
         )
+    resource_rows.append(
+        (
+            "Google randomization surrogates",
+            f"{google_randomization_resources['formal_eprocess_shot_updates']:,}",
+            "Resampled; no new exposure",
+            f"{google_randomization_resources['role_score_updates']:,}",
+            "No new exposure",
+            (
+                f"{google_randomization_resources['replicate_count']:,} replicates; "
+                "canonical merge only "
+                f"{format_number(google_randomization_resources['wall_seconds'], 3)} s, "
+                f"{google_randomization_resources['worker_process_count']} worker, "
+                "process-wide peak "
+                f"{format_number(google_randomization_resources['peak_rss_kib_linux_ru_maxrss'] / 1024, 1)} MiB; "
+                "external shard concurrency not inferred"
+            ),
+        )
+    )
     resource_rows.extend(
         (
             (
@@ -5553,9 +5627,11 @@ def write_tables(
         "\n"
         r"\par\smallskip\noindent "
         r"All three Google replay timings are for the canonical joint detector "
-        r"pipeline. PNNL reports both whole-run and held-value processing wall "
-        r"time. Peak RSS is process-wide; surrogate rows are resampling work, "
-        r"not new physical-shot or detector-bit exposure. "
+        r"pipeline. The Google-randomization timing is for canonical merge only, "
+        r"not shard computation; external shard concurrency is not inferred. "
+        r"PNNL reports both whole-run and held-value processing wall time. Peak "
+        r"RSS is process-wide; surrogate rows are resampling work, not new "
+        r"physical-shot or detector-bit exposure. "
         r"No per-method timing, memory, or relative-speed claim is reported."
         "\n"
     )
@@ -5923,17 +5999,69 @@ def conclusion_sentence(overall: bool) -> str:
 def write_manuscript_contract(
     output: Path,
     *,
+    event: Mapping[str, Any],
+    risk: Mapping[str, Any],
+    decision: Mapping[str, Any],
+    aggregate: Mapping[str, Any],
     pittsburgh_cohorts: Sequence[Mapping[str, Any]],
 ) -> tuple[Path, Path]:
     """Write the fail-closed manuscript include and caption contract."""
 
     control_summary = pnnl_control_summary(pittsburgh_cohorts)
+    primary_risk = risk["point_estimates"]["correlated_matching_mismatch"]
+    space_risk = primary_risk["space"]["budgets"]["20"]
+    dfr_risk = primary_risk["m0"]["budgets"]["20"]
+    logistic_risk = primary_risk["m3"]["budgets"]["20"]
+    pnnl_macro = aggregate["macro_by_method"]
+    pnnl_comparisons = aggregate["comparisons"]
+    event_phrase = (
+        "alerted in" if event["space"]["windows"]["primary"]["detected"] else "missed"
+    )
+    google_gate = "passed" if decision["google_primary_pass"] else "failed"
+    pnnl_gate = "passed" if decision["pnnl_retention_pass"] else "failed"
+    abstract_finding = (
+        f"The composite {event_phrase} the primary Google event window and "
+        f"captured {space_risk['captured_mismatches']} of "
+        f"{space_risk['total_mismatches']} primary decoder mismatches at the "
+        f"top-20 budget, versus {dfr_risk['captured_mismatches']} for DFR and "
+        f"{logistic_risk['captured_mismatches']} for online logistic. Its PNNL "
+        "macro restricted delay was "
+        f"{format_number(pnnl_macro['space_composite']['macro_restricted_post_delay_fraction'], 4)}, "
+        "versus "
+        f"{format_number(pnnl_macro['dfr']['macro_restricted_post_delay_fraction'], 4)} "
+        "for DFR and "
+        f"{format_number(pnnl_macro['online_logistic']['macro_restricted_post_delay_fraction'], 4)} "
+        f"for online logistic; the required retention gate {pnnl_gate}."
+    )
+    outcome_narrative = (
+        f"The Google gate {google_gate}: the composite had "
+        f"{event['space']['pre_event_alert_count']} pre-event alerts, "
+        f"{event_phrase} the primary event window, and captured "
+        f"{space_risk['captured_mismatches']}/{space_risk['total_mismatches']} "
+        "primary mismatches at top 20, compared with "
+        f"{dfr_risk['captured_mismatches']}/{dfr_risk['total_mismatches']} for "
+        "DFR and "
+        f"{logistic_risk['captured_mismatches']}/{logistic_risk['total_mismatches']} "
+        f"for online logistic. The PNNL gate {pnnl_gate}: composite-minus-DFR "
+        "macro delay was "
+        f"{pnnl_comparisons['dfr']['macro_delay_difference']:+.4f}, whereas "
+        "composite-minus-logistic was "
+        f"{pnnl_comparisons['online_logistic']['macro_delay_difference']:+.4f}. "
+        "Retention required strict improvement over both comparators."
+    )
     contract = {
         "schema_version": "run6-manuscript-artifact-contract-v2",
+        "result_narrative": {
+            "abstract_finding": abstract_finding,
+            "abstract_macro": "RunSixVerifiedAbstractFinding",
+            "outcome_narrative": outcome_narrative,
+            "outcome_macro": "RunSixVerifiedOutcomeNarrative",
+        },
         "evidence_classes": {
             "provenance": (
                 "original pre-access detector freeze plus a separately ratified "
-                "post-detector, pre-outcome consumer-validation repair"
+                "post-detector, pre-outcome consumer-validation repair and a "
+                "separately ratified post-outcome publication-consumer repair"
             ),
             "google_event": "empirical replay of one author-identified approximate event",
             "google_risk": "retrospective frozen-ranking triage; not a decoder",
@@ -6043,8 +6171,10 @@ def write_manuscript_contract(
             "resource_ledger": "resource_ledger_table.tex",
         },
         "resource_scope": (
-            "Google runtime is the canonical joint detector pipeline and PNNL "
-            "runtime is the whole auxiliary arm; peak RSS is process-wide. "
+            "Google detector runtime is for the canonical joint pipeline; its "
+            "randomization runtime is canonical-merge-only because external shard "
+            "concurrency is not inferred. PNNL runtime is the whole auxiliary arm; "
+            "peak RSS is process-wide. "
             "Per-method timing, memory, and relative-speed claims are unsupported."
         ),
         "validated_descriptive_not_gate_fields": {
@@ -6112,6 +6242,14 @@ def write_manuscript_contract(
         (
             r"\newcommand{\RunSixVerifiedClaim}{"
             r"\input{\RunSixGeneratedDir/claim_sentence.tex}}"
+        ),
+        (
+            r"\newcommand{\RunSixVerifiedAbstractFinding}{"
+            f"{tex_escape(abstract_finding)}}}"
+        ),
+        (
+            r"\newcommand{\RunSixVerifiedOutcomeNarrative}{"
+            f"{tex_escape(outcome_narrative)}}}"
         ),
         (
             r"\newcommand{\RunSixVerifiedGateTable}{"
@@ -6210,6 +6348,7 @@ def write_bundle(
     pnnl_state_rows: Sequence[Mapping[str, Any]],
     pnnl_randomization: Mapping[str, Any],
     detector_manifest: Mapping[str, Any],
+    randomization_manifest: Mapping[str, Any],
     pnnl_manifest: Mapping[str, Any],
     pittsburgh_cohorts: Sequence[Mapping[str, Any]],
     original_ratification: Mapping[str, Any],
@@ -6237,6 +6376,7 @@ def write_bundle(
             pnnl_state_rows=pnnl_state_rows,
             pnnl_randomization=pnnl_randomization,
             detector_manifest=detector_manifest,
+            randomization_manifest=randomization_manifest,
             pnnl_manifest=pnnl_manifest,
             pittsburgh_cohorts=pittsburgh_cohorts,
         )
@@ -6256,6 +6396,10 @@ def write_bundle(
         )
         contract_path, _ = write_manuscript_contract(
             temporary,
+            event=event,
+            risk=risk,
+            decision=decision,
+            aggregate=aggregate,
             pittsburgh_cohorts=pittsburgh_cohorts,
         )
         artifacts = []
@@ -6461,12 +6605,14 @@ def _run_with_validation_profile(
         detector_path=paths["detector_manifest"],
         profile=profile,
     )
-    _, randomization, threshold_bootstrap = validate_randomization_manifest(
-        paths["randomization_manifest"],
-        detector_path=paths["detector_manifest"],
-        detector_manifest=detector,
-        detector_thresholds=thresholds,
-        repair_ratification_path=paths["repair_ratification"],
+    randomization_manifest, randomization, threshold_bootstrap = (
+        validate_randomization_manifest(
+            paths["randomization_manifest"],
+            detector_path=paths["detector_manifest"],
+            detector_manifest=detector,
+            detector_thresholds=thresholds,
+            repair_ratification_path=paths["repair_ratification"],
+        )
     )
     pittsburgh = validate_pittsburgh_manifest(paths["pittsburgh_manifest"])
     pnnl, pnnl_state_rows, aggregate, pnnl_randomization = validate_pnnl_manifest(
@@ -6509,6 +6655,7 @@ def _run_with_validation_profile(
         pnnl_state_rows=pnnl_state_rows,
         pnnl_randomization=pnnl_randomization,
         detector_manifest=detector,
+        randomization_manifest=randomization_manifest,
         pnnl_manifest=pnnl,
         pittsburgh_cohorts=pittsburgh["cohorts"],
         original_ratification=original_ratification,

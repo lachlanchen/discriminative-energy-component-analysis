@@ -1,0 +1,19 @@
+\noindent\resizebox{\linewidth}{!}{%
+\begin{tabular}{p{0.55\linewidth}p{0.27\linewidth}c}
+\toprule
+Locked condition & Status in protocol & Result \\
+\midrule
+S-PACE alerts in the primary event window & Google primary gate & Fail \\
+S-PACE has at most nine pre-event alerts & Google primary gate & Pass \\
+Detector and resource artifacts frozen before labels & Google primary gate & Pass \\
+Top-20 capture is at least DFR plus one & Google primary gate & Fail \\
+Top-20 capture is at least online logistic plus one & Google primary gate & Fail \\
+All windows and locked uncertainty are reported & Google primary gate & Pass \\
+All methods receive the same records and labels & Google primary gate & Pass \\
+Google aggregate gate & Primary empirical arm & Fail \\
+PNNL retention gate & Required auxiliary arm & Fail \\
+Overall locked dual-provenance gate & Google AND PNNL & Fail \\
+\bottomrule
+\end{tabular}
+}
+\par
